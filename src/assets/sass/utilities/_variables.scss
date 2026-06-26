@@ -1,0 +1,28 @@
+$primary-font: var(--font-playfair), serif;
+$secondary-font: var(--font-inter), sans-serif;
+
+$default-trans: 0.3s ease-in-out;
+
+$default-black: #111111;
+$default-surface: #1F1F1F;
+
+$default-amber: #D4A72C;
+$default-amber-dark: #332B1D;
+
+$default-cream: #F4F0E8;
+
+$default-grey-warm: #817A78;
+$default-border-dark: #4A463F;
+
+$default-success: #00D26A;
+$default-error: #FF003D;
+
+$shadow-sm: 0 1px 3px rgba(0,0,0,.15);
+$shadow-md: 0 4px 16px rgba(0,0,0,.25);
+$shadow-lg: 0 8px 32px rgba(0,0,0,.35);
+
+$color-gradient: linear-gradient(
+    135deg,
+    #D4A72C 0%,
+    #332B1D 100%
+);

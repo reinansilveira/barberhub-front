@@ -1,0 +1,83 @@
+@use "../../assets/sass/utilities/variables" as *;
+@use "../../assets/sass/utilities/utilities" as *;
+@use "../../assets/sass/utilities/tipography" as *;
+
+.header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+	background-color: $default-black;
+
+	&__inner {
+		@include flex(center, space-between);
+		height: 6.4rem;
+	}
+
+	&__logo {
+		@include display-3();
+		color: $default-cream;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+
+	&__nav {
+		@include flex(center, center);
+		gap: 3.2rem;
+
+		@include max(800) {
+			display: none;
+		}
+	}
+
+	&__nav-link {
+		@include body-text();
+		color: $default-grey-warm;
+		text-decoration: none;
+		transition: color $default-trans;
+
+		&:hover,
+		&--active {
+			color: $default-cream;
+		}
+	}
+
+	&__cta {
+		@include button-text();
+		display: inline-flex;
+		align-items: center;
+		padding: 1rem 2rem;
+		background-color: $default-amber;
+		color: $default-black;
+		border: none;
+		border-radius: 0.6rem;
+		text-decoration: none;
+		cursor: pointer;
+		transition: background-color $default-trans;
+		white-space: nowrap;
+
+		&:hover {
+			background-color: darken($default-amber, 10%);
+		}
+
+		@include max(800) {
+			display: none;
+		}
+	}
+
+	&__menu-toggle {
+		display: none;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0.4rem;
+		color: $default-cream;
+
+		@include max(800) {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+}
