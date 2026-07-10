@@ -1,0 +1,125 @@
+@use "../../../../assets/sass/utilities/variables" as *;
+@use "../../../../assets/sass/utilities/utilities" as *;
+@use "../../../../assets/sass/utilities/tipography" as *;
+
+.testimonials {
+	background-color: $default-black;
+	padding: 9.6rem 0;
+	overflow: hidden;
+
+	&__header {
+		@include flexColumn(center, center, column);
+		text-align: center;
+		max-width: 56rem;
+		margin: 0 auto 6.4rem;
+	}
+
+	&__label {
+		@include label-text();
+		color: $default-amber;
+		text-transform: uppercase;
+		margin-bottom: 1.6rem;
+	}
+
+	&__title {
+		@include display-2();
+		color: $default-cream;
+		margin-bottom: 1.6rem;
+	}
+
+	&__subtitle {
+		@include body-text();
+		color: $default-grey-warm;
+	}
+
+	&__marquee {
+		position: relative;
+		width: 100%;
+
+		// fade nas bordas pra suavizar a entrada/saída dos cards
+		mask-image: linear-gradient(
+			90deg,
+			transparent 0%,
+			$default-black 8%,
+			$default-black 92%,
+			transparent 100%
+		);
+	}
+
+	&__track {
+		display: flex;
+		width: max-content;
+		gap: 2.4rem;
+		padding: 0 2.4rem;
+		animation: testimonials-scroll 40s linear infinite;
+
+		&:hover {
+			animation-play-state: paused;
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			animation: none;
+		}
+	}
+
+	&__card {
+		@include flexColumn(stretch, flex-start, column);
+		flex: 0 0 38rem;
+		padding: 3.2rem;
+		background-color: $default-surface;
+		border: 1px solid $default-border-dark;
+		border-radius: 1.2rem;
+	}
+
+	&__stars {
+		display: flex;
+		gap: 0.2rem;
+		color: $default-amber;
+		margin-bottom: 2rem;
+	}
+
+	&__quote {
+		@include body-text();
+		color: $default-cream;
+		margin-bottom: 2.4rem;
+	}
+
+	&__author {
+		@include flex(center, flex-start);
+		gap: 1.2rem;
+		margin-top: auto;
+	}
+
+	&__avatar {
+		width: 4rem;
+		height: 4rem;
+		border-radius: 50%;
+		object-fit: cover;
+		flex-shrink: 0;
+	}
+
+	&__author_info {
+		@include flexColumn(flex-start, center, column);
+	}
+
+	&__name {
+		@include small-text();
+		font-weight: 600;
+		color: $default-cream;
+	}
+
+	&__role {
+		@include small-text();
+		color: $default-grey-warm;
+	}
+}
+
+@keyframes testimonials-scroll {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		// -50% porque a lista está duplicada (loop contínuo e sem salto)
+		transform: translateX(-50%);
+	}
+}

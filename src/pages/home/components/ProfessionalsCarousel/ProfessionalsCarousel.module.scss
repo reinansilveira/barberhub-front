@@ -1,0 +1,155 @@
+@use "../../../../assets/sass/utilities/variables" as *;
+@use "../../../../assets/sass/utilities/utilities" as *;
+@use "../../../../assets/sass/utilities/tipography" as *;
+
+// Sem classe raiz única: nav e track são renderizados como irmãos
+// (via Fragment) e posicionados pelo grid definido em Professionals.module.scss
+
+.professionals-carousel {
+  &__nav {
+    grid-area: nav;
+    display: flex;
+    gap: 0.8rem;
+    justify-self: end;
+
+    @include max(700) {
+      justify-self: start;
+    }
+  }
+
+  &__nav-button {
+    @include flex(center, center);
+    width: 4rem;
+    height: 4rem;
+    background-color: $default-surface;
+    border: 1px solid $default-border-dark;
+    border-radius: 50%;
+    color: $default-cream;
+    cursor: pointer;
+    transition: border-color $default-trans, color $default-trans;
+
+    &:hover {
+      border-color: $default-amber;
+      color: $default-amber;
+    }
+  }
+
+  &__track {
+    grid-area: cards;
+    display: flex;
+    gap: 2.4rem;
+    width: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__card {
+    @include flexColumn(stretch, flex-start, column);
+    flex: 0 0 27rem;
+    scroll-snap-align: start;
+    background-color: $default-surface;
+    border: 1px solid $default-border-dark;
+    border-radius: 1.2rem;
+    overflow: hidden;
+  }
+
+  &__image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 26rem;
+  }
+
+  &__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__badge {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    @include flex(center, center);
+    gap: 0.6rem;
+    padding: 0.5rem 1.2rem;
+    background-color: rgba($default-success, 0.15);
+    border: 1px solid $default-success;
+    border-radius: 999px;
+    color: $default-success;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  &__badge-dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background-color: $default-success;
+  }
+
+  &__content {
+    @include flexColumn(stretch, flex-start, column);
+    flex: 1;
+    padding: 2rem;
+  }
+
+  &__name {
+    @include display-3();
+    font-size: 1.8rem;
+    color: $default-cream;
+    margin-bottom: 0.4rem;
+  }
+
+  &__role {
+    @include small-text();
+    color: $default-amber;
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+  }
+
+  &__description {
+    @include small-text();
+    color: $default-grey-warm;
+    margin-bottom: 2rem;
+  }
+
+  &__footer {
+    @include flex(center, space-between);
+    margin-top: auto;
+  }
+
+  &__rating {
+    @include flex(center, flex-start);
+    gap: 0.6rem;
+  }
+
+  &__stars {
+    display: flex;
+    gap: 0.2rem;
+    color: $default-amber;
+  }
+
+  &__rating-value {
+    @include small-text();
+    color: $default-cream;
+    font-weight: 600;
+  }
+
+  &__link {
+    @include small-text();
+    color: $default-amber;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color $default-trans;
+
+    &:hover {
+      color: darken($default-amber, 10%);
+    }
+  }
+}
