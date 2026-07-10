@@ -1,0 +1,120 @@
+@use "../../../../assets/sass/utilities/variables" as *;
+@use "../../../../assets/sass/utilities/utilities" as *;
+@use "../../../../assets/sass/utilities/tipography" as *;
+
+.booking-card {
+  @include flexColumn(stretch, flex-start, column);
+  position: relative;
+  z-index: 1;
+  width: 38rem;
+  flex-shrink: 0;
+  padding: 3.2rem;
+  background-color: rgba($default-surface, 0.9);
+  backdrop-filter: blur(1.2rem);
+  border: 1px solid $default-border-dark;
+  border-radius: 1.2rem;
+  box-shadow: $shadow-lg;
+
+  @include max(900) {
+    width: 100%;
+    max-width: 44rem;
+  }
+
+  &__label {
+    @include label-text();
+    color: $default-amber;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+
+  &__title {
+    @include display-3();
+    color: $default-cream;
+    margin-bottom: 2.4rem;
+  }
+
+  &__field {
+    @include flexColumn(stretch, flex-start, column);
+    gap: 0.8rem;
+    margin-bottom: 2rem;
+  }
+
+  &__field-label {
+    @include small-text();
+    color: $default-grey-warm;
+  }
+
+  &__select,
+  &__date-input {
+    @include body-text();
+    width: 100%;
+    padding: 1.2rem 1.6rem;
+    background-color: $default-black;
+    border: 1px solid $default-border-dark;
+    border-radius: 0.6rem;
+    color: $default-cream;
+    font-size: 1.4rem;
+    transition: border-color $default-trans;
+
+    &:focus {
+      outline: none;
+      border-color: $default-amber;
+    }
+  }
+
+  &__select {
+    appearance: none;
+    cursor: pointer;
+    border-color: $default-amber;
+  }
+
+  &__date-input {
+    color-scheme: dark;
+  }
+
+  &__slots {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.8rem;
+  }
+
+  &__slot {
+    @include button-text();
+    padding: 1rem 0;
+    background-color: $default-black;
+    border: 1px solid $default-border-dark;
+    border-radius: 0.6rem;
+    color: $default-cream;
+    cursor: pointer;
+    transition: border-color $default-trans, background-color $default-trans;
+
+    &:hover {
+      border-color: $default-amber;
+      background-color: $default-amber-dark;
+    }
+
+    &--active {
+      border-color: $default-amber;
+      background-color: $default-amber-dark;
+      color: $default-amber;
+    }
+  }
+
+  &__submit {
+    @include button-text();
+    @include flex(center, center);
+    gap: 0.8rem;
+    width: 100%;
+    padding: 1.4rem 2.4rem;
+    background-color: $default-amber;
+    color: $default-black;
+    border: none;
+    border-radius: 0.6rem;
+    cursor: pointer;
+    transition: background-color $default-trans;
+
+    &:hover {
+      background-color: darken($default-amber, 10%);
+    }
+  }
+}

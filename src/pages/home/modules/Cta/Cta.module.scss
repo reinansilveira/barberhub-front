@@ -1,0 +1,170 @@
+@use "../../../../assets/sass/utilities/variables" as *;
+@use "../../../../assets/sass/utilities/utilities" as *;
+@use "../../../../assets/sass/utilities/tipography" as *;
+
+.cta {
+	position: relative;
+	overflow: hidden;
+	background-color: $default-black;
+	padding: 12rem 0;
+
+	&__background {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+	}
+
+	&__poster,
+	&__video {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		filter: blur(3px) brightness(0.6);
+		transform: scale(1.05); // compensa o corte de borda gerado pelo blur
+	}
+
+	&__poster {
+		transition: opacity $default-trans;
+
+		&--hidden {
+			opacity: 0;
+		}
+	}
+
+	&__video {
+		animation: cta-fade-in $default-trans forwards;
+	}
+
+	&__overlay {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			180deg,
+			rgba($default-black, 0.75) 0%,
+			rgba($default-black, 0.55) 50%,
+			rgba($default-black, 0.85) 100%
+		);
+	}
+
+	&__inner {
+		position: relative;
+		z-index: 1;
+		@include flexColumn(center, center, column);
+		text-align: center;
+	}
+
+	&__label {
+		@include label-text();
+		color: $default-amber;
+		text-transform: uppercase;
+		margin-bottom: 1.6rem;
+	}
+
+	&__title {
+		@include display-1();
+		color: $default-cream;
+		margin-bottom: 2.4rem;
+
+		@include max(600) {
+			font-size: 4rem;
+		}
+	}
+
+	&__subtitle {
+		@include body-text();
+		color: $default-grey-warm;
+		max-width: 52rem;
+		margin-bottom: 4rem;
+	}
+
+	&__actions {
+		@include flex(center, center);
+		gap: 1.6rem;
+		flex-wrap: wrap;
+		margin-bottom: 4.8rem;
+	}
+
+	&__primary,
+	&__secondary {
+		@include button-text();
+		display: inline-flex;
+		align-items: center;
+		gap: 0.8rem;
+		padding: 1.4rem 2.8rem;
+		border-radius: 999px;
+		text-decoration: none;
+		transition: background-color $default-trans, color $default-trans;
+	}
+
+	&__primary {
+		background-color: $default-amber;
+		color: $default-black;
+		border: 1px solid $default-amber;
+
+		&:hover {
+			background-color: darken($default-amber, 10%);
+		}
+	}
+
+	&__secondary {
+		background-color: transparent;
+		color: $default-amber;
+		border: 1px solid $default-amber;
+
+		&:hover {
+			background-color: rgba($default-amber, 0.1);
+		}
+	}
+
+	&__features {
+		@include flex(center, center);
+		gap: 4.8rem;
+		flex-wrap: wrap;
+
+		@include max(600) {
+			gap: 2.4rem;
+		}
+	}
+
+	&__feature {
+		@include flex(center, flex-start);
+		gap: 1.2rem;
+	}
+
+	&__feature_icon {
+		@include flex(center, center);
+		width: 3.6rem;
+		height: 3.6rem;
+		flex-shrink: 0;
+		background-color: rgba($default-amber, 0.12);
+		border-radius: 50%;
+		color: $default-amber;
+	}
+
+	&__feature_text {
+		@include flexColumn(flex-start, center, column);
+		text-align: left;
+	}
+
+	&__feature_label {
+		@include small-text();
+		color: $default-grey-warm;
+	}
+
+	&__feature_value {
+		@include small-text();
+		color: $default-cream;
+		font-weight: 600;
+	}
+}
+
+@keyframes cta-fade-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
