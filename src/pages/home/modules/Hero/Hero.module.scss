@@ -1,0 +1,147 @@
+@use "../../../../assets/sass/utilities/variables" as *;
+@use "../../../../assets/sass/utilities/utilities" as *;
+@use "../../../../assets/sass/utilities/tipography" as *;
+
+.hero {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background-color: $default-black;
+
+  &__background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  &__background-image {
+    object-fit: cover;
+    object-position: center;
+    opacity: 0.55;
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgba($default-black, 0.95) 0%,
+      rgba($default-black, 0.75) 45%,
+      rgba($default-black, 0.4) 100%
+    );
+  }
+
+  &__inner {
+    position: relative;
+    z-index: 1;
+    @include flex(center, space-between);
+    gap: 4.8rem;
+    min-height: 100vh;
+    padding-top: 6.4rem;
+
+    @include max(900) {
+      flex-direction: column;
+      justify-content: center;
+      padding: 12rem 0 6.4rem;
+    }
+  }
+
+  &__content {
+    @include flexColumn(flex-start, center, column);
+    max-width: 56rem;
+  }
+
+  &__label {
+    @include label-text();
+    color: $default-amber;
+    text-transform: uppercase;
+    margin-bottom: 1.6rem;
+  }
+
+  &__title {
+    @include display-1();
+    color: $default-cream;
+    margin-bottom: 2.4rem;
+
+    @include max(600) {
+      font-size: 4.4rem;
+    }
+  }
+
+  &__subtitle {
+    @include subtitle();
+    color: $default-cream;
+    margin-bottom: 1.6rem;
+  }
+
+  &__description {
+    @include body-text();
+    color: $default-grey-warm;
+    max-width: 44rem;
+    margin-bottom: 3.2rem;
+  }
+
+  &__actions {
+    @include flex(center, flex-start);
+    gap: 3.2rem;
+    flex-wrap: wrap;
+  }
+
+  &__cta {
+    @include button-text();
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1.4rem 2.4rem;
+    background-color: $default-amber;
+    color: $default-black;
+    border: none;
+    border-radius: 0.6rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color $default-trans;
+
+    &:hover {
+      background-color: darken($default-amber, 10%);
+    }
+  }
+
+  &__whatsapp {
+    @include flex(center, flex-start);
+    gap: 1rem;
+    text-decoration: none;
+    color: $default-cream;
+  }
+
+  &__whatsapp-icon {
+    color: $default-success;
+    flex-shrink: 0;
+  }
+
+  &__whatsapp-number {
+    @include body-text();
+    font-weight: 600;
+    color: $default-cream;
+  }
+
+  &__scroll {
+    position: absolute;
+    bottom: 3.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    @include flexColumn(center, center, column);
+    gap: 0.8rem;
+    color: $default-grey-warm;
+
+    @include max(900) {
+      display: none;
+    }
+  }
+
+  &__scroll-text {
+    @include small-text();
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}

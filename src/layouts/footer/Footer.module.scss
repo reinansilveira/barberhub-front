@@ -1,0 +1,169 @@
+@use "../../assets/sass/utilities/variables" as *;
+@use "../../assets/sass/utilities/utilities" as *;
+@use "../../assets/sass/utilities/tipography" as *;
+
+.footer {
+	background-color: $default-black;
+	border-top: 1px solid $default-border-dark;
+	padding-top: 6.4rem;
+
+	&__inner {
+		display: grid;
+		grid-template-columns: 1.6fr repeat(3, 1fr);
+		gap: 4.8rem;
+		padding-bottom: 6.4rem;
+
+		@include max(900) {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		@include max(600) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	&__brand {
+		@include flexColumn(flex-start, flex-start, column);
+
+		@include max(900) {
+			grid-column: 1 / -1;
+		}
+	}
+
+	&__logo {
+		@include display-3();
+		color: $default-cream;
+		text-decoration: none;
+		margin-bottom: 1.6rem;
+	}
+
+	&__description {
+		@include small-text();
+		color: $default-grey-warm;
+		max-width: 32rem;
+		margin-bottom: 2.4rem;
+	}
+
+	&__social {
+		display: flex;
+		gap: 1.2rem;
+	}
+
+	&__social_link {
+		@include flex(center, center);
+		width: 3.6rem;
+		height: 3.6rem;
+		background-color: $default-amber-dark;
+		border-radius: 50%;
+		color: $default-amber;
+		transition: background-color $default-trans, color $default-trans;
+
+		&:hover {
+			background-color: $default-amber;
+			color: $default-black;
+		}
+	}
+
+	&__column {
+		@include flexColumn(flex-start, flex-start, column);
+	}
+
+	&__heading {
+		font-family: $secondary-font;
+		font-size: 1.6rem;
+		font-weight: 700;
+		color: $default-cream;
+		margin-bottom: 2rem;
+	}
+
+	&__list {
+		@include flexColumn(flex-start, flex-start, column);
+		gap: 1.2rem;
+		list-style: none;
+	}
+
+	&__link {
+		@include small-text();
+		color: $default-grey-warm;
+		text-decoration: none;
+		transition: color $default-trans;
+
+		&:hover {
+			color: $default-amber;
+		}
+	}
+
+	&__contact_item {
+		width: 100%;
+	}
+
+	&__contact_link {
+		display: flex;
+		align-items: flex-start;
+		gap: 1rem;
+		text-decoration: none;
+	}
+
+	&__contact_icon {
+		@include flex(center, center);
+		flex-shrink: 0;
+		width: 3.2rem;
+		height: 3.2rem;
+		margin-top: 0.2rem;
+		background-color: $default-amber-dark;
+		border-radius: 50%;
+		color: $default-amber;
+	}
+
+	&__contact_text {
+		@include flexColumn(flex-start, center, column);
+	}
+
+	&__contact_label {
+		@include small-text();
+		font-size: 1.2rem;
+		color: $default-grey-warm;
+	}
+
+	&__contact_value {
+		@include small-text();
+		color: $default-cream;
+		font-weight: 600;
+		transition: color $default-trans;
+	}
+
+	&__contact_link:hover &__contact_value {
+		color: $default-amber;
+	}
+
+	&__bottom {
+		@include flex(center, space-between);
+		flex-wrap: wrap;
+		gap: 1.6rem;
+		padding: 2.4rem 0;
+		border-top: 1px solid $default-border-dark;
+	}
+
+	&__copyright {
+		@include small-text();
+		color: $default-grey-warm;
+	}
+
+	&__credit {
+		@include small-text();
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		color: $default-grey-warm;
+		text-decoration: none;
+		transition: color $default-trans;
+
+		&:hover {
+			color: $default-cream;
+		}
+	}
+
+	&__heart {
+		color: $default-amber;
+	}
+}

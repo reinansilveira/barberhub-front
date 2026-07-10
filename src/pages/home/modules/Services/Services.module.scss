@@ -1,0 +1,121 @@
+@use "../../../../assets/sass/utilities/variables" as *;
+@use "../../../../assets/sass/utilities/utilities" as *;
+@use "../../../../assets/sass/utilities/tipography" as *;
+
+.services {
+	background-color: $default-black;
+	padding: 9.6rem 0;
+
+	&__header {
+		@include flexColumn(center, center, column);
+		text-align: center;
+		max-width: 56rem;
+		margin: 0 auto 6.4rem;
+	}
+
+	&__label {
+		@include label-text();
+		color: $default-amber;
+		text-transform: uppercase;
+		margin-bottom: 1.6rem;
+	}
+
+	&__title {
+		@include display-2();
+		color: $default-cream;
+		margin-bottom: 1.6rem;
+	}
+
+	&__subtitle {
+		@include body-text();
+		color: $default-grey-warm;
+	}
+
+	&__grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 2.4rem;
+
+		@include max(900) {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		@include max(600) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	&__card {
+		@include flexColumn(stretch, flex-start, column);
+		padding: 3.2rem;
+		background-color: $default-surface;
+		border: 1px solid $default-border-dark;
+		border-radius: 1.2rem;
+		transition: border-color $default-trans;
+
+		&:hover {
+			border-color: $default-amber;
+		}
+	}
+
+	&__icon {
+		@include flex(center, center);
+		width: 4.8rem;
+		height: 4.8rem;
+		margin-bottom: 2.4rem;
+		background-color: $default-amber-dark;
+		border-radius: 50%;
+		color: $default-amber;
+	}
+
+	&__card_title {
+		@include display-3();
+		font-size: 2rem;
+		color: $default-cream;
+		margin-bottom: 1.2rem;
+	}
+
+	&__description {
+		@include body-text();
+		font-size: 1.4rem;
+		color: $default-grey-warm;
+		margin-bottom: 2.4rem;
+	}
+
+	&__footer {
+		@include flex(flex-end, space-between);
+		padding-top: 2rem;
+		margin-top: auto;
+		border-top: 1px solid $default-border-dark;
+	}
+
+	&__price_group {
+		@include flexColumn(flex-start, center, column);
+		gap: 0.4rem;
+	}
+
+	&__price {
+		@include display-3();
+		font-size: 2rem;
+		color: $default-amber;
+	}
+
+	&__duration {
+		@include small-text();
+		color: $default-grey-warm;
+	}
+
+	&__link {
+		@include button-text();
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6rem;
+		color: $default-amber;
+		text-decoration: none;
+		transition: color $default-trans;
+
+		&:hover {
+			color: darken($default-amber, 10%);
+		}
+	}
+}

@@ -1,0 +1,50 @@
+@use "../../../../assets/sass/utilities/variables" as *;
+@use "../../../../assets/sass/utilities/utilities" as *;
+@use "../../../../assets/sass/utilities/tipography" as *;
+
+.professionals {
+	background-color: $default-black;
+	padding: 9.6rem 0;
+
+	&__inner {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		grid-template-areas:
+			"heading nav"
+			"cards cards";
+		row-gap: 4.8rem;
+		align-items: center;
+
+		@include max(700) {
+			grid-template-columns: 1fr;
+			grid-template-areas:
+				"heading"
+				"nav"
+				"cards";
+			justify-items: start;
+			row-gap: 2.4rem;
+		}
+	}
+
+	&__heading {
+		grid-area: heading;
+	}
+
+	&__label {
+		@include label-text();
+		color: $default-amber;
+		text-transform: uppercase;
+		margin-bottom: 1.2rem;
+	}
+
+	&__title {
+		@include display-2();
+		color: $default-cream;
+		margin-bottom: 1.2rem;
+	}
+
+	&__subtitle {
+		@include body-text();
+		color: $default-grey-warm;
+	}
+}
