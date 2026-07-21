@@ -1,11 +1,15 @@
 import Image from "next/image";
 import heroBg from "@/assets/images/hero.png";
 import BookingCard from "../../components/Bookingcard/Bookingcard";
+import { findAllProfessionals } from "@/services/professional";
+
 import styles from "./Hero.module.scss";
 
 const WHATSAPP_NUMBER = "(79) 9 9999-9999";
 
-export default function Hero() {
+export default async function Hero() {
+  const professionals = await findAllProfessionals(true).catch(() => []);
+
   return (
     <section className={styles.hero}>
       <div className={styles.hero__background}>
@@ -76,7 +80,12 @@ export default function Hero() {
           </div>
         </div>
 
-        <BookingCard />
+        <BookingCard
+          professionals={professionals.map((professional) => ({
+            id: professional.id,
+            name: professional.user.name,
+          }))}
+        />
       </div>
 
       <div className={styles.hero__scroll}>

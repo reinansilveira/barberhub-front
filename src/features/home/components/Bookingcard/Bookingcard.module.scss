@@ -76,9 +76,11 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 0.8rem;
+    margin-top: 1.2rem;
   }
 
-  &__slot {
+  &__slot,
+  &__slot--selected {
     @include button-text();
     padding: 1rem 0;
     background-color: $default-black;
@@ -86,18 +88,40 @@
     border-radius: 0.6rem;
     color: $default-cream;
     cursor: pointer;
-    transition: border-color $default-trans, background-color $default-trans;
+    transition:
+      border-color $default-trans,
+      background-color $default-trans;
 
     &:hover {
       border-color: $default-amber;
       background-color: $default-amber-dark;
     }
+  }
 
-    &--active {
-      border-color: $default-amber;
-      background-color: $default-amber-dark;
-      color: $default-amber;
-    }
+  &__slot--selected {
+    border-color: $default-amber;
+    background-color: $default-amber;
+    box-shadow: 0 0 0 0.2rem rgba($default-amber, 0.2);
+    color: $default-black;
+  }
+
+  &__availability,
+  &__contact {
+    margin-bottom: 2rem;
+  }
+
+  &__status,
+  &__error,
+  &__success {
+    @include small-text();
+    margin-top: 1.2rem;
+  }
+
+  &__error {
+    color: #ef8b8b;
+  }
+  &__success {
+    color: #8ed9a5;
   }
 
   &__submit {
@@ -116,5 +140,45 @@
     &:hover {
       background-color: darken($default-amber, 10%);
     }
+  }
+
+  &__error {
+    margin-top: 1.2rem;
+    color: #ff9d9d;
+    font-size: 1.3rem;
+  }
+
+  &__success {
+    margin-top: 1.2rem;
+    color: #76d89c;
+    font-size: 1.3rem;
+  }
+}
+
+.booking-card__date-choice,
+.booking-card__empty-slots {
+  @include flexColumn(stretch, flex-start, column);
+  gap: 0.8rem;
+  margin: -0.6rem 0 2rem;
+}
+
+.booking-card__empty-slots {
+  margin: 1.2rem 0 0;
+  color: $default-grey-warm;
+  font-size: 1.3rem;
+}
+
+.booking-card__change-date {
+  @include button-text();
+  width: fit-content;
+  padding: 0.9rem 1.2rem;
+  color: $default-amber;
+  background: transparent;
+  border: 1px solid $default-amber;
+  border-radius: 0.6rem;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba($default-amber, 0.12);
   }
 }
