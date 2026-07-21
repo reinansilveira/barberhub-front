@@ -1,0 +1,234 @@
+.page {
+    min-height: 100vh;
+    padding: 14rem 5% 8rem;
+    background: #f6f3ed;
+    color: #1b1a18;
+    font: 1.6rem var(--font-inter);
+}
+
+.card,
+.wide {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 4rem;
+    background: #fff;
+    border: 1px solid #e7e0d6;
+    border-radius: 1.2rem;
+    box-shadow: 0 2rem 5rem rgba(0, 0, 0, .08);
+}
+
+.wide {
+    max-width: 105rem;
+}
+
+.page h1 {
+    font: 700 clamp(3.2rem, 5vw, 5rem) var(--font-playfair);
+    margin: .8rem 0 1.2rem;
+}
+
+.page h2 {
+    margin: 3.2rem 0 1.6rem;
+    font: 700 2.6rem var(--font-playfair);
+}
+
+.page p {
+    line-height: 1.6;
+}
+
+.eyebrow {
+    color: #a76a15;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    font-size: 1.2rem;
+}
+
+.form {
+    display: grid;
+    gap: 1.6rem;
+    margin-top: 3rem;
+}
+
+.form label {
+    display: grid;
+    gap: .6rem;
+    font-weight: 600;
+}
+
+.form input,
+.form select,
+.form textarea {
+    width: 100%;
+    border: 1px solid #cfc6b9;
+    padding: 1.2rem;
+    border-radius: .6rem;
+    font: inherit;
+    background: #fff;
+}
+
+.form textarea {
+    min-height: 8rem;
+    resize: vertical;
+}
+
+.form button {
+    padding: 1.4rem 2rem;
+    background: #b57a20;
+    color: #fff;
+    border-radius: .6rem;
+    font-weight: 700;
+}
+
+.form button:disabled {
+    opacity: .65;
+    cursor: wait;
+}
+
+.slotSection,
+.clientSection {
+    display: grid;
+    gap: 1.6rem;
+}
+
+.slotSection h2,
+.clientSection h2 {
+    margin: 1.2rem 0 0;
+}
+
+.slotGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    gap: 1rem;
+}
+
+.slot,
+.slotSelected {
+    min-height: 5rem;
+    padding: 1rem;
+    border: 1px solid #cfc6b9;
+    border-radius: .6rem;
+    background: #fff;
+    font: 600 1.5rem var(--font-inter);
+}
+
+.slot:hover {
+    border-color: #b57a20;
+}
+
+.slotSelected {
+    border-color: #b57a20;
+    background: #b57a20;
+    color: #fff;
+}
+
+.error {
+    color: #ae2929;
+    font-size: 1.4rem;
+}
+
+.success {
+    color: #22733f;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.6rem;
+}
+
+.selectedProfessional,
+.dateChoice {
+    display: grid;
+    align-content: start;
+    gap: .6rem;
+    padding: 1.2rem;
+    border: 1px solid #e7e0d6;
+    border-radius: .6rem;
+    background: #fdfbf8;
+}
+
+.selectedProfessional span,
+.dateChoice span {
+    color: #756d63;
+    font-size: 1.3rem;
+}
+
+.dateChoice details {
+    display: grid;
+    gap: 1rem;
+    margin-top: .4rem;
+}
+
+.dateChoice summary {
+    width: fit-content;
+    color: #a76a15;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.dateChoice details label {
+    margin-top: 1rem;
+}
+
+.dateChoice small {
+    color: #756d63;
+}
+
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.6rem;
+    margin-top: 2.4rem;
+}
+
+.metrics div {
+    padding: 2.4rem;
+    background: #f6f3ed;
+    border-radius: .8rem;
+}
+
+.metrics b,
+.metrics span {
+    display: block;
+}
+
+.metrics b {
+    font-size: 3rem;
+}
+
+.table {
+    display: grid;
+    gap: .8rem;
+}
+
+.table article {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e7e0d6;
+}
+
+.table em {
+    color: #a76a15;
+    font-style: normal;
+}
+
+@media(max-width: 650px) {
+
+    .card,
+    .wide {
+        padding: 2.4rem;
+    }
+
+    .grid,
+    .metrics {
+        grid-template-columns: 1fr;
+    }
+
+    .table article {
+        flex-direction: column;
+    }
+}
