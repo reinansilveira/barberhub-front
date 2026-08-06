@@ -1,4 +1,3 @@
-import styles from "./InstagramFeed.module.scss";
 
 interface InstagramPost {
 	id: string;
@@ -49,14 +48,14 @@ const INSTAGRAM_POSTS: InstagramPost[] = [
 
 export default function InstagramFeed() {
 	return (
-		<section className={styles["instagram-feed"]}>
-			<div className={`wrapper ${styles["instagram-feed__inner"]}`}>
-				<div className={styles["instagram-feed__header"]}>
-					<span className={styles["instagram-feed__label"]}>Siga-nos</span>
-					<h2 className={styles["instagram-feed__title"]}>
+		<section className="instagram-feed">
+			<div className="wrapper instagram-feed__inner">
+				<div className="instagram-feed__header">
+					<span className="instagram-feed__label">Siga-nos</span>
+					<h2 className="instagram-feed__title">
 						@{INSTAGRAM_HANDLE}
 					</h2>
-					<p className={styles["instagram-feed__subtitle"]}>
+					<p className="instagram-feed__subtitle">
 						Acompanhe nosso trabalho diário e inspire-se com os melhores
 						cortes
 					</p>
@@ -65,7 +64,7 @@ export default function InstagramFeed() {
 						href={`https://instagram.com/${INSTAGRAM_HANDLE}`}
 						target="_blank"
 						rel="noopener noreferrer"
-						className={styles["instagram-feed__cta"]}
+						className="instagram-feed__cta"
 					>
 						<svg
 							width="16"
@@ -85,23 +84,23 @@ export default function InstagramFeed() {
 					</a>
 				</div>
 
-				<div className={styles["instagram-feed__grid"]}>
+				<div className="instagram-feed__grid">
 					{INSTAGRAM_POSTS.map(({ id, imageUrl, alt }) => (
 						<a
 							key={id}
 							href={`https://instagram.com/${INSTAGRAM_HANDLE}`}
 							target="_blank"
 							rel="noopener noreferrer"
-							className={styles["instagram-feed__item"]}
+							className="instagram-feed__item"
 						>
 							<img
 								src={imageUrl}
 								alt={alt}
 								loading="lazy"
-								className={styles["instagram-feed__image"]}
+								className="instagram-feed__image"
 							/>
 
-							<span className={styles["instagram-feed__overlay"]}>
+							<span className="instagram-feed__overlay">
 								<svg
 									width="20"
 									height="20"
@@ -124,3 +123,4 @@ export default function InstagramFeed() {
 		</section>
 	);
 }
+import "./InstagramFeed.scss";

@@ -1,6 +1,6 @@
 import Link from "next/link";
+import "./Footer.scss";
 import type { ReactNode } from "react";
-import styles from "./Footer.module.scss";
 
 interface FooterLink {
 	label: string;
@@ -106,19 +106,19 @@ export default function Footer() {
 	const currentYear = new Date().getFullYear();
 
 	return (
-		<footer className={styles.footer}>
-			<div className={`wrapper ${styles.footer__inner}`}>
-				<div className={styles.footer__brand}>
-					<Link href="/" className={styles.footer__logo}>
+		<footer className="footer">
+			<div className="wrapper footer__inner">
+				<div className="footer__brand">
+					<Link href="/" className="footer__logo" prefetch={false}>
 						BarbeHub
 					</Link>
 
-					<p className={styles.footer__description}>
+					<p className="footer__description">
 						A experiência premium de barbearia que você merece. Agendamento
 						simples, profissionais de elite, resultados impecáveis.
 					</p>
 
-					<div className={styles.footer__social}>
+					<div className="footer__social">
 						{SOCIAL_LINKS.map(({ label, href, icon }) => (
 							<a
 								key={label}
@@ -126,7 +126,7 @@ export default function Footer() {
 								target="_blank"
 								rel="noopener noreferrer"
 								aria-label={label}
-								className={styles.footer__social_link}
+								className="footer__social_link"
 							>
 								{icon}
 							</a>
@@ -134,12 +134,12 @@ export default function Footer() {
 					</div>
 				</div>
 
-				<nav className={styles.footer__column}>
-					<span className={styles.footer__heading}>Links rápidos</span>
-					<ul className={styles.footer__list}>
+				<nav className="footer__column">
+					<span className="footer__heading">Links rápidos</span>
+					<ul className="footer__list">
 						{QUICK_LINKS.map(({ label, href }) => (
 							<li key={href}>
-								<Link href={href} className={styles.footer__link}>
+								<Link href={href} className="footer__link">
 									{label}
 								</Link>
 							</li>
@@ -147,12 +147,12 @@ export default function Footer() {
 					</ul>
 				</nav>
 
-				<nav className={styles.footer__column}>
-					<span className={styles.footer__heading}>Legal</span>
-					<ul className={styles.footer__list}>
+				<nav className="footer__column">
+					<span className="footer__heading">Legal</span>
+					<ul className="footer__list">
 						{LEGAL_LINKS.map(({ label, href }) => (
 							<li key={href}>
-								<Link href={href} className={styles.footer__link}>
+								<Link href={href} prefetch={false} className="footer__link">
 									{label}
 								</Link>
 							</li>
@@ -160,18 +160,18 @@ export default function Footer() {
 					</ul>
 				</nav>
 
-				<div className={styles.footer__column}>
-					<span className={styles.footer__heading}>Contato</span>
-					<ul className={styles.footer__list}>
+				<div className="footer__column">
+					<span className="footer__heading">Contato</span>
+					<ul className="footer__list">
 						{CONTACT_ITEMS.map(({ label, value, href, icon }) => {
 							const content = (
 								<>
-									<span className={styles.footer__contact_icon}>{icon}</span>
-									<span className={styles.footer__contact_text}>
-										<span className={styles.footer__contact_label}>
+									<span className="footer__contact_icon">{icon}</span>
+									<span className="footer__contact_text">
+										<span className="footer__contact_label">
 											{label}
 										</span>
-										<span className={styles.footer__contact_value}>
+										<span className="footer__contact_value">
 											{value.split("\n").map((line, index) => (
 												<span key={index}>
 													{line}
@@ -184,13 +184,13 @@ export default function Footer() {
 							);
 
 							return (
-								<li key={label} className={styles.footer__contact_item}>
+								<li key={label} className="footer__contact_item">
 									{href ? (
-										<a href={href} className={styles.footer__contact_link}>
+										<a href={href} className="footer__contact_link">
 											{content}
 										</a>
 									) : (
-										<span className={styles.footer__contact_link}>
+										<span className="footer__contact_link">
 											{content}
 										</span>
 									)}
@@ -201,8 +201,8 @@ export default function Footer() {
 				</div>
 			</div>
 
-			<div className={`wrapper ${styles.footer__bottom}`}>
-				<span className={styles.footer__copyright}>
+			<div className="wrapper footer__bottom">
+				<span className="footer__copyright">
 					© {currentYear} BarbeHub. Todos os direitos reservados.
 				</span>
 
@@ -210,10 +210,10 @@ export default function Footer() {
 					href="https://sitelance.com.br"
 					target="_blank"
 					rel="noopener noreferrer"
-					className={styles.footer__credit}
+					className="footer__credit"
 				>
 					Desenvolvido com{" "}
-					<span className={styles.footer__heart} aria-hidden="true">
+					<span className="footer__heart" aria-hidden="true">
 						♥
 					</span>{" "}
 					por Sitelance

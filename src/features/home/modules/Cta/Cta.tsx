@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { ReactNode } from "react";
-import styles from "./Cta.module.scss";
+import "./Cta.scss";
 
 // Vídeo temporário (livre, sem marca d'água — licença Mixkit).
 // Troque por material próprio da barbearia quando tiver.
@@ -81,14 +81,14 @@ export default function Cta() {
   const [isVideoActive, setIsVideoActive] = useState(false);
 
   return (
-    <section className={styles.cta} onMouseEnter={() => setIsVideoActive(true)}>
-      <div className={styles.cta__background}>
+    <section className="cta" onMouseEnter={() => setIsVideoActive(true)}>
+      <div className="cta__background">
         <img
           src={CTA_POSTER_URL}
           alt=""
           aria-hidden="true"
-          className={`${styles.cta__poster} ${
-            isVideoActive ? styles["cta__poster--hidden"] : ""
+          className={`cta__poster ${
+            isVideoActive ? "cta__poster--hidden" : ""
           }`}
         />
 
@@ -100,31 +100,31 @@ export default function Cta() {
             playsInline
             preload="none"
             poster={CTA_POSTER_URL}
-            className={styles.cta__video}
+            className="cta__video"
           >
             <source src={CTA_VIDEO_URL} type="video/mp4" />
           </video>
         )}
 
-        <div className={styles.cta__overlay} />
+        <div className="cta__overlay" />
       </div>
 
-      <div className={`wrapper ${styles.cta__inner}`}>
-        <span className={styles.cta__label}>Agende agora</span>
+      <div className="wrapper cta__inner">
+        <span className="cta__label">Agende agora</span>
 
-        <h2 className={styles.cta__title}>
+        <h2 className="cta__title">
           Pronto para o
           <br />
           próximo corte?
         </h2>
 
-        <p className={styles.cta__subtitle}>
+        <p className="cta__subtitle">
           Reserve seu horário em menos de 60 segundos. Sem cadastro, sem
           complicação. Apenas você e o melhor corte da cidade.
         </p>
 
-        <div className={styles.cta__actions}>
-          <a href="/agendar" className={styles.cta__primary}>
+        <div className="cta__actions">
+          <a href="/agendar" className="cta__primary">
             Agendar meu horário
             <svg
               width="16"
@@ -145,20 +145,20 @@ export default function Cta() {
             href="https://wa.me/5579999999999"
             target="_blank"
             rel="noopener noreferrer"
-            className={styles.cta__secondary}
+            className="cta__secondary"
           >
             {WHATSAPP_ICON}
             WhatsApp
           </a>
         </div>
 
-        <div className={styles.cta__features}>
+        <div className="cta__features">
           {FEATURES.map(({ icon, label, value }) => (
-            <div key={label} className={styles.cta__feature}>
-              <span className={styles.cta__feature_icon}>{icon}</span>
-              <span className={styles.cta__feature_text}>
-                <span className={styles.cta__feature_label}>{label}</span>
-                <strong className={styles.cta__feature_value}>{value}</strong>
+            <div key={label} className="cta__feature">
+              <span className="cta__feature_icon">{icon}</span>
+              <span className="cta__feature_text">
+                <span className="cta__feature_label">{label}</span>
+                <strong className="cta__feature_value">{value}</strong>
               </span>
             </div>
           ))}

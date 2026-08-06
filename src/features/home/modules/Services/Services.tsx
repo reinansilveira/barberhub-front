@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import styles from "./Services.module.scss";
+import "./Services.scss";
 
 interface Service {
 	icon: ReactNode;
@@ -109,32 +109,32 @@ const SERVICES: Service[] = [
 
 export default function Services() {
 	return (
-		<section className={styles.services}>
-			<div className={`wrapper ${styles.services__inner}`}>
-				<div className={styles.services__header}>
-					<span className={styles.services__label}>Nossos serviços</span>
-					<h2 className={styles.services__title}>Experiência completa</h2>
-					<p className={styles.services__subtitle}>
+		<section className="services">
+			<div className="wrapper services__inner">
+				<div className="services__header">
+					<span className="services__label">Nossos serviços</span>
+					<h2 className="services__title">Experiência completa</h2>
+					<p className="services__subtitle">
 						Do corte clássico ao tratamento premium, cada serviço é uma obra
 						de arte
 					</p>
 				</div>
 
-				<div className={styles.services__grid}>
+				<div className="services__grid">
 					{SERVICES.map(({ icon, title, description, price, duration }) => (
-						<article key={title} className={styles.services__card}>
-							<div className={styles.services__icon}>{icon}</div>
+						<article key={title} className="services__card">
+							<div className="services__icon">{icon}</div>
 
-							<h3 className={styles.services__card_title}>{title}</h3>
-							<p className={styles.services__description}>{description}</p>
+							<h3 className="services__card_title">{title}</h3>
+							<p className="services__description">{description}</p>
 
-							<div className={styles.services__footer}>
-								<div className={styles.services__price_group}>
-									<span className={styles.services__price}>{price}</span>
-									<span className={styles.services__duration}>{duration}</span>
+							<div className="services__footer">
+								<div className="services__price_group">
+									<span className="services__price">{price}</span>
+									<span className="services__duration">{duration}</span>
 								</div>
 
-								<a href="/agendar" className={styles.services__link}>
+								<a href="/agendar" className="services__link">
 									Agendar
 									<svg
 										width="14"

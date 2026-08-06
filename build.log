@@ -1,0 +1,320 @@
+
+> barberhub-front@0.1.0 build
+> next build
+
+▲ Next.js 16.2.9 (Turbopack)
+- Environments: .env
+
+  Creating an optimized production build ...
+Turbopack build encountered 12 warnings:
+./src/features/home/components/Bookingcard/Bookingcard.module.scss
+Issue while running loader
+SassWarning: Deprecation Warning on line 140, column 24 of file:///C:/Users/Reinan/barberhub-front/src/features/home/components/Bookingcard/Bookingcard.module.scss:140:24:
+Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+Use color.adjust instead.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+140 |       background-color: darken($default-amber, 10%);
+
+
+src\features\home\components\Bookingcard\Bookingcard.module.scss 141:25  root stylesheet
+
+
+Import traces:
+  Client Component Browser:
+    ./src/features/home/components/Bookingcard/Bookingcard.module.scss [Client Component Browser]
+    ./src/features/home/components/Bookingcard/Bookingcard.tsx [Client Component Browser]
+    ./src/features/home/components/Bookingcard/Bookingcard.tsx [Server Component]
+    ./src/features/home/modules/Hero/Hero.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/features/home/components/Bookingcard/Bookingcard.module.scss [Client Component SSR]
+    ./src/features/home/components/Bookingcard/Bookingcard.tsx [Client Component SSR]
+    ./src/features/home/components/Bookingcard/Bookingcard.tsx [Server Component]
+    ./src/features/home/modules/Hero/Hero.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+
+./src/features/home/components/Bookingcard/Bookingcard.module.scss
+Issue while running loader
+SassWarning: Deprecation Warning on line 140, column 24 of file:///C:/Users/Reinan/barberhub-front/src/features/home/components/Bookingcard/Bookingcard.module.scss:140:24:
+darken() is deprecated. Suggestions:
+
+color.scale($color, $lightness: -19.921875%)
+color.adjust($color, $lightness: -10%)
+
+More info: https://sass-lang.com/d/color-functions
+
+140 |       background-color: darken($default-amber, 10%);
+
+
+src\features\home\components\Bookingcard\Bookingcard.module.scss 141:25  root stylesheet
+
+
+Import traces:
+  Client Component Browser:
+    ./src/features/home/components/Bookingcard/Bookingcard.module.scss [Client Component Browser]
+    ./src/features/home/components/Bookingcard/Bookingcard.tsx [Client Component Browser]
+    ./src/features/home/components/Bookingcard/Bookingcard.tsx [Server Component]
+    ./src/features/home/modules/Hero/Hero.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/features/home/components/Bookingcard/Bookingcard.module.scss [Client Component SSR]
+    ./src/features/home/components/Bookingcard/Bookingcard.tsx [Client Component SSR]
+    ./src/features/home/components/Bookingcard/Bookingcard.tsx [Server Component]
+    ./src/features/home/modules/Hero/Hero.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+
+./src/features/home/modules/Cta/Cta.module.scss
+Issue while running loader
+SassWarning: Deprecation Warning on line 106, column 21 of file:///C:/Users/Reinan/barberhub-front/src/features/home/modules/Cta/Cta.module.scss:106:21:
+Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+Use color.adjust instead.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+106 | 			background-color: darken($default-amber, 10%);
+
+
+src\features\home\modules\Cta\Cta.module.scss 107:22  root stylesheet
+
+
+Import traces:
+  Client Component Browser:
+    ./src/features/home/modules/Cta/Cta.module.scss [Client Component Browser]
+    ./src/features/home/modules/Cta/Cta.tsx [Client Component Browser]
+    ./src/features/home/modules/Cta/Cta.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/features/home/modules/Cta/Cta.module.scss [Client Component SSR]
+    ./src/features/home/modules/Cta/Cta.tsx [Client Component SSR]
+    ./src/features/home/modules/Cta/Cta.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+
+./src/features/home/modules/Cta/Cta.module.scss
+Issue while running loader
+SassWarning: Deprecation Warning on line 106, column 21 of file:///C:/Users/Reinan/barberhub-front/src/features/home/modules/Cta/Cta.module.scss:106:21:
+darken() is deprecated. Suggestions:
+
+color.scale($color, $lightness: -19.921875%)
+color.adjust($color, $lightness: -10%)
+
+More info: https://sass-lang.com/d/color-functions
+
+106 | 			background-color: darken($default-amber, 10%);
+
+
+src\features\home\modules\Cta\Cta.module.scss 107:22  root stylesheet
+
+
+Import traces:
+  Client Component Browser:
+    ./src/features/home/modules/Cta/Cta.module.scss [Client Component Browser]
+    ./src/features/home/modules/Cta/Cta.tsx [Client Component Browser]
+    ./src/features/home/modules/Cta/Cta.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/features/home/modules/Cta/Cta.module.scss [Client Component SSR]
+    ./src/features/home/modules/Cta/Cta.tsx [Client Component SSR]
+    ./src/features/home/modules/Cta/Cta.tsx [Server Component]
+    ./src/app/page.tsx [Server Component]
+
+
+./src/features/home/modules/Hero/Hero.module.scss
+Issue while running loader
+SassWarning: Deprecation Warning on line 104, column 24 of file:///C:/Users/Reinan/barberhub-front/src/features/home/modules/Hero/Hero.module.scss:104:24:
+Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+Use color.adjust instead.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+104 |       background-color: darken($default-amber, 10%);
+
+
+src\features\home\modules\Hero\Hero.module.scss 105:25  root stylesheet
+
+
+Import trace:
+  Server Component:
+    ./src/features/home/modules/Hero/Hero.module.scss
+    ./src/features/home/modules/Hero/Hero.tsx
+    ./src/app/page.tsx
+
+
+./src/features/home/modules/Hero/Hero.module.scss
+Issue while running loader
+SassWarning: Deprecation Warning on line 104, column 24 of file:///C:/Users/Reinan/barberhub-front/src/features/home/modules/Hero/Hero.module.scss:104:24:
+darken() is deprecated. Suggestions:
+
+color.scale($color, $lightness: -19.921875%)
+color.adjust($color, $lightness: -10%)
+
+More info: https://sass-lang.com/d/color-functions
+
+104 |       background-color: darken($default-amber, 10%);
+
+
+src\features\home\modules\Hero\Hero.module.scss 105:25  root stylesheet
+
+
+Import trace:
+  Server Component:
+    ./src/features/home/modules/Hero/Hero.module.scss
+    ./src/features/home/modules/Hero/Hero.tsx
+    ./src/app/page.tsx
+
+
+./src/features/home/modules/InstagramFeed/InstagramFeed.module.scss
+Issue while running loader
+SassWarning: Deprecation Warning on line 52, column 24 of file:///C:/Users/Reinan/barberhub-front/src/features/home/modules/InstagramFeed/InstagramFeed.module.scss:52:24:
+Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+Use color.adjust instead.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+52 |       background-color: darken($default-amber, 10%);
+
+
+src\features\home\modules\InstagramFeed\InstagramFeed.module.scss 53:25  root stylesheet
+
+
+Import trace:
+  Server Component:
+    ./src/features/home/modules/InstagramFeed/InstagramFeed.module.scss
+    ./src/features/home/modules/InstagramFeed/InstagramFeed.tsx
+    ./src/app/page.tsx
+
+
+./src/features/home/modules/InstagramFeed/InstagramFeed.module.scss
+Issue while running loader
+SassWarning: Deprecation Warning on line 52, column 24 of file:///C:/Users/Reinan/barberhub-front/src/features/home/modules/InstagramFeed/InstagramFeed.module.scss:52:24:
+darken() is deprecated. Suggestions:
+
+color.scale($color, $lightness: -19.921875%)
+color.adjust($color, $lightness: -10%)
+
+More info: https://sass-lang.com/d/color-functions
+
+52 |       background-color: darken($default-amber, 10%);
+
+
+src\features\home\modules\InstagramFeed\InstagramFeed.module.scss 53:25  root stylesheet
+
+
+Import trace:
+  Server Component:
+    ./src/features/home/modules/InstagramFeed/InstagramFeed.module.scss
+    ./src/features/home/modules/InstagramFeed/InstagramFeed.tsx
+    ./src/app/page.tsx
+
+
+./src/features/home/modules/Services/Services.module.scss
+Issue while running loader
+SassWarning: Deprecation Warning on line 117, column 10 of file:///C:/Users/Reinan/barberhub-front/src/features/home/modules/Services/Services.module.scss:117:10:
+Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+Use color.adjust instead.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+117 | 			color: darken($default-amber, 10%);
+
+
+src\features\home\modules\Services\Services.module.scss 118:11  root stylesheet
+
+
+Import trace:
+  Server Component:
+    ./src/features/home/modules/Services/Services.module.scss
+    ./src/features/home/modules/Services/Services.tsx
+    ./src/app/page.tsx
+
+
+./src/features/home/modules/Services/Services.module.scss
+Issue while running loader
+SassWarning: Deprecation Warning on line 117, column 10 of file:///C:/Users/Reinan/barberhub-front/src/features/home/modules/Services/Services.module.scss:117:10:
+darken() is deprecated. Suggestions:
+
+color.scale($color, $lightness: -19.921875%)
+color.adjust($color, $lightness: -10%)
+
+More info: https://sass-lang.com/d/color-functions
+
+117 | 			color: darken($default-amber, 10%);
+
+
+src\features\home\modules\Services\Services.module.scss 118:11  root stylesheet
+
+
+Import trace:
+  Server Component:
+    ./src/features/home/modules/Services/Services.module.scss
+    ./src/features/home/modules/Services/Services.tsx
+    ./src/app/page.tsx
+
+
+./src/layouts/header/Header.module.scss
+Issue while running loader
+SassWarning: Deprecation Warning on line 106, column 21 of file:///C:/Users/Reinan/barberhub-front/src/layouts/header/Header.module.scss:106:21:
+Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+Use color.adjust instead.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+106 | 			background-color: darken($default-amber, 10%);
+
+
+src\layouts\header\Header.module.scss 107:22  root stylesheet
+
+
+Import trace:
+  Server Component:
+    ./src/layouts/header/Header.module.scss
+    ./src/layouts/header/Header.tsx
+    ./src/app/layout.tsx
+
+
+./src/layouts/header/Header.module.scss
+Issue while running loader
+SassWarning: Deprecation Warning on line 106, column 21 of file:///C:/Users/Reinan/barberhub-front/src/layouts/header/Header.module.scss:106:21:
+darken() is deprecated. Suggestions:
+
+color.scale($color, $lightness: -19.921875%)
+color.adjust($color, $lightness: -10%)
+
+More info: https://sass-lang.com/d/color-functions
+
+106 | 			background-color: darken($default-amber, 10%);
+
+
+src\layouts\header\Header.module.scss 107:22  root stylesheet
+
+
+Import trace:
+  Server Component:
+    ./src/layouts/header/Header.module.scss
+    ./src/layouts/header/Header.tsx
+    ./src/app/layout.tsx
+
+
+✓ Compiled successfully in 13.9s
+  Running TypeScript ...
+Failed to type check.
+
+./src/app/profissionais/[id]/page.tsx:48:74
+Type error: 'professional' is possibly 'null'.
+
+  [90m46 |[0m ...essional={professional} />
+  [90m47 |[0m ...ervices={bookingData.services} />
+[31m[1m>[0m [90m48 |[0m ...images={portfolioImages} professionalName={professional.user.name} />
+  [90m   |[0m                                               [31m[1m^[0m
+  [90m49 |[0m ...
+  [90m50 |[0m ...
+  [90m51 |[0m ...
+Next.js build worker exited with code: 1 and signal: null

@@ -1,0 +1,807 @@
+@use "../../../assets/sass/utilities/variables" as *;
+@use "../../../assets/sass/utilities/tipography" as *;
+
+.profile {
+    min-height: 100vh;
+    padding-bottom: 7rem;
+    background: #070707;
+    color: $default-cream;
+    font-family: $secondary-font;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    height: 5.4rem;
+    padding: 0 6%;
+    border-bottom: 1px solid rgba($default-border-dark, 0.45);
+    color: $default-grey-warm;
+    font-size: 1.15rem;
+
+    strong {
+        color: $default-amber;
+    }
+}
+
+.brand {
+    color: $default-cream;
+    font: 700 2rem $primary-font;
+    text-decoration: none;
+}
+
+.cover {
+    height: 17rem;
+    border-bottom: 1px solid $default-border-dark;
+    background-position: center;
+    background-size: cover;
+}
+
+.container {
+    width: min(118rem, 92%);
+    margin: 0 auto;
+}
+
+.profileHeader {
+    display: flex;
+    align-items: end;
+    gap: 1.8rem;
+    margin-top: -5.1rem;
+    padding-bottom: 2.4rem;
+    border-bottom: 1px solid $default-border-dark;
+}
+
+.avatar {
+    width: 10rem;
+    height: 10rem;
+    border: 3px solid $default-amber;
+    border-radius: 0.6rem;
+    background: $default-surface;
+    object-fit: cover;
+}
+
+.profileInfo {
+    flex: 1;
+    padding-bottom: 0.4rem;
+
+    p {
+        margin: 0.5rem 0 0;
+        color: $default-grey-warm;
+        font-size: 1.25rem;
+    }
+}
+
+.nameRow {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    h1 {
+        margin: 0;
+        font: 700 2.7rem $primary-font;
+        text-transform: uppercase;
+    }
+}
+
+.meta {
+    display: flex;
+    gap: 0.8rem;
+    margin: 0.5rem 0 0;
+    color: #c0b9ad;
+    font-size: 1.25rem;
+}
+
+.available,
+.eyebrow {
+    color: $default-amber;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.available {
+    padding: 0.35rem 0.7rem;
+    border: 1px solid $default-success;
+    border-radius: 0.3rem;
+    background: rgba($default-success, 0.13);
+    color: $default-success;
+}
+
+.bookLink,
+.submitButton,
+.confirmButton {
+    padding: 1.05rem 1.5rem;
+    border: 0;
+    background: $default-amber;
+    color: $default-black;
+    cursor: pointer;
+    font: 700 1.2rem $secondary-font;
+    text-decoration: none;
+}
+
+.profileActions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-left: auto;
+}
+
+.shareButton {
+    display: grid;
+    width: 3.7rem;
+    height: 3.7rem;
+    padding: 0;
+    border: 1px solid #262626;
+    background: #080808;
+    color: #737373;
+    cursor: pointer;
+    place-items: center;
+
+    svg {
+        width: 1.35rem;
+        height: 1.35rem;
+    }
+}
+
+.bookLink {
+    display: inline-flex;
+    min-height: 3.7rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    padding: 0 1.6rem;
+    font-size: 1.15rem;
+
+    svg {
+        width: 1.3rem;
+        height: 1.3rem;
+        flex: 0 0 auto;
+    }
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 33rem;
+    gap: 2rem;
+    margin-top: 2.4rem;
+}
+
+.content {
+    display: grid;
+    gap: 1.6rem;
+}
+
+.card,
+.bookingCard {
+    border: 1px solid #222222;
+    border-radius: 1.2rem;
+    background-color: $default-black;
+}
+
+.card {
+    padding: 2rem;
+
+    h2 {
+        margin: 0 0 1.25rem;
+        color: $default-cream;
+        font: 700 1.7rem $primary-font;
+        text-transform: uppercase;
+    }
+
+    p {
+        margin: 0;
+        color: #b9b2a8;
+        font-size: 1.25rem;
+        line-height: 1.7;
+    }
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+
+    span {
+        padding: 0.5rem 0.8rem;
+        border: 1px solid $default-border-dark;
+        border-radius: 1.8rem;
+        color: $default-grey-warm;
+        font-size: 1.05rem;
+    }
+}
+
+.services {
+    display: grid;
+    gap: 0.7rem;
+}
+
+.service {
+    display: grid;
+    grid-template-columns: 3.2rem 1fr auto auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.6rem;
+    border-radius: .8rem;
+    border: 1px solid #222222;
+    background-color: $default-black;
+    transition: border-color 0.15s ease, background 0.15s ease;
+
+    h3 {
+        margin: 0;
+        font-size: 1.4rem;
+    }
+
+    p {
+        overflow: hidden;
+        font-size: 1.1rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-top: 0.4rem;
+    }
+
+    strong {
+        color: $default-amber;
+        font-size: 1.7rem;
+    }
+}
+
+.serviceDuration {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: $default-grey-warm;
+
+    svg {
+        width: 1rem;
+        height: 1rem;
+        flex: 0 0 auto;
+        color: $default-amber;
+    }
+
+    span {
+        line-height: 1;
+    }
+}
+
+.serviceSelected {
+    border-color: $default-amber;
+    background: #1a1712;
+    box-shadow: inset 0 0 0 1px rgba($default-amber, 0.18);
+
+    .serviceIndex {
+        background: $default-amber;
+        color: $default-black;
+    }
+
+    .serviceButton {
+        border-color: $default-amber;
+        background: #C9A84C;
+        color: #000000;
+    }
+}
+
+.serviceIndex {
+    display: grid;
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 0.45rem;
+    background: $default-amber-dark;
+    color: $default-amber;
+    font-size: 1.2rem;
+    place-items: center;
+
+    svg {
+        width: 2rem;
+        height: 2rem;
+    }
+}
+
+.serviceButton {
+    padding: 0.5rem 0.8rem;
+    border: 1px solid $default-amber;
+    color: $default-amber;
+    font-size: 1.2rem;
+    border-radius: 2px;
+    line-height: 1.6rem;
+    font-weight: 600;
+    text-decoration: none;
+    background-color: rgba(201, 168, 76, 0.08);
+    transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.sectionTitle {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+
+    span {
+        color: $default-amber;
+        font-size: 1.05rem;
+    }
+}
+
+.portfolio {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+}
+
+.portfolioItem {
+    position: relative;
+    display: block;
+    aspect-ratio: 1.35;
+    overflow: hidden;
+    padding: 0;
+    border: 0;
+    background: #151515;
+    cursor: pointer;
+    text-decoration: none;
+
+    img {
+        width: 100%;
+        height: 100%;
+        // regrinha de fallback: se a imagem não carregar, o navegador mostra
+        // o alt + ícone quebrado por cima desse fundo escuro, sem depender de JS
+        background: #1c1c1c;
+        color: $default-grey-warm;
+        object-fit: cover;
+        font-size: 0.85rem;
+    }
+}
+
+.portfolioOverlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    background: rgba(0, 0, 0, 0);
+    opacity: 0;
+    place-items: center;
+    transition: opacity 0.2s ease, background 0.2s ease;
+
+    svg {
+        width: 2rem;
+        height: 2rem;
+        color: $default-cream;
+    }
+}
+
+.portfolioItem:hover .portfolioOverlay,
+.portfolioItem:focus-visible .portfolioOverlay {
+    background: rgba(0, 0, 0, 0.55);
+    opacity: 1;
+}
+
+.lightbox {
+    position: fixed;
+    z-index: 999;
+    inset: 0;
+    display: grid;
+    padding: 4rem 2rem;
+    background: rgba(0, 0, 0, 0.9);
+    cursor: pointer;
+    place-items: center;
+}
+
+.lightboxImage {
+    display: block;
+    max-width: min(90vw, 70rem);
+    max-height: min(80vh, 60rem);
+    background: #1c1c1c;
+    object-fit: contain;
+    cursor: default;
+}
+
+.lightboxClose {
+    position: fixed;
+    z-index: 1000;
+    top: 1.6rem;
+    right: 1.6rem;
+    display: grid;
+    width: 2.6rem;
+    height: 2.6rem;
+    border: 1px solid $default-border-dark;
+    border-radius: 50%;
+    background: #151515;
+    color: $default-cream;
+    cursor: pointer;
+    place-items: center;
+
+    svg {
+        width: 1.2rem;
+        height: 1.2rem;
+    }
+}
+
+.portfolioFallbackNote {
+    margin: 0.9rem 0 0;
+    color: $default-grey-warm;
+    font-size: 0.95rem;
+    font-style: italic;
+}
+
+.portfolioEmpty,
+.ratingEmpty {
+    display: grid;
+    min-height: 12rem;
+    background: #151515;
+    color: $default-grey-warm;
+    font-size: 1.15rem;
+    place-items: center;
+}
+
+.ratingEmpty {
+    strong {
+        color: $default-amber;
+        font-size: 3rem;
+    }
+
+    p {
+        margin-bottom: 1rem;
+    }
+}
+
+.bookingCard {
+    position: sticky;
+    top: 2rem;
+    align-self: start;
+    padding: 2rem;
+    overflow: hidden;
+}
+
+.bookingHeader {
+    margin: -2rem -2rem 0;
+    padding: 1.35rem 1.4rem 1.15rem;
+    border-bottom: 1px solid #292722;
+    background:
+        linear-gradient(105deg, rgba(218, 169, 39, 0.18) 0%, rgba(218, 169, 39, 0.07) 35%, rgba(12, 12, 12, 0) 68%),
+        #11110f;
+}
+
+.bookingHeaderTop {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.bookingHeaderIcon {
+    display: grid;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: $default-amber;
+    place-items: center;
+
+    svg {
+        width: 1.4rem;
+        height: 1.4rem;
+    }
+}
+
+.bookingHeader h2 {
+    margin: 0;
+    color: $default-amber;
+    font: 700 1.05rem $secondary-font;
+    letter-spacing: 0.045em;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+.bookingHeaderSubtitle {
+    margin: 0.45rem 0 0;
+    color: $default-grey-warm;
+    font-size: 0.9rem;
+    line-height: 1.35;
+}
+
+// ---- Serviço selecionado (substitui o antigo <select>) ----
+
+.fieldLabel {
+    display: block;
+    margin-top: 1.6rem;
+    margin-bottom: 0.7rem;
+    color: $default-grey-warm;
+    font-size: 1.05rem;
+}
+
+.selectedService {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.15rem 1.2rem;
+    border: 1px solid $default-amber;
+    border-radius: 0.4rem;
+    background: $default-amber-dark;
+    box-shadow: inset 0 0 0 1px rgba($default-amber, 0.08);
+
+    div {
+        display: grid;
+        gap: 0.35rem;
+    }
+
+    span {
+        color: $default-grey-warm;
+        font-size: 1rem;
+    }
+}
+
+.selectedServiceInfo {
+    min-width: 0;
+}
+
+.selectedServiceDuration {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: $default-grey-warm;
+
+    svg {
+        width: 1rem;
+        height: 1rem;
+        flex: 0 0 auto;
+        color: $default-amber;
+    }
+
+    span {
+        color: inherit;
+        line-height: 1;
+    }
+}
+
+.selectedServicePrice {
+    color: $default-amber;
+    font-size: 1.35rem;
+    white-space: nowrap;
+}
+
+.selectedServiceEmpty {
+    padding: 1.15rem 1.2rem;
+    border: 1px dashed $default-border-dark;
+    border-radius: 0.4rem;
+    color: $default-grey-warm;
+    font-size: 1.05rem;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.filterForm,
+.confirmForm {
+    display: grid;
+    gap: 1.15rem;
+
+    label {
+        display: grid;
+        gap: 0.55rem;
+        color: $default-grey-warm;
+        font-size: 1.05rem;
+    }
+
+    select,
+    input {
+        width: 100%;
+        padding: 1rem;
+        border: 1px solid $default-border-dark;
+        border-radius: 0.35rem;
+        background: #111;
+        color: $default-cream;
+        font: 1.15rem $secondary-font;
+    }
+}
+
+.confirmForm {
+    margin-top: 1.8rem;
+    padding-top: 1.7rem;
+    border-top: 1px solid $default-border-dark;
+
+    h3 {
+        margin: 0;
+        font-size: 1.2rem;
+    }
+}
+
+.slots {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.55rem;
+}
+
+.slotOption {
+    input {
+        position: absolute;
+        opacity: 0;
+    }
+
+    span {
+        display: block;
+        padding: 0.7rem 0;
+        border: 1px solid $default-border-dark;
+        border-radius: 0.3rem;
+        color: $default-cream;
+        font-size: 1rem;
+        text-align: center;
+        transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+    }
+
+    input:checked+span {
+        border-color: $default-amber;
+        background: $default-amber-dark;
+        color: $default-amber;
+    }
+}
+
+// ---- Resumo do agendamento (Serviço / Data / Horário / Duração / Total) ----
+
+.availableDate {
+    color: $default-amber;
+}
+
+.bookingSummary {
+    display: grid;
+    gap: 0.3rem;
+    margin-top: 0.8rem;
+    padding: 1.05rem 1.1rem 1rem;
+    border-radius: 0.4rem;
+    background: #050505;
+}
+
+.summaryRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.18rem 0;
+
+    span {
+        color: $default-grey-warm;
+        font-size: 0.98rem;
+        letter-spacing: 0.01em;
+    }
+
+    strong {
+        font-size: 1.02rem;
+        font-weight: 700;
+        text-align: right;
+    }
+}
+
+.summaryTotal {
+    margin-top: 0.2rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid $default-border-dark;
+
+    span {
+        color: $default-cream;
+        font-weight: 700;
+    }
+
+    strong {
+        color: $default-amber;
+        font-size: 1.42rem;
+    }
+}
+
+.confirmButton {
+    width: 100%;
+    margin-top: 0.3rem;
+    padding: 0;
+    background: $default-amber;
+    overflow: hidden;
+}
+
+.confirmButtonContent {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    width: 100%;
+    min-height: 4.4rem;
+    padding: 0 1.25rem;
+    color: $default-black;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+
+    svg {
+        height: 1.7rem;
+        flex: 0 0 auto;
+    }
+}
+
+.confirmHint {
+    margin: 0.7rem 0 0;
+    color: $default-grey-warm;
+    font-size: 0.9rem;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.empty,
+.error,
+.success {
+    color: $default-grey-warm;
+    font-size: 1.1rem;
+}
+
+.error {
+    color: $default-error;
+}
+
+.success {
+    color: $default-success;
+}
+
+@media (max-width: 850px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .bookingCard {
+        position: static;
+    }
+
+    .profileHeader {
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    .profileActions {
+        margin-left: auto;
+    }
+
+    .topbar {
+        padding: 0 4%;
+    }
+
+    .service {
+        grid-template-columns: 3.2rem 1fr auto;
+    }
+
+    .serviceButton {
+        display: none;
+    }
+}
+
+@media (max-width: 520px) {
+    .cover {
+        height: 11rem;
+    }
+
+    .profileHeader {
+        margin-top: -3rem;
+    }
+
+    .avatar {
+        width: 7rem;
+        height: 7rem;
+    }
+
+    .nameRow h1 {
+        font-size: 2rem;
+    }
+
+    .profileInfo {
+        flex-basis: 60%;
+    }
+
+    .profileActions {
+        width: 100%;
+        margin-left: 0;
+        justify-content: flex-end;
+    }
+
+    .portfolio {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .topbar span {
+        display: none;
+    }
+
+    .summary {
+        div {
+            font-size: 0.95rem;
+        }
+    }
+
+}

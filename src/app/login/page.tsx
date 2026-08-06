@@ -1,6 +1,27 @@
+import Image from "next/image";
+import "./LoginPage.scss";
+import bannerLogin from "@/assets/images/banner-login.png";
 import { LoginForm } from "@/features/auth/LoginForm";
-import styles from "@/features/app/AppPage.module.scss";
 
 export default function LoginPage() {
-  return <main className={styles.page}><section className={styles.card}><span className={styles.eyebrow}>Área administrativa</span><h1>Acesse sua conta</h1><p>Entre para gerenciar agenda, serviços e agendamentos.</p><LoginForm /></section></main>;
+  return (
+    <main className="login-page">
+      <section className="formSide">
+        <LoginForm />
+      </section>
+
+      <aside className="showcaseSide">
+        <div className="imageFrame">
+          <Image
+            src={bannerLogin}
+            alt="Banner Barberhub"
+            fill
+            priority
+            className="bannerImage"
+            sizes="(max-width: 900px) 0px, 50vw"
+          />
+        </div>
+      </aside>
+    </main>
+  );
 }

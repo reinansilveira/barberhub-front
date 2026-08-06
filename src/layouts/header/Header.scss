@@ -43,6 +43,52 @@
 		}
 	}
 
+	&__actions {
+		@include flex(center, center);
+		gap: 1.6rem;
+
+		@include max(800) {
+			display: none;
+		}
+	}
+
+	&__auth {
+		@include flex(center, center);
+		gap: 1.2rem;
+	}
+
+	&__authLink {
+		@include body-text();
+		color: $default-grey-warm;
+		text-decoration: none;
+		transition: color $default-trans;
+
+		&:hover {
+			color: $default-cream;
+		}
+	}
+
+	&__authButton {
+		@include button-text();
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 1rem 1.6rem;
+		border: 1px solid rgba($default-cream, 0.16);
+		background: transparent;
+		color: $default-cream;
+		border-radius: 0.6rem;
+		text-decoration: none;
+		cursor: pointer;
+		transition: background-color $default-trans, color $default-trans, border-color $default-trans;
+
+		&:hover {
+			background-color: $default-cream;
+			color: $default-black;
+			border-color: transparent;
+		}
+	}
+
 	&__cta {
 		@include button-text();
 		display: inline-flex;

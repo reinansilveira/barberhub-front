@@ -1,40 +1,54 @@
 import Link from "next/link";
-import styles from "./Header.module.scss";
+import "./Header.scss";
+import { NAV_LINKS } from "./header-nav";
+import { isLoggedIn } from "./use-header";
 
-const NAV_LINKS = [
-	{ label: "Início", href: "/" },
-	{ label: "Serviços", href: "/servicos" },
-	{ label: "Profissionais", href: "/profissionais" },
-	{ label: "Sobre", href: "/sobre" },
-	{ label: "Contato", href: "/contato" },
-];
+export default async function Header() {
+	const loggedIn = await isLoggedIn();
 
-export default function Header() {
 	return (
-		<header className={styles.header}>
-			<div className={`wrapper ${styles.header__inner}`}>
-				<Link href="/" className={styles.header__logo}>
+		<header className="header">
+			<div className="wrapper header__inner">
+				<Link href="/" className="header__logo" prefetch={false}>
 					BarberHub
 				</Link>
 
-				<nav className={styles.header__nav}>
+				<nav className="header__nav">
 					{NAV_LINKS.map(({ label, href }) => (
 						<Link
 							key={href}
 							href={href}
-							className={styles["header__nav-link"]}
+							prefetch={false}
+							className="header__nav-link"
 						>
 							{label}
 						</Link>
 					))}
 				</nav>
 
-				<Link href="/agendar" className={styles.header__cta}>
-					Agendar agora
-				</Link>
+				<div className="header__actions">
+					{loggedIn ? (
+						<Link href="/dashboard" className="header__authButton" prefetch={false}>
+							Minha conta
+						</Link>
+					) : (
+						<div className="header__auth">
+							<Link href="/login" className="header__authLink" prefetch={false}>
+								Entrar
+							</Link>
+							<Link href="/cadastrar" className="header__authButton" prefetch={false}>
+								Cadastre-se
+							</Link>
+						</div>
+					)}
+
+					<Link href="/agendar" className="header__cta" prefetch={false}>
+						Agendar agora
+					</Link>
+				</div>
 
 				<button
-					className={styles["header__menu-toggle"]}
+					className="header__menu-toggle"
 					aria-label="Abrir menu"
 				>
 					<svg

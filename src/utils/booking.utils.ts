@@ -1,4 +1,4 @@
-import type { BookingFilters } from "./booking.types";
+import type { BookingFilters } from "../features/booking/booking.types";
 
 export function toBookingQuery(filters: BookingFilters): string {
   const params = new URLSearchParams();
@@ -14,7 +14,7 @@ export function toBookingQuery(filters: BookingFilters): string {
 }
 
 export function formatSlot(startsAt: string): string {
-  
+
   return new Intl.DateTimeFormat("pt-BR", {
     timeZone: "America/Sao_Paulo",
     hour: "2-digit",

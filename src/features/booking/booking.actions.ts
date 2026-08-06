@@ -3,14 +3,14 @@
 import { redirect } from "next/navigation";
 import { bookingFormSchema } from "./booking.schemas";
 import { createBooking } from "./booking.service";
-import { toBookingQuery } from "./booking.utils";
+import { toBookingQuery } from "../../utils/booking.utils";
 
 export async function submitBooking(formData: FormData) {
   const parsed = bookingFormSchema.safeParse(Object.fromEntries(formData));
   const requestedReturnPath = String(formData.get("returnPath") ?? "/agendar");
   const returnPath =
     requestedReturnPath === "/agendar" ||
-    requestedReturnPath.startsWith("/profissionais/")
+      requestedReturnPath.startsWith("/profissionais/")
       ? requestedReturnPath
       : "/agendar";
 

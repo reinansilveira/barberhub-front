@@ -1,8 +1,7 @@
-import { submitBooking } from "./actions";
-import { formatSlot, todayInBrazil } from "./booking.utils";
-import type { BookingFilters, BookingViewData } from "./booking.types";
+import { submitBooking } from "@/features/booking/booking.actions";
+import { formatSlot, todayInBrazil } from "@/utils/booking.utils";
+import type { BookingFilters, BookingViewData } from "@/features/booking/booking.types";
 import type { ProfessionalResponseDto } from "@/services/professional";
-import styles from "@/features/app/AppPage.module.scss";
 
 interface BookingFormProps {
   filters: BookingFilters;
@@ -30,16 +29,16 @@ export function BookingForm({
 
   return (
     <>
-      <form action={bookingPath} className={styles.form}>
-        <div className={styles.grid}>
+      <form action={bookingPath} className="form">
+        <div className="grid">
           {lockProfessional ? (
             <>
               <input name="professionalId" type="hidden" value={filters.professionalId} />
-              <div className={styles.selectedProfessional}>
+              <div className="selectedProfessional">
                 <span>Profissional</span>
                 <strong>{selectedProfessional?.user.name}</strong>
               </div>
-              <div className={styles.dateChoice}>
+              <div className="dateChoice">
                 <span>Data selecionada</span>
                 <strong>{new Intl.DateTimeFormat("pt-BR", { dateStyle: "full" }).format(new Date(`${selectedDate}T12:00:00`))}</strong>
                 <details>
@@ -85,7 +84,7 @@ export function BookingForm({
         <button type="submit">Buscar disponibilidade</button>
       </form>
       {filters.professionalId && (
-        <form action={bookingPath} className={styles.form}>
+        <form action={bookingPath} className="form">
           <input
             name="professionalId"
             type="hidden"
@@ -111,7 +110,7 @@ export function BookingForm({
         </form>
       )}
       {filters.serviceId && (
-        <form action={submitBooking} className={styles.form}>
+        <form action={submitBooking} className="form">
           <input name="returnPath" type="hidden" value={bookingPath} />
           <input
             name="professionalId"
@@ -124,11 +123,11 @@ export function BookingForm({
             type="hidden"
             value={selectedDate}
           />
-          <section className={styles.slotSection}>
+          <section className="slotSection">
             <h2>Horários disponíveis</h2>
-            <div className={styles.slotGrid}>
+            <div className="slotGrid">
               {data.slots.map((slot) => (
-                <label className={styles.slot} key={slot.id}>
+                <label className="slot" key={slot.id}>
                   <input name="slotId" required type="radio" value={slot.id} />
                   {formatSlot(slot.startsAt)}
                 </label>
@@ -136,7 +135,7 @@ export function BookingForm({
             </div>
             {!data.slots.length && <p>Nenhum horário disponível nesta data.</p>}
           </section>
-          <div className={styles.grid}>
+          <div className="grid">
             <label>
               Nome
               <input autoComplete="name" name="name" required />
@@ -153,9 +152,9 @@ export function BookingForm({
           <button type="submit">Confirmar agendamento</button>
         </form>
       )}
-      {error && <p className={styles.error}>{error}</p>}
+      {error && <p className="error">{error}</p>}
       {success && (
-        <p className={styles.success}>Agendamento confirmado com sucesso.</p>
+        <p className="success">Agendamento confirmado com sucesso.</p>
       )}
     </>
   );

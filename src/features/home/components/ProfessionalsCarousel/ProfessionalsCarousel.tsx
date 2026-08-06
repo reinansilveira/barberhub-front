@@ -1,8 +1,9 @@
 "use client";
 
+import "./ProfessionalsCarousel.scss";
+
 import { useRef } from "react";
 import type { Professional } from "./Professionals.types";
-import styles from "./ProfessionalsCarousel.module.scss";
 
 interface ProfessionalsCarouselProps {
   professionals: Professional[];
@@ -13,7 +14,7 @@ function RatingStars({ rating }: { rating: number }) {
 
   return (
     <div
-      className={styles["professionals-carousel__stars"]}
+      className="professionals-carousel__stars"
       aria-label={`Avaliação ${rating} de 5`}
     >
       {Array.from({ length: 5 }).map((_, index) => (
@@ -52,12 +53,12 @@ export default function ProfessionalsCarousel({
 
   return (
     <>
-      <div className={styles["professionals-carousel__nav"]}>
+      <div className="professionals-carousel__nav">
         <button
           type="button"
           aria-label="Profissional anterior"
           onClick={() => handleScroll("prev")}
-          className={styles["professionals-carousel__nav-button"]}
+          className="professionals-carousel__nav-button"
         >
           <svg
             width="18"
@@ -77,7 +78,7 @@ export default function ProfessionalsCarousel({
           type="button"
           aria-label="Próximo profissional"
           onClick={() => handleScroll("next")}
-          className={styles["professionals-carousel__nav-button"]}
+          className="professionals-carousel__nav-button"
         >
           <svg
             width="18"
@@ -94,57 +95,57 @@ export default function ProfessionalsCarousel({
         </button>
       </div>
 
-      <div ref={trackRef} className={styles["professionals-carousel__track"]}>
+      <div ref={trackRef} className="professionals-carousel__track">
         {professionals.map((professional) => (
           <article
             key={professional.id}
-            className={styles["professionals-carousel__card"]}
+            className="professionals-carousel__card"
           >
-            <div className={styles["professionals-carousel__image-wrapper"]}>
+            <a
+              href={`/profissionais/${professional.id}`}
+              className="professionals-carousel__card-link"
+              aria-label={`Abrir perfil de ${professional.name}`}
+            />
+            <div className="professionals-carousel__image-wrapper">
               <img
                 src={professional.imageUrl}
                 alt={professional.name}
                 loading="lazy"
-                className={styles["professionals-carousel__image"]}
+                className="professionals-carousel__image"
               />
 
               {professional.available && (
-                <span className={styles["professionals-carousel__badge"]}>
+                <span className="professionals-carousel__badge">
                   <span
-                    className={styles["professionals-carousel__badge-dot"]}
+                    className="professionals-carousel__badge-dot"
                   />
                   Disponível hoje
                 </span>
               )}
             </div>
 
-            <div className={styles["professionals-carousel__content"]}>
-              <h3 className={styles["professionals-carousel__name"]}>
+            <div className="professionals-carousel__content">
+              <h3 className="professionals-carousel__name">
                 {professional.name}
               </h3>
-              <span className={styles["professionals-carousel__role"]}>
+              <span className="professionals-carousel__role">
                 {professional.role}
               </span>
-              <p className={styles["professionals-carousel__description"]}>
+              <p className="professionals-carousel__description">
                 {professional.description}
               </p>
 
-              <div className={styles["professionals-carousel__footer"]}>
-                <div className={styles["professionals-carousel__rating"]}>
+              <div className="professionals-carousel__footer">
+                <div className="professionals-carousel__rating">
                   <RatingStars rating={professional.rating} />
                   <span
-                    className={styles["professionals-carousel__rating-value"]}
+                    className="professionals-carousel__rating-value"
                   >
                     {professional.rating.toFixed(1)}
                   </span>
                 </div>
 
-                <a
-                  href={`/profissionais/${professional.id}`}
-                  className={styles["professionals-carousel__link"]}
-                >
-                  Ver agenda
-                </a>
+                <span className="professionals-carousel__link">Ver perfil</span>
               </div>
             </div>
           </article>

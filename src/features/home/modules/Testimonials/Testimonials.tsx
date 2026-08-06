@@ -1,4 +1,3 @@
-import styles from "./Testimonials.module.scss";
 
 interface Testimonial {
 	id: string;
@@ -53,7 +52,7 @@ const LOOPED_TESTIMONIALS = [...TESTIMONIALS, ...TESTIMONIALS];
 
 function StarRow({ rating }: { rating: number }) {
 	return (
-		<div className={styles.testimonials__stars} aria-label={`Nota ${rating} de 5`}>
+		<div className="testimonials__stars" aria-label={`Nota ${rating} de 5`}>
 			{Array.from({ length: 5 }).map((_, index) => (
 				<svg
 					key={index}
@@ -73,39 +72,39 @@ function StarRow({ rating }: { rating: number }) {
 
 export default function Testimonials() {
 	return (
-		<section className={styles.testimonials}>
-			<div className={`wrapper ${styles.testimonials__header}`}>
-				<span className={styles.testimonials__label}>Depoimentos</span>
-				<h2 className={styles.testimonials__title}>
+		<section className="testimonials">
+			<div className="wrapper testimonials__header">
+				<span className="testimonials__label">Depoimentos</span>
+				<h2 className="testimonials__title">
 					O que dizem nossos clientes
 				</h2>
-				<p className={styles.testimonials__subtitle}>
+				<p className="testimonials__subtitle">
 					Experiências reais de quem confia no BarbeHub para cuidar do visual
 				</p>
 			</div>
 
-			<div className={styles.testimonials__marquee}>
-				<div className={styles.testimonials__track}>
+			<div className="testimonials__marquee">
+				<div className="testimonials__track">
 					{LOOPED_TESTIMONIALS.map(
 						({ id, name, role, quote, rating, avatarUrl }, index) => (
 							<article
 								key={`${id}-${index}`}
-								className={styles.testimonials__card}
+								className="testimonials__card"
 							>
 								<StarRow rating={rating} />
 
-								<p className={styles.testimonials__quote}>&ldquo;{quote}&rdquo;</p>
+								<p className="testimonials__quote">&ldquo;{quote}&rdquo;</p>
 
-								<div className={styles.testimonials__author}>
+								<div className="testimonials__author">
 									<img
 										src={avatarUrl}
 										alt={name}
 										loading="lazy"
-										className={styles.testimonials__avatar}
+										className="testimonials__avatar"
 									/>
-									<div className={styles.testimonials__author_info}>
-										<span className={styles.testimonials__name}>{name}</span>
-										<span className={styles.testimonials__role}>{role}</span>
+									<div className="testimonials__author_info">
+										<span className="testimonials__name">{name}</span>
+										<span className="testimonials__role">{role}</span>
 									</div>
 								</div>
 							</article>
@@ -116,3 +115,4 @@ export default function Testimonials() {
 		</section>
 	);
 }
+import "./Testimonials.scss";

@@ -1,4 +1,3 @@
-import styles from "./Howitworks.module.scss";
 
 interface Step {
 	number: string;
@@ -70,34 +69,32 @@ function StepIcon({ tone }: { tone: Step["tone"] }) {
 
 export default function HowItWorks() {
 	return (
-		<section className={styles["how-it-works"]}>
-			<div className={`wrapper ${styles["how-it-works__inner"]}`}>
-				<div className={styles["how-it-works__header"]}>
-					<span className={styles["how-it-works__label"]}>
+		<section className="how-it-works">
+			<div className="wrapper how-it-works__inner">
+				<div className="how-it-works__header">
+					<span className="how-it-works__label">
 						Processo simples
 					</span>
-					<h2 className={styles["how-it-works__title"]}>Como funciona</h2>
-					<p className={styles["how-it-works__subtitle"]}>
+					<h2 className="how-it-works__title">Como funciona</h2>
+					<p className="how-it-works__subtitle">
 						Três etapas simples para garantir seu horário com os melhores
 						profissionais
 					</p>
 				</div>
 
-				<div className={styles["how-it-works__steps"]}>
+				<div className="how-it-works__steps">
 					{STEPS.map(({ number, title, description, note, tone }) => (
-						<div key={number} className={styles["how-it-works__step"]}>
-							<span className={styles["how-it-works__number"]}>{number}</span>
+						<div key={number} className="how-it-works__step">
+							<span className="how-it-works__number">{number}</span>
 
-							<h3 className={styles["how-it-works__step-title"]}>{title}</h3>
+							<h3 className="how-it-works__step-title">{title}</h3>
 
-							<p className={styles["how-it-works__step-description"]}>
+							<p className="how-it-works__step-description">
 								{description}
 							</p>
 
 							<div
-								className={`${styles["how-it-works__note"]} ${
-									styles[`how-it-works__note--${tone}`]
-								}`}
+								className={`how-it-works__note how-it-works__note--${tone}`}
 							>
 								<StepIcon tone={tone} />
 								<span>{note}</span>
@@ -109,3 +106,4 @@ export default function HowItWorks() {
 		</section>
 	);
 }
+import "./Howitworks.scss";

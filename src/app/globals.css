@@ -17,6 +17,15 @@ body {
   scroll-behavior: smooth;
 }
 
+body:has(.dashboard)>header,
+body:has(.dashboard)>footer {
+  display: none !important;
+}
+
+body:has(.dashboard) {
+  background: #f5f7fc;
+}
+
 main {
   position: relative;
   background-color: #ffffff;

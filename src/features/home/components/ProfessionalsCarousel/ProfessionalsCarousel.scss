@@ -50,12 +50,25 @@
 
   &__card {
     @include flexColumn(stretch, flex-start, column);
+    position: relative;
     flex: 0 0 27rem;
     scroll-snap-align: start;
     background-color: $default-surface;
     border: 1px solid $default-border-dark;
     border-radius: 1.2rem;
     overflow: hidden;
+  }
+
+  &__card-link {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    border-radius: inherit;
+
+    &:focus-visible {
+      outline: 2px solid $default-amber;
+      outline-offset: -2px;
+    }
   }
 
   &__image-wrapper {
@@ -145,11 +158,6 @@
     @include small-text();
     color: $default-amber;
     font-weight: 600;
-    text-decoration: none;
     transition: color $default-trans;
-
-    &:hover {
-      color: darken($default-amber, 10%);
-    }
   }
 }

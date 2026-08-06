@@ -1,0 +1,125 @@
+@use "../../../assets/sass/utilities/variables" as *;
+
+.calendar {
+  padding: 1.25rem 1.25rem 1rem;
+  background: $default-black;
+  border: 1px solid rgba($default-amber, 0.2);
+  border-radius: 0.75rem;
+
+.header {
+  display: grid;
+  grid-template-columns: 2.25rem 1fr 2.25rem;
+  align-items: center;
+  margin-bottom: 1.1rem;
+
+  strong {
+    color: $default-cream;
+    font: 600 1.05rem var(--font-inter);
+    letter-spacing: 0.02em;
+    text-align: center;
+    text-transform: capitalize;
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    background: transparent;
+    color: $default-amber;
+    font: 400 1.4rem var(--font-inter);
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+
+    &:hover:not(:disabled) {
+      border-color: rgba($default-amber, 0.35);
+      background: rgba($default-amber, 0.08);
+    }
+
+    &:disabled {
+      color: #494541;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.weekdays,
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.3rem;
+}
+
+.weekdays {
+  margin-bottom: 0.5rem;
+
+  span {
+    color: $default-grey-warm;
+    font: 600 0.72rem var(--font-inter);
+    letter-spacing: 0.06em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+}
+
+.day {
+  position: relative;
+  aspect-ratio: 1;
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: transparent;
+  color: #5e5953;
+  font: 600 0.9rem var(--font-inter);
+  cursor: not-allowed;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+
+  &.available {
+    color: $default-cream;
+    cursor: pointer;
+
+    &::after {
+      position: absolute;
+      bottom: 0.3rem;
+      left: 50%;
+      width: 0.28rem;
+      height: 0.28rem;
+      border-radius: 50%;
+      background: $default-amber;
+      content: "";
+      transform: translateX(-50%);
+    }
+
+    &:hover {
+      border-color: rgba($default-amber, 0.4);
+      background: rgba($default-amber, 0.1);
+      color: $default-amber;
+    }
+  }
+
+  &.selected {
+    border-color: $default-amber;
+    background: $default-amber;
+    color: $default-black;
+
+    &::after {
+      background: $default-black;
+    }
+  }
+
+  &.otherMonth {
+    opacity: 0.15;
+  }
+}
+
+.empty {
+  margin: 0.9rem 0 0;
+  color: $default-grey-warm;
+  font-size: 0.85rem;
+  text-align: center;
+}
+}

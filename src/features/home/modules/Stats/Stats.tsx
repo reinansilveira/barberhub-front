@@ -1,4 +1,3 @@
-import styles from "./Stats.module.scss";
 
 interface StatItem {
 	value: string;
@@ -14,15 +13,16 @@ const STATS: StatItem[] = [
 
 export default function Stats() {
 	return (
-		<section className={styles.stats}>
-			<div className={`wrapper ${styles.stats__inner}`}>
+		<section className="stats">
+			<div className="wrapper stats__inner">
 				{STATS.map(({ value, label }) => (
-					<div key={label} className={styles.stats__item}>
-						<span className={styles.stats__value}>{value}</span>
-						<span className={styles.stats__label}>{label}</span>
+					<div key={label} className="stats__item">
+						<span className="stats__value">{value}</span>
+						<span className="stats__label">{label}</span>
 					</div>
 				))}
 			</div>
 		</section>
 	);
 }
+import "./Stats.scss";

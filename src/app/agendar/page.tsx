@@ -1,34 +1,14 @@
-import { BookingForm } from "@/features/booking/BookingForm";
-import { bookingFiltersSchema } from "@/features/booking/booking.schemas";
-import { getBookingViewData } from "@/features/booking/booking.service";
-import { findAllProfessionals } from "@/services/professional";
-import styles from "@/features/app/AppPage.module.scss";
+import Link from "next/link";
 
-interface BookingPageProps {
-  searchParams: Promise<Record<string, string | undefined>>;
-}
-
-export default async function BookingPage({ searchParams }: BookingPageProps) {
-  const params = await searchParams;
-  const filters = bookingFiltersSchema.safeParse(params).data ?? {};
-  const [professionals, data] = await Promise.all([
-    findAllProfessionals(true),
-    getBookingViewData(filters.professionalId, filters.date),
-  ]);
-  return (
-    <main className={styles.page}>
-      <section className={styles.wide}>
-        <span className={styles.eyebrow}>Reserva online</span>
-        <h1>Agende seu horário</h1>
-        <p>Escolha o profissional, serviço e horário disponíveis.</p>
-        <BookingForm
-          data={data}
-          error={params.error}
-          filters={filters}
-          professionals={professionals}
-          success={params.success === "1"}
-        />
-      </section>
-    </main>
-  );
+export default function AgendarPage() {
+    return (
+        <main style={{ maxWidth: 720, margin: "80px auto", padding: 32 }}>
+            <h1>Agendar</h1>
+            <p>Esta página ainda não possui conteúdo específico.</p>
+            <p>
+                Enquanto isso, volte para <Link href="/">a página inicial</Link> ou use o
+                formulário de agendamento disponível na home.
+            </p>
+        </main>
+    );
 }
