@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { login, type LoginInput } from "@/services/auth";
+import { login, loginClient, type LoginInput } from "@/services/auth";
 import { saveSession } from "./actions";
 
 type LoginFormValues = LoginInput & { remember?: boolean };
@@ -26,7 +26,14 @@ export function useLoginForm() {
 
   async function submit({ email, password }: LoginFormValues) {
     try {
-      const session = await login({ email, password });
+      let session;
+
+      try {
+        session = await loginClient({ email, password });
+      } catch {
+        session = await login({ email, password });
+      }
+
       await saveSession(session);
       router.replace("/dashboard");
       router.refresh();

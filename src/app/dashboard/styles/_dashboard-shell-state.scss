@@ -1,0 +1,22 @@
+.dashboard-shell {
+  @media (min-width: 801px) {
+    grid-template-columns: 21rem minmax(0, 1fr);
+
+    &__brand {
+      font-size: 1.25rem;
+    }
+    &__brand-mark {
+      font-size: 0.9rem;
+    }
+
+    &__nav-item,
+    &__footer-link {
+      justify-content: flex-start;
+      font-size: 1.05rem;
+    }
+
+    &__copyright {
+      display: block;
+    }
+  }
+}

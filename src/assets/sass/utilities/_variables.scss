@@ -26,3 +26,106 @@ $color-gradient: linear-gradient(
     #D4A72C 0%,
     #332B1D 100%
 );
+
+// Dashboard tokens. Keeping these in the shared token module lets every
+// dashboard partial consume the same visual contract without local copies.
+$dashboard-ink: #15213a;
+$dashboard-ink-soft: #56657d;
+$dashboard-muted: #7f8ca2;
+$dashboard-muted-strong: #65738a;
+$dashboard-border: #e1e6f0;
+$dashboard-border-soft: #edf0f5;
+$dashboard-surface: #fff;
+$dashboard-background: #f6f8fc;
+
+$dashboard-brand: #6348cb;
+$dashboard-brand-strong: #7950d7;
+$dashboard-brand-soft: #eee9ff;
+$dashboard-brand-tint: #e3e0fa;
+$dashboard-teal: #18b6a3;
+
+$dashboard-success-background: #def6e7;
+$dashboard-success-ink: #16854a;
+$dashboard-warning-background: #fff0d5;
+$dashboard-warning-ink: #ae7114;
+$dashboard-danger-background: #ffe5e7;
+$dashboard-danger-ink: #d1353f;
+$dashboard-neutral-background: #eef1f7;
+
+$dashboard-sidebar-from: #1e3156;
+$dashboard-sidebar-to: #101a2d;
+$dashboard-sidebar-ink: #c7d2e6;
+
+$dashboard-radius-sm: 0.5rem;
+$dashboard-radius-md: 0.8rem;
+$dashboard-radius-lg: 1.2rem;
+$dashboard-radius-pill: 2rem;
+$dashboard-panel-shadow: 0 0.8rem 2.5rem rgba(#243457, 0.04);
+
+$dashboard-breakpoint-tablet: 900px;
+$dashboard-breakpoint-mobile: 600px;
+
+$dashboard-trend-colors: (
+  up: (
+    bg: $dashboard-success-background,
+    ink: $dashboard-success-ink,
+  ),
+  down: (
+    bg: $dashboard-danger-background,
+    ink: $dashboard-danger-ink,
+  ),
+  flat: (
+    bg: $dashboard-neutral-background,
+    ink: $dashboard-muted-strong,
+  ),
+);
+
+$dashboard-status-colors: (
+  complete: (
+    bg: $dashboard-success-background,
+    ink: $dashboard-success-ink,
+  ),
+  pending: (
+    bg: $dashboard-warning-background,
+    ink: $dashboard-warning-ink,
+  ),
+  cancelled: (
+    bg: $dashboard-danger-background,
+    ink: $dashboard-danger-ink,
+  ),
+);
+
+// Compatibility names for the existing dashboard styles. New dashboard
+// partials should prefer the explicit $dashboard-* tokens above.
+$ink: $dashboard-ink;
+$ink-soft: $dashboard-ink-soft;
+$muted: $dashboard-muted;
+$muted-strong: $dashboard-muted-strong;
+$border: $dashboard-border;
+$border-soft: $dashboard-border-soft;
+$surface: $dashboard-surface;
+$bg: $dashboard-background;
+$brand: $dashboard-brand;
+$brand-strong: $dashboard-brand-strong;
+$brand-soft: $dashboard-brand-soft;
+$brand-tint: $dashboard-brand-tint;
+$teal: $dashboard-teal;
+$success-bg: $dashboard-success-background;
+$success-ink: $dashboard-success-ink;
+$warning-bg: $dashboard-warning-background;
+$warning-ink: $dashboard-warning-ink;
+$danger-bg: $dashboard-danger-background;
+$danger-ink: $dashboard-danger-ink;
+$neutral-bg: $dashboard-neutral-background;
+$sidebar-from: $dashboard-sidebar-from;
+$sidebar-to: $dashboard-sidebar-to;
+$sidebar-ink: $dashboard-sidebar-ink;
+$radius-sm: $dashboard-radius-sm;
+$radius-md: $dashboard-radius-md;
+$radius-lg: $dashboard-radius-lg;
+$radius-pill: $dashboard-radius-pill;
+$shadow-panel: $dashboard-panel-shadow;
+$bp-tablet: $dashboard-breakpoint-tablet;
+$bp-mobile: $dashboard-breakpoint-mobile;
+$trend-colors: $dashboard-trend-colors;
+$status-colors: $dashboard-status-colors;

@@ -4,6 +4,16 @@ export const dateText = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month
 export const timeText = new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit" });
 export const weekday = new Intl.DateTimeFormat("pt-BR", { weekday: "short" });
 
+export function initials(name: string) {
+    return name
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((part) => part[0] ?? "")
+        .join("")
+        .toUpperCase();
+}
+
 export function isCompleted(status: string) {
     return /confirm|complete|done|final/i.test(status);
 }

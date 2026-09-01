@@ -1,28 +1,27 @@
-import type { Appointment } from "@/services/appointment";
+import { initials } from "../../_shared/dashboard.utils";
 
-export const ClientsPanel = ({ appointments, clients }: { appointments: Appointment[]; clients: string[] }) => {
-  return (
-    <section className="panel">
-      <div className="panelTitle">
-        <div>
-          <small>RELACIONAMENTO</small>
-          <h2>Clientes</h2>
+export function ClientsPanel({ clients }: { clients: string[] }) {
+    return (
+        <div className="panel">
+            <div className="panelTitle">
+                <small>CLIENTES</small>
+                <span className="metricDescription">{clients.length} no total</span>
+            </div>
+
+            {clients.length === 0 ? (
+                <p className="empty">Nenhum cliente cadastrado ainda.</p>
+            ) : (
+                <div className="clientList">
+                    {clients.map((name) => (
+                        <article key={name}>
+                            <span>{initials(name)}</span>
+                            <div>
+                                <b>{name}</b>
+                            </div>
+                        </article>
+                    ))}
+                </div>
+            )}
         </div>
-        <strong>{clients.length} clientes</strong>
-      </div>
-
-      <div className="clientList">
-        {clients.map((client) => (
-          <article key={client}>
-            <span>{client[0]}</span>
-            <b>{client}</b>
-            <small>
-              {appointments.filter((item) => item.client.name === client).length} agendamento(s)
-            </small>
-          </article>
-        ))}
-        {!clients.length && <p>Nenhum cliente cadastrado ainda.</p>}
-      </div>
-    </section>
-  );
+    );
 }

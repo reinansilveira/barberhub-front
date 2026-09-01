@@ -1,110 +1,49 @@
 "use client";
-import { useEffect, useState } from "react";
-import { createSlots, deleteSlot, findAvailableSlots, isSlotBatch, type Slot } from "@/services/slot";
-import type { ProfessionalResponseDto } from "@/services/professional";
 
-export function useSlotForm(professional: ProfessionalResponseDto) {
-    const timeText = new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit" });
-    const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
-    const [time, setTime] = useState("09:00");
-    const [pendingTimes, setPendingTimes] = useState<string[]>([]);
-    const [existing, setExisting] = useState<Slot[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [saving, setSaving] = useState(false);
-    const [feedback, setFeedback] = useState<string | null>(null);
+import { useState } from "react";
+import type { Service } from "@/services/service";
+
+export type SlotFormValues = {
+    clientName: string;
+    serviceId: string;
+    scheduledAt: string; // datetime-local value
+};
+
+const EMPTY: SlotFormValues = { clientName: "", serviceId: "", scheduledAt: "" };
+
+export function useSlotForm(onCreated?: () => void) {
+    const [values, setValues] = useState<SlotFormValues>(EMPTY);
+    const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        let cancelled = false;
+    function update<K extends keyof SlotFormValues>(key: K, value: SlotFormValues[K]) {
+        setValues((prev) => ({ ...prev, [key]: value }));
+    }
 
-        (async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const data = await findAvailableSlots(professional.id, date);
-                if (!cancelled) setExisting(data);
-            } catch {
-                if (!cancelled) setError("Não consegui carregar os horários existentes.");
-            } finally {
-                if (!cancelled) setLoading(false);
-            }
-        })();
-
-        return () => {
-            cancelled = true;
-        };
-    }, [professional.id, date]);
-
-    const refresh = async () => {
-        setLoading(true);
+    async function submit(e: React.FormEvent) {
+        e.preventDefault();
+        setSubmitting(true);
         setError(null);
+
         try {
-            setExisting(await findAvailableSlots(professional.id, date));
-        } catch {
-            setError("Não consegui carregar os horários existentes.");
+            // Swap for your real client-side API call / server action.
+            const res = await fetch("/api/appointments", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(values),
+            });
+            if (!res.ok) throw new Error("Falha ao criar agendamento");
+
+            setValues(EMPTY);
+            onCreated?.();
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Erro inesperado");
         } finally {
-            setLoading(false);
+            setSubmitting(false);
         }
-    };
+    }
 
-    const addTime = () => {
-        if (!time || pendingTimes.includes(time)) return;
-        setPendingTimes((prev) => [...prev, time].sort());
-    };
-
-    const removeTime = (t: string) => setPendingTimes((prev) => prev.filter((item) => item !== t));
-
-    const submit = async () => {
-        if (!pendingTimes.length) return;
-        setSaving(true);
-        setError(null);
-        setFeedback(null);
-        try {
-            const isoTimes = pendingTimes.map((t) => new Date(`${date}T${t}:00`).toISOString());
-            const result = await createSlots(professional.id, isoTimes);
-            if (isSlotBatch(result)) {
-                setFeedback(
-                    `Criados: ${result.created.length}` +
-                    (result.skipped.length
-                        ? ` · Ignorados: ${result.skipped.length} (${result.skipped.map((s) => s.reason).join(", ")})`
-                        : ""),
-                );
-            } else {
-                setFeedback("Horário criado.");
-            }
-            setPendingTimes([]);
-            await refresh();
-        } catch {
-            setError("Não consegui criar os horários.");
-        } finally {
-            setSaving(false);
-        }
-    };
-
-    const removeExisting = async (id: string) => {
-        try {
-            await deleteSlot(id);
-            await refresh();
-        } catch {
-            setError("Não consegui remover esse horário.");
-        }
-    };
-
-    return {
-        date,
-        setDate,
-        time,
-        setTime,
-        pendingTimes,
-        existing,
-        loading,
-        saving,
-        feedback,
-        error,
-        addTime,
-        removeTime,
-        submit,
-        removeExisting,
-        timeText,
-    };
+    return { values, update, submit, submitting, error };
 }
+
+export type { Service };

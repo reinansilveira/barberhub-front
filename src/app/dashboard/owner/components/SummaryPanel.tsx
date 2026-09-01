@@ -1,99 +1,66 @@
-import Link from "next/link";
+import { currency, isCancelled, isCompleted, initials, timeText } from "../../_shared/dashboard.utils";
 import type { Appointment } from "@/services/appointment";
-import type { Service } from "@/services/service";
-import { currency, isCompleted } from "../../_shared/dashboard.utils";
-import { RevenueChart } from "./RevenueChart";
-import type { RevenueChartModel } from "../hooks/use-revenue-chart";
 
-export const SummaryPanel = ({
-  appointments,
-  services,
-  recent,
-  revenue,
-  completedCount,
-  clientsCount,
-  revenueChartModel,
+function statusVariant(status: string) {
+    if (isCompleted(status)) return "complete" as const;
+    if (isCancelled(status)) return "cancelled" as const;
+    return "pending" as const;
+}
+
+const STATUS_LABEL: Record<"complete" | "pending" | "cancelled", string> = {
+    complete: "Concluído",
+    pending: "Pendente",
+    cancelled: "Cancelado",
+};
+
+export function SummaryPanel({
+    recent,
+    revenue,
+    completedCount,
 }: {
-  appointments: Appointment[];
-  services: Service[];
-  recent: Appointment[];
-  revenue: number;
-  completedCount: number;
-  clientsCount: number;
-  revenueChartModel: RevenueChartModel;
-}) => {
-  return (
-    <>
-      <section className="metrics">
-        <article>
-          <small>Vendas concluídas</small>
-          <strong>{currency.format(revenue)}</strong>
-          <span>{completedCount} agendamento(s) concluído(s)</span>
-        </article>
-        <article>
-          <small>Agendamentos</small>
-          <strong>{appointments.length}</strong>
-          <span>{appointments.filter((item) => !isCompleted(item.status)).length} aguardando atendimento</span>
-        </article>
-        <article>
-          <small>Clientes</small>
-          <strong>{clientsCount}</strong>
-          <span>Base de clientes ativa</span>
-        </article>
-        <article>
-          <small>Serviços ativos</small>
-          <strong>{services.length}</strong>
-          <span>Disponíveis para agendamento</span>
-        </article>
-      </section>
-
-      <section className="grid">
-        <article className="panel">
-          <div className="panelTitle">
-            <div>
-              <small>ATIVIDADE</small>
-              <h2>Agendamentos recentes</h2>
-            </div>
-            <Link href="/dashboard?view=agenda">Ver agenda</Link>
-          </div>
-
-          <div className="appointments">
-            {recent.map((item) => (
-              <article key={item.id}>
-                <time>
-                  {new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short" }).format(
-                    new Date(item.scheduledAt),
-                  )}
-                </time>
+    recent: Appointment[];
+    revenue: number;
+    completedCount: number;
+}) {
+    return (
+        <div className="panel">
+            <div className="panelTitle">
                 <div>
-                  <b>{item.client.name}</b>
-                  <small>
-                    {item.service.name} ·{" "}
-                    {new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit" }).format(
-                      new Date(item.scheduledAt),
-                    )}
-                  </small>
+                    <small>ATENDIMENTOS RECENTES</small>
+                    <span className="metricDescription">
+                        {completedCount} concluídos · {currency.format(revenue)} faturados
+                    </span>
                 </div>
-                <em className={isCompleted(item.status) ? "complete" : "pending"}>
-                  {isCompleted(item.status) ? "Concluído" : "Pendente"}
-                </em>
-                <strong>{currency.format(Number(item.price || 0))}</strong>
-              </article>
-            ))}
-            {!recent.length && <p>Nenhum agendamento registrado.</p>}
-          </div>
-        </article>
-
-        <article className="panel">
-          <div className="panelTitle">
-            <div>
-              <small>DESEMPENHO</small>
-              <h2>Resumo financeiro</h2>
+                <a href="/dashboard?view=agenda">Ver agenda</a>
             </div>
-          </div>
-          <RevenueChart model={revenueChartModel} />
-        </article>
-      </section>
-    </>
-  );
+
+            {recent.length === 0 ? (
+                <p className="empty">Nenhum atendimento por aqui ainda.</p>
+            ) : (
+                <div className="appointments">
+                    {recent.map((item) => {
+                        // service name field assumed — adjust if your Appointment type differs
+                        const serviceName =
+                            (item as unknown as { service?: { name?: string } }).service?.name ?? "Serviço";
+                        const variant = statusVariant(item.status);
+
+                        return (
+                            <article key={item.id}>
+                                <span className="avatar">{initials(item.client.name)}</span>
+                                <div>
+                                    <b>{item.client.name}</b>
+                                    <small>{serviceName}</small>
+                                </div>
+                                <time>{timeText.format(new Date(item.scheduledAt))}</time>
+                                <strong>{currency.format(Number(item.price || 0))}</strong>
+                                <em className="status" data-status={variant}>
+                                    {STATUS_LABEL[variant]}
+                                </em>
+                            </article>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
+    );
 }

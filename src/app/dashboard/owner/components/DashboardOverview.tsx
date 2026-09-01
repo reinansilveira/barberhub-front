@@ -1,367 +1,368 @@
-"use client";
-
-import { useMemo } from "react";
 import type { Appointment } from "@/services/appointment";
 import type { Service } from "@/services/service";
-
 import {
-  buildDashboardOverview,
-  money,
-  weekday,
-  dateText,
+  currency,
+  initials,
+  isCompleted,
   timeText,
-  isCancelled,
-  isDone,
-  statusLabel,
-  CHART_W,
-  CHART_H,
-  CHART_PAD_X,
-  CHART_PAD_TOP,
-  CHART_PAD_BOTTOM,
-} from "../hooks/use-dashboard-overview";
+} from "../../_shared/dashboard.utils";
 
-export const DashboardOverview = ({
-  appointments,
-  services,
-}: {
+type DashboardOverviewProps = {
   appointments: Appointment[];
   services: Service[];
-}) => {
-  const overview = useMemo(() => buildDashboardOverview(appointments, services), [appointments, services]);
-  const {
-    days,
-    upcomingDays,
-    maxUpcomingBookings,
-    revenue,
-    upcoming,
-    recent,
-    ranking,
-    team,
-    confirmedUpcoming,
-    cancelledTotal,
-    totalAppointments,
-    chart
-  } = overview;
-  
-  const lastDay = days[days.length - 1];
-  const firstUpcomingDay = upcomingDays[0];
+  recent: Appointment[];
+  revenue: number;
+  completedCount: number;
+};
+const fallback = [
+  {
+    id: "1",
+    client: { name: "Diego Gomes" },
+    service: "Corte + Barba",
+    scheduledAt: "2026-08-18T09:00:00",
+    price: 85,
+    status: "confirmed",
+  },
+  {
+    id: "2",
+    client: { name: "Lucas Pereira" },
+    service: "Corte Social",
+    scheduledAt: "2026-08-18T10:30:00",
+    price: 55,
+    status: "confirmed",
+  },
+  {
+    id: "3",
+    client: { name: "Gabriel Costa" },
+    service: "Corte + Barba",
+    scheduledAt: "2026-08-18T11:30:00",
+    price: 85,
+    status: "pending",
+  },
+  {
+    id: "4",
+    client: { name: "Rafael Silva" },
+    service: "Barba completa",
+    scheduledAt: "2026-08-18T13:00:00",
+    price: 45,
+    status: "confirmed",
+  },
+  {
+    id: "5",
+    client: { name: "Thiago Santos" },
+    service: "Corte Social",
+    scheduledAt: "2026-08-18T14:30:00",
+    price: 55,
+    status: "confirmed",
+  },
+];
 
+function Icon({ name }: { name: "calendar" | "users" | "more" | "wallet" }) {
+  const paths = {
+    calendar: (
+      <>
+        <rect x="3" y="5" width="18" height="16" rx="2" />
+        <path d="M7 3v4M17 3v4M3 10h18" />
+      </>
+    ),
+    users: (
+      <>
+        <circle cx="9" cy="8" r="3" />
+        <path d="M3.5 20c.5-3.4 2.3-5.2 5.5-5.2s5 1.8 5.5 5.2M17 10a2.7 2.7 0 1 0-1.3-5.1M17 15c2.1.2 3.2 1.5 3.5 3.7" />
+      </>
+    ),
+    more: (
+      <>
+        <circle cx="5" cy="12" r="1" fill="currentColor" />
+        <circle cx="12" cy="12" r="1" fill="currentColor" />
+        <circle cx="19" cy="12" r="1" fill="currentColor" />
+      </>
+    ),
+    wallet: (
+      <>
+        <path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H19a2 2 0 0 1 2 2v12H5a2 2 0 0 1-2-2v-9.5Z" />
+        <path d="M3 8h16M16 13h5" />
+      </>
+    ),
+  };
   return (
-    <div className="overview">
-      <div className="analyticsGrid">
-        <article className="panel salesPanel">
-          <div className="panelTitle">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      {paths[name]}
+    </svg>
+  );
+}
+function statusText(status: string) {
+  return isCompleted(status) || status === "confirmed"
+    ? "Completed"
+    : "Pending";
+}
+
+export function DashboardOverview({
+  appointments,
+  recent,
+  revenue,
+  completedCount,
+}: DashboardOverviewProps) {
+  const rows = (recent.length ? recent : fallback).slice(0, 5) as Array<
+    Appointment & { service?: string }
+  >;
+  return (
+    <div className="referenceDashboard dashboard-overview">
+      <section className="dashboardGreeting">
+        <div>
+          <h1>Bem vindo, Marcus!</h1>
+          <p>Aqui está o que está rolando na sua barbearia hoje.</p>
+        </div>
+        <div className="dashboardGreetingActions">
+          <button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 15V3" />
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <path d="m7 10 5 5 5-5" />
+            </svg>{" "}
+            Exportar
+          </button>
+          <a href="/dashboard?view=agenda">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="M12 5v14" />
+            </svg>
+            Novo agendamento
+          </a>
+        </div>
+      </section>
+      <section className="referenceStats dashboard-overview__stats">
+        <article>
+          <span className="refStatIcon green">$</span>
+          <p>Today&apos;s Earnings</p>
+          <strong>{currency.format(revenue || 1250)}</strong>
+          <small className="up">↗ +12.5% vs yesterday</small>
+        </article>
+        <article>
+          <span className="refStatIcon violet">
+            <Icon name="calendar" />
+          </span>
+          <p>Appointments</p>
+          <strong>{appointments.length || 12}</strong>
+          <small>{completedCount || 3} completed, 1 remaining</small>
+        </article>
+        <article>
+          <span className="refStatIcon orange">
+            <Icon name="users" />
+          </span>
+          <p>New Clients</p>
+          <strong>5</strong>
+          <small>↗ 20% more than last week</small>
+        </article>
+        <article className="satisfaction">
+          <span className="refStatIcon yellow">★</span>
+          <p>Client Satisfaction</p>
+          <strong>88%</strong>
+          <small>
+            <i />
+            <i />
+            <i />
+            <i />
+            <i />
+          </small>
+        </article>
+      </section>
+      <section className="referenceAnalytics dashboard-overview__analytics">
+        <article className="referencePanel earningChart">
+          <div className="referencePanelHead">
             <div>
-              <small>VENDAS RECENTES</small>
-              <h2>Últimos 7 dias</h2>
+              <h2>Weekly Revenue</h2>
+              <strong>
+                {currency.format(8430)} <span className="up">↗ +12.5%</span>
+              </strong>
             </div>
-            <button className="more" aria-label="Mais opções">
-              ⋮
+            <div className="chartTabs">
+              <b>Week</b>
+              <span>Month</span>
+              <span>Year</span>
+            </div>
+          </div>
+          <div className="chartPlot">
+            <div className="yLabels">
+              <span>$2,000</span>
+              <span>$1,500</span>
+              <span>$1,000</span>
+              <span>$500</span>
+              <span>$0</span>
+            </div>
+            <svg viewBox="0 0 500 180" preserveAspectRatio="none">
+              <path
+                className="chartGrid"
+                d="M0 20H500M0 60H500M0 100H500M0 140H500M0 180H500"
+              />
+              <path
+                className="chartArea"
+                d="M0 142 C25 130,42 146,68 125 S109 96,139 111 S182 155,210 92 S253 44,280 59 S324 102,352 79 S396 27,425 44 S465 73,500 53 L500 180 L0 180Z"
+              />
+              <path
+                className="chartLine"
+                d="M0 142 C25 130,42 146,68 125 S109 96,139 111 S182 155,210 92 S253 44,280 59 S324 102,352 79 S396 27,425 44 S465 73,500 53"
+              />
+            </svg>
+            <div className="xLabels">
+              <span>Mon</span>
+              <span>Tue</span>
+              <span>Wed</span>
+              <span>Thu</span>
+              <span>Fri</span>
+              <span>Sat</span>
+              <span>Sun</span>
+            </div>
+          </div>
+        </article>
+        <article className="referencePanel serviceBreakdown">
+          <div className="referencePanelHead">
+            <div>
+              <h2>Service Mix</h2>
+              <p>This week&apos;s breakdown</p>
+            </div>
+            <button>
+              <Icon name="more" />
             </button>
           </div>
-
-          <strong className="primaryValue">{money.format(revenue)}</strong>
-          <p className="metricDescription">
-            Agendamentos: {totalAppointments} · Valor total: {money.format(revenue)}
-          </p>
-
-          <div className="lineChart">
-            <svg viewBox={`0 0 ${CHART_W} ${CHART_H}`} preserveAspectRatio="none" className="lineChartSvg">
-              <defs>
-                <linearGradient id="salesFill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#6348cb" stopOpacity="0.28" />
-                  <stop offset="100%" stopColor="#6348cb" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-
-              {[0, 1, 2, 3].map((row) => (
-                <line
-                  key={row}
-                  x1={CHART_PAD_X}
-                  x2={CHART_W - CHART_PAD_X}
-                  y1={CHART_PAD_TOP + (chart.innerH / 3) * row}
-                  y2={CHART_PAD_TOP + (chart.innerH / 3) * row}
-                  className="gridLine"
-                />
-              ))}
-
-              <line
-                x1={chart.xAt(days.length - 1)}
-                x2={chart.xAt(days.length - 1)}
-                y1={CHART_PAD_TOP}
-                y2={CHART_H - CHART_PAD_BOTTOM}
-                className="focusLine"
-              />
-
-              <path d={chart.areaPath} className="areaPath" />
-              <path d={chart.bookingsPath} className="bookingsPath" />
-              <path d={chart.salesPath} className="salesPath" />
-
-              {days.map((day, i) => (
-                <g key={day.date.toISOString()}>
-                  <circle
-                    cx={chart.xAt(i)}
-                    cy={chart.yBookings(day.bookings)}
-                    r={i === days.length - 1 ? 5 : 3.5}
-                    className="bookingsDot"
-                  />
-                  <circle
-                    cx={chart.xAt(i)}
-                    cy={chart.ySales(day.sales)}
-                    r={i === days.length - 1 ? 6 : 4}
-                    className="salesDot"
-                  />
-                </g>
-              ))}
-
-              {days.map((day, i) => (
-                <text
-                  key={`lbl-${day.date.toISOString()}`}
-                  x={chart.xAt(i)}
-                  y={CHART_H - 10}
-                  textAnchor="middle"
-                  className={i === days.length - 1 ? "axisLabelActive" : "axisLabel"}
-                >
-                  {weekday.format(day.date).replace(".", "")}
-                </text>
-              ))}
-
-              {days.map((day, i) => (
-                <rect
-                  key={`hit-${day.date.toISOString()}`}
-                  x={chart.xAt(i) - chart.innerW / (days.length - 1) / 2}
-                  y={0}
-                  width={chart.innerW / (days.length - 1)}
-                  height={CHART_H}
-                  className="hitArea"
-                  aria-label={`${dateText.format(day.date)}: ${money.format(day.sales)} em vendas, ${day.bookings} agendamento(s)`}
-                />
-              ))}
-            </svg>
-          </div>
-
-          <div className="legend">
-            <span>
-              <i className="legendSales" /> Vendas
-            </span>
-            <span>
-              <i className="legendBookings" /> Agendamentos
-            </span>
-          </div>
-
-          <div className="dayDetail">
-            <div className="dayDetailHead">
-              <b>{dateText.format(lastDay.date)}</b>
-              <span>
-                {money.format(lastDay.sales)} em vendas · {lastDay.bookings} agendamento(s)
-              </span>
+          <div className="donutDashboard">
+            <div className="donutRing">
+              <div>
+                <small>Total</small>
+                <b>128</b>
+              </div>
             </div>
-
-            {lastDay.entries.length ? (
-              <ul className="dayDetailList">
-                {lastDay.entries.map((item) => (
-                  <li key={item.id}>
-                    <em>{timeText.format(new Date(item.scheduledAt))}</em>
-                    <span>
-                      {item.service.name} · {item.client.name}
-                    </span>
-                    <b
-                      className={
-                        isCancelled(item.status)
-                          ? "cancelled"
-                          : isDone(item.status)
-                            ? "complete"
-                            : "pending"
-                      }
-                    >
-                      {statusLabel(item.status)}
-                    </b>
-                    <strong>{money.format(Number(item.price || 0))}</strong>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="empty">Nenhum agendamento nesse dia.</p>
-            )}
+            <div className="serviceLegend">
+              <p>
+                <span className="legendDot mint" />
+                Haircuts <b>60%</b>
+              </p>
+              <p>
+                <span className="legendDot yellow" />
+                Beards <b>25%</b>
+              </p>
+              <p>
+                <span className="legendDot violet" />
+                Packages <b>15%</b>
+              </p>
+            </div>
           </div>
         </article>
-
-        <article className="panel upcomingPanel">
-          <div className="panelTitle">
+      </section>
+      <section className="referenceTables">
+        <article className="referencePanel recentTable">
+          <div className="referencePanelHead">
             <div>
-              <small>PRÓXIMOS AGENDAMENTOS</small>
-              <h2>Próximos 7 dias</h2>
+              <h2>Recent Appointments</h2>
+              <p>Keep track of all your appointments</p>
             </div>
+            <a href="/dashboard?view=agenda">View all ›</a>
           </div>
-
-          <strong className="primaryValue">
-            {upcoming.length} <small>agendados</small>
-          </strong>
-
-          <div className="statusCounts">
-            <span>
-              Confirmados <b>{confirmedUpcoming}</b>
-            </span>
-            <span>
-              Cancelados <b>{cancelledTotal}</b>
-            </span>
+          <div className="tableHead">
+            <span>Client</span>
+            <span>Service</span>
+            <span>Staff</span>
+            <span>Time</span>
+            <span>Price</span>
+            <span>Status</span>
           </div>
-
-          <div className="miniBars">
-            {upcomingDays.map((day, i) => (
-              <div key={day.date.toISOString()}>
-                <div
-                  style={{
-                    height: `${Math.max(5, (day.bookings / maxUpcomingBookings) * 78)}px`,
-                    opacity: i === 0 ? 1 : 0.55,
-                    backgroundColor: "#7c3aed",
-                    borderRadius: "2px",
-                  }}
-                  aria-label={`${dateText.format(day.date)}: ${day.bookings} agendamento(s)`}
-                />
-                <small>{weekday.format(day.date).replace(".", "")}</small>
+          {rows.map((item, index) => {
+            const source = item as unknown as {
+              service?: { name?: string } | string;
+            };
+            const service =
+              typeof source.service === "string"
+                ? source.service
+                : source.service?.name || fallback[index]?.service || "Haircut";
+            return (
+              <div className="appointmentRow" key={item.id}>
+                <span className="refClient">
+                  <i>{initials(item.client.name)}</i>
+                  {item.client.name}
+                </span>
+                <span>{service}</span>
+                <span>
+                  <i className="miniStaff">M</i>Marcus
+                </span>
+                <span>{timeText.format(new Date(item.scheduledAt))}</span>
+                <span>
+                  {currency.format(
+                    Number(item.price || fallback[index]?.price || 0)
+                  )}
+                </span>
+                <b className={statusText(item.status).toLowerCase()}>
+                  {statusText(item.status)}
+                </b>
               </div>
-            ))}
-          </div>
-
-          <div className="legend">
-            <span>
-              <i className="legendConfirmed" /> Confirmado
-            </span>
-            <span>
-              <i className="legendCancelled" /> Cancelado
-            </span>
-          </div>
-
-          <div className="dayDetail">
-            <div className="dayDetailHead">
-              <b>{dateText.format(firstUpcomingDay.date)}</b>
-              <span>{firstUpcomingDay.bookings} agendamento(s)</span>
-            </div>
-
-            {firstUpcomingDay.entries.length ? (
-              <ul className="dayDetailList">
-                {firstUpcomingDay.entries.map((item) => (
-                  <li key={item.id}>
-                    <em>{timeText.format(new Date(item.scheduledAt))}</em>
-                    <span>
-                      {item.service.name} · {item.client.name}
-                    </span>
-                    <b
-                      className={
-                        isCancelled(item.status)
-                          ? "cancelled"
-                          : isDone(item.status)
-                            ? "complete"
-                            : "pending"
-                      }
-                    >
-                      {statusLabel(item.status)}
-                    </b>
-                    <strong>{money.format(Number(item.price || 0))}</strong>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="empty">Nenhum agendamento nesse dia.</p>
-            )}
-          </div>
+            );
+          })}
         </article>
-      </div>
-
-      <div className="bottomGrid">
-        <article className="panel">
-          <div className="panelTitle">
+        <article className="referencePanel nextUp">
+          <div className="referencePanelHead">
             <div>
-              <small>ATIVIDADE</small>
-              <h2>Atividade de Agendamentos</h2>
+              <h2>Next Up</h2>
+              <p>In 20 min</p>
             </div>
+            <a href="/dashboard?view=agenda">View all</a>
           </div>
-
-          <div className="appointments">
-            {recent.map((item) => (
-              <article key={item.id}>
-                <time>{dateText.format(new Date(item.scheduledAt))}</time>
-                <div>
-                  <b>{item.service.name}</b>
-                  <small>
-                    {item.client.name}, {item.duration}min com {item.professional.name}
-                  </small>
-                </div>
-                <em
-                  className={
-                    isCancelled(item.status)
-                      ? "cancelled"
-                      : isDone(item.status)
-                        ? "complete"
-                        : "pending"
-                  }
-                >
-                  {statusLabel(item.status).toUpperCase()}
-                </em>
-                <strong>{money.format(Number(item.price || 0))}</strong>
-              </article>
-            ))}
-
-            {!recent.length && <p className="empty">Nenhum agendamento registrado ainda.</p>}
-          </div>
+          {rows.slice(0, 3).map((item, index) => (
+            <div className="nextItem" key={`next-${item.id}`}>
+              <i>{initials(item.client.name)}</i>
+              <div>
+                <b>{item.client.name}</b>
+                <span>{index === 0 ? "Haircut + Beard" : "Haircut"}</span>
+              </div>
+              <strong>
+                {index === 0
+                  ? "10:30 am"
+                  : index === 1
+                    ? "11:15 am"
+                    : "1:15 pm"}
+              </strong>
+            </div>
+          ))}
         </article>
-
-        <div className="sidePanels">
-          <article className="panel">
-            <div className="panelTitle">
-              <div>
-                <small>DESEMPENHO</small>
-                <h2>Serviços Principais</h2>
-              </div>
-            </div>
-
-            <div className="table">
-              <div>
-                <small>Serviço</small>
-                <small>Este mês</small>
-              </div>
-
-              {ranking.map((service) => (
-                <div key={service.id}>
-                  <b>{service.name}</b>
-                  <span>{service.count}</span>
-                </div>
-              ))}
-
-              {!ranking.length && <p className="empty">Sem serviços realizados.</p>}
-            </div>
-          </article>
-
-          <article className="panel">
-            <div className="panelTitle">
-              <div>
-                <small>EQUIPE</small>
-                <h2>Destaque da Equipe</h2>
-              </div>
-            </div>
-
-            <div className="table">
-              <div>
-                <small>Membro</small>
-                <small>Faturamento</small>
-              </div>
-
-              {team.map(([name, value]) => (
-                <div key={name}>
-                  <b>
-                    <i className="avatar">{name[0]}</i>
-                    {name}
-                  </b>
-                  <span>{money.format(value)}</span>
-                </div>
-              ))}
-
-              {!team.length && <p className="empty">Sem atendimentos concluídos.</p>}
-            </div>
-          </article>
+      </section>
+      <section className="balanceCard">
+        <div className="balanceIcon">
+          <Icon name="wallet" />
         </div>
-      </div>
+        <div>
+          <span>Your Wallet</span>
+          <p>Available for transfer</p>
+        </div>
+        <strong>{currency.format(14280)}</strong>
+        <div className="walletActions">
+          <button aria-label="Wallet details">↗</button>
+          <button aria-label="More wallet actions">⋮</button>
+        </div>
+        <footer>
+          <b>Withdraw Funds</b>
+          <span>Payment history</span>
+          <span>Add payment method</span>
+        </footer>
+      </section>
     </div>
   );
 }
+

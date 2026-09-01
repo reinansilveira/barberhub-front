@@ -1,25 +1,12 @@
+import { DashboardOverview } from "./DashboardOverview";
+import { ReferencePanels } from "./ReferencePanels";
+import { ClientsPanel } from "./ClientsPanel";
 import type { Appointment } from "@/services/appointment";
 import type { Service } from "@/services/service";
 import type { Kpi, OwnerView } from "../owner.types";
-import { DashboardOverview } from "./DashboardOverview";
-import { ClientsPanel } from "./ClientsPanel";
-import { MetricsPanel } from "./MetricsPanel";
-import { ProfessionalsPanel } from "./ProfessionalsPanel";
-import { ServicesPanel } from "./ServicesPanel";
-import { SummaryPanel } from "./SummaryPanel";
 import type { RevenueChartModel } from "../hooks/use-revenue-chart";
 
-export const DashboardContent = ({
-    view,
-    appointments,
-    services,
-    clients,
-    recent,
-    revenue,
-    completedCount,
-    kpis,
-    revenueChartModel,
-}: {
+type DashboardContentProps = {
     view: OwnerView;
     appointments: Appointment[];
     services: Service[];
@@ -29,30 +16,33 @@ export const DashboardContent = ({
     completedCount: number;
     kpis: Kpi[];
     revenueChartModel: RevenueChartModel;
-}) => {
-    switch (view) {
+};
+
+export function DashboardContent(props: DashboardContentProps) {
+    switch (props.view) {
         case "dashboard":
-            return <DashboardOverview appointments={appointments} services={services} />;
-        case "clientes":
-            return <ClientsPanel appointments={appointments} clients={clients} />;
-        case "metricas":
-            return <MetricsPanel kpis={kpis} />;
-        case "profissionais":
-            return <ProfessionalsPanel />;
-        case "catalogo":
-        case "novo-servico":
-            return <ServicesPanel />;
-        default:
             return (
-                <SummaryPanel
-                    appointments={appointments}
-                    services={services}
-                    recent={recent}
-                    revenue={revenue}
-                    completedCount={completedCount}
-                    clientsCount={clients.length}
-                    revenueChartModel={revenueChartModel}
+                <DashboardOverview
+                    appointments={props.appointments}
+                    services={props.services}
+                    recent={props.recent}
+                    revenue={props.revenue}
+                    completedCount={props.completedCount}
                 />
             );
+
+        case "agenda":
+        case "catalogo":
+        case "novo-servico":
+        case "profissionais":
+        case "metricas":
+        case "configuracoes":
+            return <ReferencePanels view={props.view} />;
+
+        case "clientes":
+            return <ClientsPanel clients={props.clients} />;
+
+        default:
+            return <ReferencePanels view="configuracoes" />;
     }
 }

@@ -1,3 +1,5 @@
+@use "variables" as *;
+
 @mixin min($screen) {
 	@media only screen and (min-width: $screen+"px") {
 		@content;
@@ -21,6 +23,82 @@
 	align-items: $align;
 	justify-content: $justify;
 	flex-direction: $direction;
+}
+
+// Shared responsive and visual primitives used by dashboard components.
+@mixin respond-down($breakpoint) {
+	@media (max-width: $breakpoint) {
+		@content;
+	}
+}
+
+@mixin dashboard-panel {
+	padding: 2.2rem;
+	border: 1px solid $dashboard-border;
+	border-radius: $dashboard-radius-lg;
+	background: $dashboard-surface;
+	box-shadow: $dashboard-panel-shadow;
+}
+
+@mixin dashboard-eyebrow {
+	color: $dashboard-muted;
+	font-size: 1rem;
+	font-weight: 800;
+	letter-spacing: 0.12em;
+}
+
+@mixin dashboard-pill($background, $color) {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3rem;
+	padding: 0.3rem 0.7rem;
+	border-radius: $dashboard-radius-pill;
+	background: $background;
+	color: $color;
+	font-size: 0.95rem;
+	font-weight: 700;
+}
+
+@mixin dashboard-avatar($size: 3rem) {
+	display: grid;
+	width: $size;
+	height: $size;
+	place-items: center;
+	border-radius: 50%;
+	background: $dashboard-brand-soft;
+	color: $dashboard-brand;
+	font-weight: 800;
+	font-style: normal;
+}
+
+// Compatibility mixins for legacy dashboard hooks. New BEM partials should
+// use respond-down and the dashboard-* mixins directly.
+@mixin tablet {
+	@include respond-down($dashboard-breakpoint-tablet) {
+		@content;
+	}
+}
+
+@mixin mobile {
+	@include respond-down($dashboard-breakpoint-mobile) {
+		@content;
+	}
+}
+
+@mixin panel {
+	@include dashboard-panel;
+}
+
+@mixin eyebrow {
+	@include dashboard-eyebrow;
+}
+
+@mixin pill($background, $color) {
+	@include dashboard-pill($background, $color);
+}
+
+@mixin avatar($size: 3rem) {
+	@include dashboard-avatar($size);
 }
 
 .mobile-only {
