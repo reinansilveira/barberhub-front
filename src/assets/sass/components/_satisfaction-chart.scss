@@ -1,0 +1,47 @@
+.satisfaction-chart {
+  --satisfaction-chart-line: #64c9b2;
+
+  width: 100%;
+  height: 5.25rem;
+  margin-top: 0.35rem;
+
+  &__grid {
+    stroke: #edf1ef;
+    stroke-dasharray: 3 3;
+  }
+
+  &__axis {
+    fill: #94989e;
+    font-size: 0.65rem;
+  }
+
+  &__tooltip {
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid #e7ebe9;
+    border-radius: 0.4rem;
+    background: #ffffff;
+    box-shadow: 0 0.25rem 0.75rem rgba(20, 20, 20, 0.08);
+    color: #81858c;
+    font-size: 0.7rem;
+
+    strong {
+      display: inline;
+      color: #202328;
+      font-size: 0.8rem;
+      letter-spacing: normal;
+    }
+
+    span {
+      color: #94989e;
+      font-size: 0.65rem;
+    }
+  }
+}
+
+.satisfaction--fallback {
+  .satisfaction-chart {
+    opacity: 0.82;
+  }
+}

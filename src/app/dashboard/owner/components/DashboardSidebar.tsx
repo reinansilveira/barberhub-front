@@ -13,12 +13,12 @@ import {
 import { ownerNav } from "../owner.nav";
 
 const ICONS = {
-  Dashboard: LayoutGrid,
-  Calendar: CalendarDays,
-  Barbers: Users,
-  Services: List,
-  Financials: ChartNoAxesCombined,
-  Settings,
+  Painel: LayoutGrid,
+  Agenda: CalendarDays,
+  Barbeiros: Users,
+  Serviços: List,
+  Financeiro: ChartNoAxesCombined,
+  Configurações: Settings,
   Profissionais: Users,
   "Novo serviço": Plus,
 };
@@ -55,11 +55,11 @@ export function DashboardSidebar({ activeTitle }: { activeTitle: string }) {
       <div className="dashboard-sidebar__footer">
         <a className="dashboard-sidebar__footer-link" href="#">
           <CircleHelp aria-hidden="true" />
-          Help &amp; Support
+          Ajuda e suporte
         </a>
         <a className="dashboard-sidebar__footer-link" href="#">
           <LogOut aria-hidden="true" />
-          Log out
+          Sair
         </a>
         <small className="dashboard-sidebar__copyright">© 2024 Barberhub</small>
       </div>

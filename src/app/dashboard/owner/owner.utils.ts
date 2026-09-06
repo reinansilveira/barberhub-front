@@ -100,5 +100,5 @@ export function buildKpis(appointments: Appointment[]): Kpi[] {
 }
 
 export function resolveTitle(view: OwnerView) {
-  return ownerNav.find((item) => item[1].includes(`view=${view}`))?.[0] ?? "Dashboard";
+  return ownerNav.find((item) => item[1].includes(`view=${view}`))?.[0] ?? "Painel";
 }

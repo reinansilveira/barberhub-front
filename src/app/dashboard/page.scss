@@ -4,3 +4,11 @@
 @use "./styles/dashboard-overview";
 @use "./styles/dashboard-pages";
 @use "./styles/_dashboard-members";
+@use "./styles/appointment-modal";
+@use "./styles/service-modal";
+@use "./styles/dashboard-topbar";
+@use "./styles/profile-settings";
+@use "./styles/barber-modal";
+@use "../../assets/sass/components/satisfaction-chart";
+@use "../../assets/sass/components/revenue-chart";
+@use "../../assets/sass/components/service-radial-chart";

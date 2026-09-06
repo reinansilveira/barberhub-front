@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Rating } from "@/components/reui/rating";
 
 export interface Review {
   id: string;
@@ -83,7 +84,7 @@ export const ReviewsSection = ({
                     <strong>{review.authorName}</strong>
                     <span>{review.date}</span>
                   </div>
-                  <span className="reviewStars">{"★".repeat(review.rating)}</span>
+                  <Rating rating={review.rating} className="reviewStars" />
                 </div>
                 <p className="reviewComment">{review.comment}</p>
                 {review.serviceTag && <span className="reviewTag">{review.serviceTag}</span>}

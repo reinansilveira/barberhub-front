@@ -1,12 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  CalendarCheck2,
+  CalendarX2,
+  CalendarDays,
+  BarChart3,
+  Bell,
+  Building2,
+  Clock3,
+  CreditCard,
+  Grid2X2,
+  MoreHorizontal,
+  Pencil,
+  List,
+  Plus,
+  Scissors,
+  Sparkles,
+  SlidersHorizontal,
+  Star,
+  ShieldCheck,
+  Square,
+  UsersRound,
+  UserRound,
+  WalletCards,
+} from "lucide-react";
 import type { OwnerView } from "../owner.types";
+import { findAllProfessionals, updateProfessional, type ProfessionalResponseDto } from "@/services/professional";
+import { updateService, type Service } from "@/services/service";
+import { apiErrorMessage } from "@/services/api/api-error";
+import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Progress, ProgressLabel, ProgressValue } from "@/components/ui/progress";
+import { Rating } from "@/components/reui/rating";
+import { RevenueLineChart } from "@/components/shadcn/RevenueLineChart";
+import type { RevenueChartModel } from "../hooks/use-revenue-chart";
+import { ProfileSettingsPanel, type ProfileSettingsData } from "./ProfileSettingsPanel";
 
-type MetricIconName = "calendar" | "pending" | "cancelled" | "wallet";
-const metricIconNames: MetricIconName[] = ["calendar", "pending", "cancelled", "wallet"];
+type MetricIconName = "calendar" | "pending" | "cancelled" | "wallet" | "scissors" | "star" | "users";
+const metricIconNames: MetricIconName[] = ["calendar", "pending", "cancelled", "wallet", "scissors", "star", "users"];
 
 const barbers = ["Enzo Ribeiro", "Mateo Silva", "Lucas Mendes"];
+const barberAvatars = ["https://i.pravatar.cc/96?img=12", "https://i.pravatar.cc/96?img=33", "https://i.pravatar.cc/96?img=68"];
 const barberProfiles = [
   { role: "Barbeiro sênior", rating: "4,9", cuts: "142", revenue: "R$ 3,2k", retention: "98%", progress: "6 / 8 agendamentos", stripe: "green" },
   { role: "Barbeiro pleno", rating: "4,7", cuts: "118", revenue: "R$ 2,7k", retention: "94%", progress: "5 / 7 agendamentos", stripe: "yellow" },
@@ -18,9 +54,9 @@ const services = [
   ["Corte + Barba", "O combo especial", "112", "R$ 75", "99%", "#8c2dff"],
 ];
 const serviceProfiles = [
-  { duration: "30 min", rating: "4,9", icon: "✂" },
-  { duration: "25 min", rating: "4,8", icon: "▣" },
-  { duration: "60 min", rating: "5,0", icon: "✣" },
+  { duration: "30 min", rating: "4,9", icon: "scissors" },
+  { duration: "25 min", rating: "4,8", icon: "square" },
+  { duration: "60 min", rating: "5,0", icon: "sparkles" },
 ];
 const calendarPeriods = [
   "18–24 de novembro de 2024",
@@ -59,10 +95,12 @@ function PageHead({
   title,
   subtitle,
   action,
+  onAction,
 }: {
   title: string;
   subtitle: string;
   action: string;
+  onAction?: () => void;
 }) {
   return (
     <header className="pageHead dashboard-page__header">
@@ -70,40 +108,32 @@ function PageHead({
         <h1>{title}</h1>
         <p>{subtitle}</p>
       </div>
-      <button className="blackAction">{action}</button>
+      {action && <button className="blackAction dashboard-action-button" type="button" onClick={onAction}>{action.startsWith("+") && <Plus aria-hidden="true" />} {action.replace(/^\+\s*/, "")}</button>}
     </header>
   );
 }
 function MetricIcon({ name }: { name: MetricIconName }) {
-  const paths = {
-    calendar: (
-      <>
-        <path d="M8 2v3M16 2v3" />
-        <rect x="3" y="3" width="18" height="18" rx="2" />
-        <path d="M3 9h18m-12 6 2 2 4-4" />
-      </>
-    ),
-    pending: (
-      <>
-        <path d="M16 14v2.2l1.6 1M16 4h2a2 2 0 0 1 2 2v.832M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h2" />
-        <circle cx="16" cy="16" r="6" />
-        <rect x="8" y="2" width="8" height="4" rx="1" />
-      </>
-    ),
-    cancelled: (
-      <>
-        <path d="M16 2v3M2 2l20 20M21 9h-5.5M3 9h6" />
-        <path d="M3.586 3.586A2 2 0 0 0 3 5v14a2 2 0 0 0 2 2h14a2 2 0 0 0 1.414-.586M8.656 3H19a2 2 0 0 1 2 2v10.344" />
-      </>
-    ),
-    wallet: (
-      <>
-        <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1" />
-        <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" />
-      </>
-    ),
-  };
-  return <svg viewBox="0 0 24 24" aria-hidden="true">{paths[name]}</svg>;
+  const icons = {
+    calendar: CalendarCheck2,
+    pending: Clock3,
+    cancelled: CalendarX2,
+    wallet: WalletCards,
+    scissors: Scissors,
+    star: Star,
+    users: UsersRound,
+  } as const;
+  const Icon = icons[name];
+  return <Icon aria-hidden="true" />;
+}
+function ServiceIcon({ name }: { name: string }) {
+  const icons = { scissors: Scissors, square: Square, sparkles: Sparkles } as const;
+  const Icon = icons[name as keyof typeof icons] ?? Sparkles;
+  return <Icon aria-hidden="true" />;
+}
+function SettingsIcon({ item }: { item: string }) {
+  const icons = { Profile: UserRound, Business: Building2, Notifications: Bell, Security: ShieldCheck, Billing: CreditCard } as const;
+  const Icon = icons[item as keyof typeof icons] ?? UserRound;
+  return <Icon aria-hidden="true" />;
 }
 function ArrowIcon({ direction }: { direction: "left" | "right" }) {
   return (
@@ -148,29 +178,93 @@ function MiniStats({
     </section>
   );
 }
-function LineGraph() {
+function PerformanceMetrics({ name, kind, model }: { name: string; kind: "barber" | "service"; model: RevenueChartModel }) {
+  const [period, setPeriod] = useState<"week" | "month" | "year">("week");
+  const isBarber = kind === "barber";
+  const periodNames = { week: "semanal", month: "mensal", year: "anual" } as const;
+  const periodTotals = { week: 9970, month: 32900, year: 226100 } as const;
   return (
-    <div className="financialChart">
-      <div className="financialChart__plot">
-        <div className="financialChart__scale" aria-hidden="true">
-          {['2.500', '2.000', '1.500', '1.000', '500', '0'].map((value) => <span key={value}>{value}</span>)}
-        </div>
-        <svg viewBox="0 0 700 250" preserveAspectRatio="none" role="img" aria-label="Receita dos últimos sete dias">
-          <path className="chartGrid" d="M0 20H700M0 65H700M0 110H700M0 155H700M0 200H700M0 245H700" />
-          <path className="financialLine" d="M0 155 C55 135 83 125 116 135 S180 170 232 160 S293 115 350 95 S420 70 468 35 S535 18 583 27 S648 44 700 65" />
-          {[[0, 155], [116, 135], [232, 160], [350, 95], [468, 35], [583, 27], [700, 65]].map(([cx, cy]) => <circle cx={cx} cy={cy} r="3.5" key={`${cx}-${cy}`} />)}
-        </svg>
+    <div className="metrics-view__content">
+      <div className="metrics-view__heading">
+        <div><span>{isBarber ? "Desempenho do barbeiro" : "Desempenho do serviço"}</span><h2>{name}</h2><p>Visão geral dos resultados no período selecionado.</p></div>
       </div>
-      <div className="financialChart__labels">
-        {['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'].map((day) => <span key={day}>{day}</span>)}
-      </div>
+      <MiniStats items={isBarber ? [["calendar", "Cortes realizados", "142", "+12,5%"], ["wallet", "Receita gerada", "R$ 3,2k", "+8,4%"], ["users", "Retenção", "98%", "+4,2%"], ["star", "Avaliação", "4,9", "+0,3"]] : [["calendar", "Agendamentos", "142", "+12,5%"], ["wallet", "Receita", "R$ 7.100", "+8,4%"], ["star", "Satisfação", "98%", "+4,2%"], ["pending", "Duração média", "30 min", "-2,1%"]]} />
+      <section className="referencePanel revenueOverview metrics-view__chart">
+        <div className="metrics-view__chart-head"><div><h2>Receita {periodNames[period]}</h2><strong>R$ {periodTotals[period].toLocaleString("pt-BR")} <span>↗ +12,5%</span></strong></div><div className="metrics-view__periods" role="group" aria-label="Período da receita">{(["week", "month", "year"] as const).map((item) => <button type="button" className={period === item ? "is-active" : ""} aria-pressed={period === item} onClick={() => setPeriod(item)} key={item}>{item === "week" ? "Semana" : item === "month" ? "Mês" : "Ano"}</button>)}</div></div>
+        <RevenueLineChart model={model} period={period} />
+      </section>
     </div>
   );
 }
 
-export function ReferencePanels({ view }: { view: OwnerView }) {
-  const [calendarFilter, setCalendarFilter] = useState<"day" | "week" | "month">("week");
+export function ReferencePanels({
+  view,
+  onNewAppointment,
+  onNewService,
+  onNewBarber,
+  revenueChartModel,
+  profile,
+  services: dashboardServices,
+}: {
+  view: OwnerView;
+  onNewAppointment?: () => void;
+  onNewService?: () => void;
+  onNewBarber?: () => void;
+  revenueChartModel: RevenueChartModel;
+  profile: ProfileSettingsData;
+  services: Service[];
+}) {
+  const router = useRouter();
+  const [calendarFilter, setCalendarFilter] = useState<"day" | "week" | "month">("month");
   const [calendarPeriod, setCalendarPeriod] = useState(0);
+  const [selectedDate, setSelectedDate] = useState(20);
+  const [selectedBarber, setSelectedBarber] = useState<string | null>(null);
+  const [barberAction, setBarberAction] = useState<"edit" | "metrics" | null>(null);
+  const [openBarberMenu, setOpenBarberMenu] = useState<string | null>(null);
+  const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [serviceAction, setServiceAction] = useState<"edit" | "metrics" | null>(null);
+  const [openServiceMenu, setOpenServiceMenu] = useState<string | null>(null);
+  const [financialPeriod, setFinancialPeriod] = useState<"week" | "month" | "year">("week");
+  const [professionals, setProfessionals] = useState<ProfessionalResponseDto[]>([]);
+  const [editError, setEditError] = useState("");
+  const [savingEdit, setSavingEdit] = useState(false);
+  const [serviceEdit, setServiceEdit] = useState({ name: "", price: "", duration: "", description: "", category: "" });
+  const [professionalEdit, setProfessionalEdit] = useState({ specialty: "", experience: "", commission: "", bio: "" });
+
+  useEffect(() => {
+    if (view === "profissionais") {
+      findAllProfessionals(true).then(setProfessionals).catch(() => setProfessionals([]));
+    }
+  }, [view]);
+
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setSelectedBarber(null);
+      setSelectedService(null);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, []);
+
+  const openServiceEdit = (name: string) => {
+    const service = dashboardServices.find((item) => item.name === name);
+    setEditError("");
+    setServiceEdit({ name: service?.name || name, price: String(service?.price ?? ""), duration: String(service?.duration ?? ""), description: service?.description || "", category: service?.category || "" });
+    setSelectedService(name);
+    setServiceAction("edit");
+  };
+  const openProfessionalEdit = (name: string) => {
+    const professional = professionals.find((item) => item.user.name === name);
+    setEditError("");
+    setProfessionalEdit({ specialty: professional?.specialty || "", experience: String(professional?.experience ?? ""), commission: String(professional?.commission ?? ""), bio: professional?.bio || "" });
+    setSelectedBarber(name);
+    setBarberAction("edit");
+  };
+  const monthCells = [
+    27, 28, 29, 30, 31,
+    ...Array.from({ length: 30 }, (_, index) => index + 1),
+  ];
 
   if (view === "agenda")
     return (
@@ -181,6 +275,13 @@ export function ReferencePanels({ view }: { view: OwnerView }) {
             <p>{calendarPeriods[calendarPeriod]}</p>
           </div>
           <div className="calendar-page__header-actions">
+            <button className="calendar-page__icon-button" type="button" aria-label="Filtrar eventos" title="Filtrar eventos">
+              <SlidersHorizontal aria-hidden="true" />
+            </button>
+            <button className="calendar-page__icon-button" type="button" aria-label="Alternar formato de horário" title="Formato de horário">
+              <Clock3 aria-hidden="true" />
+              <span>24</span>
+            </button>
             <div className="calendar-page__filters" aria-label="Visualização do calendário">
               {([
                 ["day", "Dia"],
@@ -225,7 +326,13 @@ export function ReferencePanels({ view }: { view: OwnerView }) {
                 <ArrowIcon direction="right" />
               </button>
             </div>
-            <button className="blackAction" type="button">+ Novo agendamento</button>
+            <button className="calendar-page__icon-button" type="button" aria-label="Visualização em lista" title="Visualização em lista">
+              <List aria-hidden="true" />
+            </button>
+            <button className="calendar-page__icon-button calendar-page__icon-button--active" type="button" aria-label="Visualização em grade" title="Visualização em grade">
+              <Grid2X2 aria-hidden="true" />
+            </button>
+            <button className="blackAction" type="button" onClick={onNewAppointment}><Plus aria-hidden="true" /> Novo agendamento</button>
           </div>
         </header>
         <MiniStats
@@ -239,29 +346,81 @@ export function ReferencePanels({ view }: { view: OwnerView }) {
         />
         <section className="calendarGrid">
           <article className="calendarBoard">
-            <div className="calendarDays calendar-page__days">
-              <div className="calendar-page__time-column">
-                {["8h", "9h", "10h", "11h", "12h", "13h", "14h", "15h", "17h"].map((time) => (
-                  <span key={time}>{time}</span>
-                ))}
-              </div>
-              {calendarDays.map((day) => (
-                <div className={`calDay calendar-page__day${day.current ? " is-current" : ""}`} key={day.label}>
-                  <header>
-                    <small>{day.label}</small>
-                    <b>{day.date}</b>
-                  </header>
-                  <div className="calendar-page__day-body">
-                    {day.events.map(([row, title, detail, tone]) => (
-                      <span className={`event calendar-page__event calendar-page__event--${tone}`} style={{ gridRow: String(row) }} key={`${title}-${detail}`}>
-                        <strong>{title}</strong>
-                        <em>{detail}</em>
-                      </span>
-                    ))}
-                  </div>
+            {calendarFilter === "month" ? (
+              <div className="calendarMonth calendar-page__month">
+                <div className="calendarMonth__weekdays">
+                  {["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].map((day) => <span key={day}>{day}</span>)}
                 </div>
-              ))}
-            </div>
+                <div className="calendarMonth__grid">
+                  {monthCells.map((date, index) => {
+                    const isOutsideMonth = index < 5;
+                    const day = calendarDays.find((item) => item.date === String(date));
+                    return (
+                      <button className={`calendarMonth__day${date === 20 && !isOutsideMonth ? " is-current" : ""}${isOutsideMonth ? " is-outside" : ""}`} key={`${date}-${index}`} type="button" onClick={() => {
+                        if (!isOutsideMonth) {
+                          setSelectedDate(date);
+                          setCalendarFilter("day");
+                        }
+                      }}>
+                        <b>{date}</b>
+                        {day?.events.slice(0, 3).map(([row, title, detail, tone]) => (
+                          <span className={`calendarMonth__event calendarMonth__event--${tone}`} key={`${title}-${detail}`}>
+                            <strong>{title}</strong>
+                            <em>{String(detail).split(" · ")[0]} · {String(7 + Number(row)).padStart(2, "0")}:00</em>
+                          </span>
+                        ))}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : calendarFilter === "week" ? (
+              <div className="calendarWeek calendar-page__week">
+                <div className="calendarWeek__grid">
+                  {calendarDays.map((day) => (
+                    <button className={`calendarWeek__day${day.date === String(selectedDate) ? " is-current" : ""}`} key={day.date} type="button" onClick={() => {
+                      setSelectedDate(Number(day.date));
+                      setCalendarFilter("day");
+                    }}>
+                      <header>
+                        <small>{day.label}</small>
+                        <b>{day.date}</b>
+                      </header>
+                      <div className="calendarWeek__events">
+                        {day.events.map(([row, title, detail, tone]) => (
+                          <span className={`calendarWeek__event calendarWeek__event--${tone}`} key={`${title}-${detail}`}>
+                            <strong>{title}</strong>
+                            <em>{String(detail).split(" · ")[0]} · {String(7 + Number(row)).padStart(2, "0")}:00</em>
+                          </span>
+                        ))}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="calendarDayView">
+                <div className="calendarDayView__header">
+                  <div>
+                    <span>Agenda do dia</span>
+                    <strong>{selectedDate} de novembro de 2024</strong>
+                  </div>
+                  <span>{calendarDays.find((day) => day.date === String(selectedDate))?.events.length ?? 0} agendamentos</span>
+                </div>
+                <div className="calendarDayView__list">
+                  {(calendarDays.find((day) => day.date === String(selectedDate))?.events ?? []).map(([row, title, detail, tone]) => (
+                    <div className={`calendarDayView__event calendarDayView__event--${tone}`} key={`${title}-${detail}`}>
+                      <span className="calendarDayView__time">{`${String(7 + Number(row)).padStart(2, "0")}:00`}</span>
+                      <div>
+                        <strong>{title}</strong>
+                        <span>{String(detail)}</span>
+                      </div>
+                      <button type="button" onClick={onNewAppointment}>Abrir agenda</button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </article>
         </section>
         <section className="calendarLower">
@@ -328,13 +487,14 @@ export function ReferencePanels({ view }: { view: OwnerView }) {
           title="Barbeiros"
           subtitle="Gerencie sua equipe e acompanhe o desempenho"
           action="+ Novo barbeiro"
+          onAction={onNewBarber}
         />
         <MiniStats
           items={[
-            ["●", "Barbeiros ativos", "3", ""],
-            ["●", "Agendamentos hoje", "18", ""],
-            ["●", "Avaliação média", "4,8", ""],
-            ["●", "Receita da equipe", "R$ 8,4k", ""],
+            ["users", "Barbeiros ativos", "3", ""],
+            ["calendar", "Agendamentos hoje", "18", ""],
+            ["star", "Avaliação média", "4,8", ""],
+            ["wallet", "Receita da equipe", "R$ 8,4k", ""],
           ]}
         />
         <section className="barberCards">
@@ -342,15 +502,44 @@ export function ReferencePanels({ view }: { view: OwnerView }) {
             <article className={`barber-card barber-card--${barberProfiles[i].stripe}`} key={name}>
               <span className={`cardStripe stripe${i}`} aria-hidden="true" />
               <header className="barber-card__header">
-                <i className="barber-card__avatar">{name.slice(0, 2)}</i>
+                <Avatar className="barber-card__avatar">
+                  <AvatarImage src={barberAvatars[i]} alt={name} />
+                  <AvatarFallback>{name.slice(0, 2)}</AvatarFallback>
+                  <AvatarBadge />
+                </Avatar>
                 <div>
                   <b>{name}</b>
                   <small>{barberProfiles[i].role}</small>
-                  <em>★★★★★ <span>{barberProfiles[i].rating}</span></em>
+                  <Rating rating={Number(barberProfiles[i].rating.replace(",", "."))} showValue />
                 </div>
                 <div className="barber-card__actions">
-                  <button type="button" aria-label={`Editar ${name}`}>✎</button>
-                  <button type="button" aria-label={`Mais opções de ${name}`}>···</button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    aria-label={`Editar ${name}`}
+                    onClick={() => { openProfessionalEdit(name); setOpenBarberMenu(null); }}
+                  >
+                    <Pencil aria-hidden="true" />
+                  </Button>
+                  <div className="barber-card__menu-wrap">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      aria-label={`Mais opções de ${name}`}
+                      aria-expanded={openBarberMenu === name}
+                      onClick={() => setOpenBarberMenu(openBarberMenu === name ? null : name)}
+                    >
+                      <MoreHorizontal aria-hidden="true" />
+                    </Button>
+                    {openBarberMenu === name && (
+                      <div className="barber-card__menu" role="menu">
+                        <button type="button" onClick={() => { openProfessionalEdit(name); setOpenBarberMenu(null); }}>Editar perfil</button>
+                        <button type="button" onClick={() => { setSelectedBarber(name); setBarberAction("metrics"); setOpenBarberMenu(null); }}>Ver métricas</button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </header>
               <div className="barberNumbers barber-card__metrics">
@@ -364,18 +553,39 @@ export function ReferencePanels({ view }: { view: OwnerView }) {
                   <b>{barberProfiles[i].retention}</b>Retenção
                 </span>
               </div>
-              <p className="barber-card__progress-label">
-                Desempenho de hoje
-                <b>{barberProfiles[i].progress}</b>
-              </p>
-              <div className="barber-card__progress"><span /></div>
+              <Progress value={[75, 71, 67][i]} className="barber-card__progress">
+                <ProgressLabel>Desempenho de hoje</ProgressLabel>
+                <ProgressValue>{() => barberProfiles[i].progress}</ProgressValue>
+              </Progress>
               <footer className="barber-card__footer">
-                <button type="button">▣ Agenda</button>
-                <button type="button">▥ Métricas</button>
+                <Button type="button" variant="outline" size="sm" onClick={() => onNewAppointment?.()}>
+                  <CalendarDays aria-hidden="true" /> Agenda
+                </Button>
+                <Button type="button" variant="outline" size="sm" onClick={() => { setSelectedBarber(name); setBarberAction("metrics"); }}>
+                  <BarChart3 aria-hidden="true" /> Métricas
+                </Button>
               </footer>
             </article>
           ))}
         </section>
+        {selectedBarber && (
+          <div className={`entity-edit-modal ${barberAction === "metrics" ? "entity-edit-modal--metrics" : ""}`} onMouseDown={(event) => { if (event.target === event.currentTarget) setSelectedBarber(null); }}>
+          <section className={barberAction === "metrics" ? "metrics-view" : "barber-action-panel entity-edit-modal__dialog"} aria-label={`Ação para ${selectedBarber}`} role={barberAction === "edit" ? "dialog" : undefined} aria-modal={barberAction === "edit" ? "true" : undefined}>
+            {barberAction === "edit" && <div><span className="barber-action-panel__eyebrow">Editar profissional</span><h2>{selectedBarber}</h2><p>Atualize os dados do profissional e mantenha a equipe organizada.</p></div>}
+            {barberAction === "edit" ? (
+              <div className="barber-action-panel__form">
+                <label>Especialidade<input value={professionalEdit.specialty} onChange={(event) => setProfessionalEdit({ ...professionalEdit, specialty: event.target.value })} placeholder={barberProfiles[barbers.indexOf(selectedBarber)]?.role} /></label>
+                <label>Experiência (anos)<input type="number" min="0" value={professionalEdit.experience} onChange={(event) => setProfessionalEdit({ ...professionalEdit, experience: event.target.value })} /></label>
+                <label>Comissão (%)<input type="number" min="0" step="0.1" value={professionalEdit.commission} onChange={(event) => setProfessionalEdit({ ...professionalEdit, commission: event.target.value })} /></label>
+                <label className="barber-action-panel__field--wide">Bio<textarea rows={2} value={professionalEdit.bio} onChange={(event) => setProfessionalEdit({ ...professionalEdit, bio: event.target.value })} /></label>
+                {editError && <p className="barber-action-panel__error" role="alert">{editError}</p>}
+                <Button type="button" disabled={savingEdit} onClick={async () => { const professional = professionals.find((item) => item.user.name === selectedBarber); if (!professional) { setEditError("Não foi possível localizar este profissional no backend."); return; } setSavingEdit(true); setEditError(""); try { await updateProfessional(professional.id, { specialty: professionalEdit.specialty || undefined, experience: professionalEdit.experience ? Number(professionalEdit.experience) : undefined, commission: professionalEdit.commission ? Number(professionalEdit.commission) : undefined, bio: professionalEdit.bio || undefined }); setSelectedBarber(null); router.refresh(); } catch (requestError) { setEditError(apiErrorMessage(requestError, "Não foi possível salvar o profissional.")); } finally { setSavingEdit(false); } }}>{savingEdit ? "Salvando..." : "Salvar alterações"}</Button>
+              </div>
+            ) : <PerformanceMetrics name={selectedBarber} kind="barber" model={revenueChartModel} />}
+            <button className={barberAction === "metrics" ? "metrics-view__close" : "barber-action-panel__close"} type="button" aria-label="Fechar painel" onClick={() => setSelectedBarber(null)}>×</button>
+          </section>
+          </div>
+        )}
         <PerformanceTable title="Performance Leaderboard" />
       </div>
     );
@@ -387,31 +597,35 @@ export function ReferencePanels({ view }: { view: OwnerView }) {
           title="Serviços"
           subtitle="Gerencie seu catálogo de serviços e preços"
           action="+ Novo serviço"
+          onAction={onNewService}
         />
         <MiniStats
           items={[
-            ["✂", "Serviços ativos", "12", ""],
-            ["▣", "Agendamentos hoje", "24", ""],
-            ["◷", "Duração média", "45 min", ""],
-            ["◉", "Ticket médio", "R$ 65,00", ""],
+            ["scissors", "Serviços ativos", "12", "+12,5%"],
+            ["calendar", "Agendamentos hoje", "24", "+8,4%"],
+            ["pending", "Duração média", "45 min", "-2,1%"],
+            ["wallet", "Ticket médio", "R$ 65,00", "+4,2%"],
           ]}
         />
         <section className="serviceCards">
-          {services.map(([name, desc, bookings, price, rating, color], i) => (
-            <article className="service-card" key={name}>
-              <span className="service-card__stripe" style={{ background: color }} aria-hidden="true" />
+          {services.map(([name, desc, bookings, price, rating], i) => (
+            <article className={`service-card service-card--${["green", "yellow", "violet"][i]}`} key={name}>
+              <span className="service-card__stripe" aria-hidden="true" />
               <header className="service-card__header">
-                <i className="service-card__icon">{serviceProfiles[i].icon}</i>
+                <i className="service-card__icon"><ServiceIcon name={serviceProfiles[i].icon} /></i>
                 <div>
                   <b>{name}</b>
                   <small>{desc}</small>
                   <em>
-                    ★★★★★ <small>{serviceProfiles[i].rating}</small>
+                    <Rating rating={Number(serviceProfiles[i].rating.replace(",", "."))} showValue />
                   </em>
                 </div>
                 <div className="service-card__actions">
-                  <button type="button" aria-label={`Editar ${name}`}>✎</button>
-                  <button type="button" aria-label={`Mais opções de ${name}`}>···</button>
+                  <Button type="button" variant="outline" size="icon" aria-label={`Editar ${name}`} onClick={() => openServiceEdit(name)}><Pencil aria-hidden="true" /></Button>
+                  <div className="service-card__menu-wrap">
+                    <Button type="button" variant="outline" size="icon" aria-label={`Mais opções de ${name}`} aria-expanded={openServiceMenu === name} onClick={() => setOpenServiceMenu(openServiceMenu === name ? null : name)}><MoreHorizontal aria-hidden="true" /></Button>
+                    {openServiceMenu === name && <div className="service-card__menu" role="menu"><button type="button" onClick={() => { openServiceEdit(name); setOpenServiceMenu(null); }}>Editar serviço</button><button type="button" onClick={() => { setSelectedService(name); setServiceAction("metrics"); setOpenServiceMenu(null); }}>Ver métricas</button></div>}
+                  </div>
                 </div>
               </header>
               <div className="service-card__metrics">
@@ -427,12 +641,21 @@ export function ReferencePanels({ view }: { view: OwnerView }) {
               </div>
               <footer className="service-card__footer">
                 <small>Duração: <b>{serviceProfiles[i].duration}</b></small>
-                <button type="button">Editar</button>
-                <button type="button">Métricas</button>
+                <Button type="button" variant="outline" size="sm" onClick={() => openServiceEdit(name)}>Editar</Button>
+                <Button type="button" variant="outline" size="sm" onClick={() => { setSelectedService(name); setServiceAction("metrics"); }}>Métricas</Button>
               </footer>
             </article>
           ))}
         </section>
+        {selectedService && (
+          <div className={`entity-edit-modal ${serviceAction === "metrics" ? "entity-edit-modal--metrics" : ""}`} onMouseDown={(event) => { if (event.target === event.currentTarget) setSelectedService(null); }}>
+          <section className={serviceAction === "metrics" ? "metrics-view" : "service-action-panel entity-edit-modal__dialog"} aria-label={`Ação para ${selectedService}`} role={serviceAction === "edit" ? "dialog" : undefined} aria-modal={serviceAction === "edit" ? "true" : undefined}>
+            {serviceAction === "edit" && <div><span>Editar serviço</span><h2>{selectedService}</h2><p>Atualize os dados exibidos no catálogo.</p></div>}
+            {serviceAction === "edit" ? <div className="service-action-panel__form"><label>Nome<input value={serviceEdit.name} onChange={(event) => setServiceEdit({ ...serviceEdit, name: event.target.value })} /></label><label>Preço<input inputMode="decimal" value={serviceEdit.price} onChange={(event) => setServiceEdit({ ...serviceEdit, price: event.target.value })} /></label><label>Duração (minutos)<input type="number" min="1" value={serviceEdit.duration} onChange={(event) => setServiceEdit({ ...serviceEdit, duration: event.target.value })} /></label><label>Categoria<input value={serviceEdit.category} onChange={(event) => setServiceEdit({ ...serviceEdit, category: event.target.value })} /></label><label className="service-action-panel__field--wide">Descrição<textarea rows={2} value={serviceEdit.description} onChange={(event) => setServiceEdit({ ...serviceEdit, description: event.target.value })} /></label>{editError && <p className="service-action-panel__error" role="alert">{editError}</p>}<Button type="button" disabled={savingEdit} onClick={async () => { const service = dashboardServices.find((item) => item.name === selectedService); const price = Number(serviceEdit.price.replace(",", ".")); const duration = Number(serviceEdit.duration); if (!service || !service.id) { setEditError("Não foi possível localizar este serviço no backend."); return; } if (!serviceEdit.name.trim() || !Number.isFinite(price) || price < 0 || !Number.isInteger(duration) || duration < 1) { setEditError("Informe nome, preço e duração válidos."); return; } setSavingEdit(true); setEditError(""); try { await updateService(service.id, { name: serviceEdit.name.trim(), price, duration, description: serviceEdit.description.trim() || undefined, category: serviceEdit.category.trim() || undefined }); setSelectedService(null); router.refresh(); } catch (requestError) { setEditError(apiErrorMessage(requestError, "Não foi possível salvar o serviço.")); } finally { setSavingEdit(false); } }}>{savingEdit ? "Salvando..." : "Salvar alterações"}</Button></div> : <PerformanceMetrics name={selectedService} kind="service" model={revenueChartModel} />}
+            <button className={serviceAction === "metrics" ? "metrics-view__close" : "service-action-panel__close"} type="button" aria-label="Fechar painel" onClick={() => setSelectedService(null)}>×</button>
+          </section>
+          </div>
+        )}
         <PerformanceTable title="Service Performance" service />
       </div>
     );
@@ -447,32 +670,33 @@ export function ReferencePanels({ view }: { view: OwnerView }) {
         />
         <MiniStats
           items={[
-            ["▣", "Receita total", "R$ 18.540,00", "+12,5%"],
-            ["▤", "Ticket médio", "R$ 68,50", "+4,2%"],
-            ["▣", "Agendamentos totais", "284", "-2,1%"],
-            ["⌁", "Despesas", "R$ 4.210,00", "+8,4%"],
+            ["wallet", "Receita total", "R$ 18.540,00", "+12,5%"],
+            ["pending", "Ticket médio", "R$ 68,50", "+4,2%"],
+            ["calendar", "Agendamentos totais", "284", "-2,1%"],
+            ["cancelled", "Despesas", "R$ 4.210,00", "+8,4%"],
           ]}
         />
-        <section className="referencePanel revenueOverview financial-page__revenue-overview">
-          <div className="referencePanelHead">
-            <h2>Visão geral da receita</h2>
-            <select aria-label="Period">
-              <option>Últimos 7 dias</option>
-              <option>Últimos 30 dias</option>
-              <option>Este ano</option>
-            </select>
+        <section className="referencePanel revenueOverview financial-page__revenue-overview financial-metrics-card">
+          <div className="financial-metrics-card__head">
+            <div>
+              <h2>Receita {financialPeriod === "week" ? "semanal" : financialPeriod === "month" ? "mensal" : "anual"}</h2>
+              <strong>{financialPeriod === "week" ? "R$ 9.970,00" : financialPeriod === "month" ? "R$ 32.900,00" : "R$ 226.100,00"} <span>↗ +12,5%</span></strong>
+            </div>
+            <div className="financial-metrics-card__periods" role="group" aria-label="Período da receita">
+              {(["week", "month", "year"] as const).map((period) => <button type="button" key={period} className={financialPeriod === period ? "is-active" : ""} aria-pressed={financialPeriod === period} onClick={() => setFinancialPeriod(period)}>{period === "week" ? "Semana" : period === "month" ? "Mês" : "Ano"}</button>)}
+            </div>
           </div>
-          <LineGraph />
+          <RevenueLineChart model={revenueChartModel} period={financialPeriod} />
         </section>
         <TransactionTable />
       </div>
     );
 
-  return <SettingsPanel />;
+  return <SettingsPanel profile={profile} />;
 }
 
-function SettingsPanel() {
-  const [tab, setTab] = useState("Business");
+function SettingsPanel({ profile }: { profile: ProfileSettingsData }) {
+  const [tab, setTab] = useState("Profile");
   const [saved, setSaved] = useState(false);
   const settingsTabs = [
     "Profile",
@@ -511,15 +735,7 @@ function SettingsPanel() {
                 setSaved(false);
               }}
             >
-              {item === "Profile"
-                ? "♙"
-                : item === "Business"
-                  ? "▣"
-                  : item === "Notifications"
-                    ? "♧"
-                    : item === "Security"
-                      ? "◐"
-                      : "▤"}{" "}
+              <SettingsIcon item={item} />
               {item === "Profile"
                 ? "Perfil"
                 : item === "Business"
@@ -533,7 +749,7 @@ function SettingsPanel() {
           ))}
         </nav>
         <div className="dashboard-page__body">
-          {tab === "Business" ? (
+          {tab === "Profile" ? <ProfileSettingsPanel profile={profile} /> : tab === "Business" ? (
             <>
               <section className="referencePanel settings-form">
                 <div className="referencePanelHead settings-form__header">
@@ -651,7 +867,7 @@ function PerformanceTable({
         <div className="performanceRow" key={row}>
           <b>{row + 1}</b>
           <span>
-            <i>{service ? "✂" : barbers[row].slice(0, 2)}</i>
+            <i>{service ? <Scissors aria-hidden="true" /> : barbers[row].slice(0, 2)}</i>
             <strong>{service ? serviceRows[row][0] : barbers[row]}</strong>
             <small>{service ? "Mais procurado" : barberProfiles[row].role}</small>
           </span>
@@ -663,7 +879,7 @@ function PerformanceTable({
               : ["8.230", "7.270", "6.120"][row]}
           </span>
           <span>{service ? "R$ 52,00" : ["R$ 22,80", "R$ 22,90", "R$ 21,90"][row]}</span>
-          <span>★ {service ? "4,9" : ["4,9", "4,7", "4,6"][row]}</span>
+          <span><Rating rating={Number((service ? "4,9" : ["4,9", "4,7", "4,6"][row]).replace(",", "."))} showValue /></span>
           <em className={row === 2 && !service ? "break" : "active"}>{row === 2 && !service ? "Em pausa" : "Ativo"}</em>
         </div>
       ))}

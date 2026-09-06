@@ -1,0 +1,39 @@
+.revenue-chart {
+  --revenue-chart-line: #7656dc;
+
+  width: 100%;
+  height: 15rem;
+  margin-top: 1rem;
+  overflow: hidden;
+
+  &__grid {
+    stroke: #f0f1f2;
+    stroke-dasharray: 3 3;
+  }
+
+  &__axis {
+    fill: #a4a7ad;
+    font-size: 0.7rem;
+    text-transform: capitalize;
+  }
+
+  &__tooltip {
+    display: grid;
+    gap: 0.2rem;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid #e8e5fb;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    box-shadow: 0 0.35rem 1rem rgba(52, 36, 115, 0.1);
+
+    strong {
+      color: #202328;
+      font-size: 0.8rem;
+    }
+
+    span {
+      color: #94989e;
+      font-size: 0.68rem;
+    }
+  }
+}

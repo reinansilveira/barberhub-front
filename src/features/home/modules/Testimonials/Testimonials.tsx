@@ -1,4 +1,6 @@
 
+import { Rating } from "@/components/reui/rating";
+
 interface Testimonial {
 	id: string;
 	name: string;
@@ -51,23 +53,7 @@ const TESTIMONIALS: Testimonial[] = [
 const LOOPED_TESTIMONIALS = [...TESTIMONIALS, ...TESTIMONIALS];
 
 function StarRow({ rating }: { rating: number }) {
-	return (
-		<div className="testimonials__stars" aria-label={`Nota ${rating} de 5`}>
-			{Array.from({ length: 5 }).map((_, index) => (
-				<svg
-					key={index}
-					width="14"
-					height="14"
-					viewBox="0 0 24 24"
-					fill={index < rating ? "currentColor" : "none"}
-					stroke="currentColor"
-					strokeWidth="1.5"
-				>
-					<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-				</svg>
-			))}
-		</div>
-	);
+	return <Rating rating={rating} className="testimonials__stars" />;
 }
 
 export default function Testimonials() {

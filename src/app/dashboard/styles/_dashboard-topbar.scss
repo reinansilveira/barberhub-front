@@ -1,0 +1,108 @@
+@use "../../../assets/sass/utilities/variables" as *;
+
+.dashboard-topbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 2rem;
+}
+
+.dashboard-topbar__search-wrap,
+.dashboard-topbar__calendar-wrap { position: relative; }
+
+.dashboard-topbar__search {
+  display: flex;
+  align-items: center;
+  width: min(30rem, 32vw);
+  min-height: 3.8rem;
+  gap: 0.75rem;
+  padding: 0 1rem;
+  border: 1px solid $dashboard-border-soft;
+  border-radius: 0.75rem;
+  background: $dashboard-surface;
+  color: $dashboard-muted;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+
+  &:focus-within { border-color: $dashboard-ink-soft; box-shadow: 0 0 0 0.25rem rgba(#111827, 0.06); }
+  > svg { width: 1.5rem; flex: 0 0 auto; }
+  input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: $dashboard-ink; font: inherit; font-size: 1.05rem; }
+  input::placeholder { color: $dashboard-muted; }
+  button { display: grid; place-items: center; color: $dashboard-muted; }
+  button svg { width: 1.3rem; }
+}
+
+.dashboard-topbar__command {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 0.65rem);
+  left: 0;
+  width: min(34rem, 38vw);
+  padding: 0.55rem;
+  border: 1px solid $dashboard-border-soft;
+  border-radius: 0.8rem;
+  background: $dashboard-surface;
+  box-shadow: 0 1rem 2.5rem rgba(#111827, 0.14);
+
+  &-heading { padding: 0.55rem 0.7rem; color: $dashboard-muted; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+  button { display: grid; width: 100%; gap: 0.18rem; padding: 0.75rem 0.7rem; border-radius: 0.5rem; color: $dashboard-ink; text-align: left; }
+  button:hover, button:focus-visible { background: $dashboard-neutral-background; outline: 0; }
+  button span { font-size: 0.9rem; font-weight: 700; }
+  button small, p { color: $dashboard-muted; font-size: 0.75rem; }
+  p { padding: 0.8rem 0.7rem; }
+}
+
+.dashboard-topbar__actions { display: flex; align-items: center; gap: 1.2rem; }
+.dashboard-topbar__divider { width: 1px; height: 3.5rem; background: $dashboard-border-soft; }
+.dashboard-topbar__notifications { position: relative; }
+.dashboard-topbar__notifications-trigger { position: relative; display: grid; width: 2.35rem; height: 2.35rem; place-items: center; border: 1px solid transparent; border-radius: 0.5rem; background: $dashboard-neutral-background; color: $dashboard-muted-strong; }
+.dashboard-topbar__notifications-trigger:hover, .dashboard-topbar__notifications-trigger:focus-visible { border-color: $dashboard-border-soft; background: #e8e9ed; color: $dashboard-ink; outline: 0; }
+.dashboard-topbar__notifications-trigger > svg { width: 1.3rem; height: 1.3rem; }
+.dashboard-topbar__notifications-trigger > span { position: absolute; top: -0.25rem; right: -0.25rem; display: grid; width: 1.35rem; height: 1.35rem; place-items: center; border: 2px solid $dashboard-surface; border-radius: 50%; background: $dashboard-ink; color: $dashboard-surface; font-size: 0.75rem; font-weight: 800; }
+.dashboard-topbar__notifications-popover { position: absolute; z-index: 20; top: calc(100% + 0.75rem); right: 50%; width: min(20rem, calc(100vw - 2rem)); overflow: hidden; transform: translateX(50%); border: 1px solid $dashboard-border-soft; border-radius: 0.55rem; background: $dashboard-surface; box-shadow: 0 1rem 2.5rem rgba(#111827, 0.16); }
+.dashboard-topbar__notifications-heading { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; padding: 1rem; }
+.dashboard-topbar__notifications-heading h2 { color: $dashboard-ink; font-size: 1rem; font-weight: 700; }
+.dashboard-topbar__notifications-heading button { display: inline-flex; align-items: center; gap: 0.3rem; color: $dashboard-ink; font-size: 1rem; }
+.dashboard-topbar__notifications-heading button:disabled { opacity: 0.45; }
+.dashboard-topbar__notifications-heading button svg { width: 1rem; }
+.dashboard-topbar__notifications-list { border-top: 1px solid $dashboard-border-soft; }
+.dashboard-topbar__notification { display: flex; width: 100%; gap: 0.7rem; padding: 0.8rem 1rem; border-top: 1px solid $dashboard-border-soft; text-align: left; }
+.dashboard-topbar__notification:last-child { border-bottom: 0; }
+.dashboard-topbar__notification:hover { background: $dashboard-neutral-background; }
+.dashboard-topbar__notification-dot { width: 0.5rem; height: 0.5rem; margin-top: 0.35rem; flex: 0 0 auto; border-radius: 50%; background: transparent; }
+.dashboard-topbar__notification.is-unread .dashboard-topbar__notification-dot { background: $dashboard-brand; }
+.dashboard-topbar__notification > span:last-child { display: grid; gap: 0.25rem; }
+.dashboard-topbar__notification b { color: $dashboard-ink; font-size: 1rem; }
+.dashboard-topbar__notification time { color: $dashboard-muted; font-size: 1rem; }
+.dashboard-topbar__calendar-trigger { display: inline-flex; align-items: center; min-height: 3.8rem; max-width: 25rem; gap: 0.65rem; padding: 0 1.1rem; border: 1px solid $dashboard-border-soft; border-radius: 0.75rem; background: $dashboard-surface; color: $dashboard-ink; font-size: 0.95rem; font-weight: 700; white-space: nowrap; }
+.dashboard-topbar__calendar-trigger svg { width: 1.35rem; color: $dashboard-muted; }
+.dashboard-topbar__calendar-trigger svg:last-child { width: 1.15rem; margin-left: 0.3rem; }
+.dashboard-topbar__calendar { position: absolute; z-index: 10; top: calc(100% + 0.65rem); right: 0; width: 29rem; padding: 1.1rem; border: 1px solid $dashboard-border-soft; border-radius: 0.85rem; background: $dashboard-surface; box-shadow: 0 1rem 2.5rem rgba(#111827, 0.14); }
+.dashboard-topbar__calendar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; color: $dashboard-ink; font-size: 1rem; text-transform: capitalize; }
+.dashboard-topbar__calendar-header button { display: grid; width: 2.4rem; height: 2.4rem; place-items: center; border-radius: 0.4rem; color: $dashboard-muted-strong; }
+.dashboard-topbar__calendar-header button:hover { background: $dashboard-neutral-background; }
+.dashboard-topbar__calendar-header svg { width: 1.3rem; }
+.dashboard-topbar__calendar-weekdays,
+.dashboard-topbar__calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; }
+.dashboard-topbar__calendar-weekdays { margin-bottom: 0.35rem; color: $dashboard-muted; font-size: 0.72rem; font-weight: 700; }
+.dashboard-topbar__calendar-grid { gap: 0.25rem; }
+.dashboard-topbar__calendar-grid button { position: relative; min-height: 3rem; border-radius: 0.45rem; color: $dashboard-ink; font-size: 0.85rem; }
+.dashboard-topbar__calendar-grid button:hover { background: $dashboard-neutral-background; }
+.dashboard-topbar__calendar-grid button.is-between { border-radius: 0; background: $dashboard-success-background; color: $dashboard-success-ink; }
+.dashboard-topbar__calendar-grid button.is-start,
+.dashboard-topbar__calendar-grid button.is-end { background: $dashboard-ink; color: $dashboard-surface; }
+.dashboard-topbar__calendar-footer { display: flex; justify-content: space-between; gap: 0.7rem; margin-top: 1rem; padding-top: 0.85rem; border-top: 1px solid $dashboard-border-soft; }
+.dashboard-topbar__calendar-footer button { padding: 0.55rem 0.7rem; border-radius: 0.45rem; color: $dashboard-muted-strong; font-size: 0.78rem; }
+.dashboard-topbar__calendar-footer button:last-child { background: $dashboard-ink; color: $dashboard-surface; }
+.dashboard-topbar .user { width: 3.1rem; height: 3.1rem; border-radius: 50%; }
+.dashboard-topbar .userName { color: $dashboard-ink; font-size: 0.9rem; font-weight: 700; }
+
+@media (max-width: 800px) {
+  .dashboard-topbar__search { width: 2.9rem; padding: 0; justify-content: center; border-color: transparent; background: transparent; }
+  .dashboard-topbar__search input, .dashboard-topbar__search button { display: none; }
+  .dashboard-topbar__command { left: auto; right: 0; width: min(30rem, calc(100vw - 2.4rem)); }
+  .dashboard-topbar__calendar-trigger { max-width: 3.2rem; padding: 0 0.8rem; }
+  .dashboard-topbar__calendar-trigger span, .dashboard-topbar__calendar-trigger svg:last-child, .dashboard-topbar .userName { display: none; }
+  .dashboard-topbar__calendar { right: -1rem; }
+}

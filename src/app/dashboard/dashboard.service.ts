@@ -8,7 +8,11 @@ export async function getSessionRole(): Promise<Role | null> {
   try {
     const payload = JSON.parse(
       Buffer.from(token.split(".")[1] ?? "", "base64url").toString("utf8")
-    ) as { role?: string; accountType?: string; user?: { role?: string } };
+    ) as { role?: string; accountType?: string; exp?: number; user?: { role?: string } };
+
+    if (payload.exp && payload.exp * 1000 <= Date.now()) {
+      return null;
+    }
     const value = (
       payload.role ??
       payload.user?.role ??

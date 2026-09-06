@@ -50,6 +50,39 @@ button {
   border-radius: 0;
 }
 
+.ui-avatar {
+  position: relative;
+  display: inline-grid;
+  flex: 0 0 auto;
+  width: 2.75rem;
+  height: 2.75rem;
+  overflow: hidden;
+  place-items: center;
+  border-radius: 0.55rem;
+  background: #eceff1;
+  color: #505761;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.ui-avatar__image { width: 100%; height: 100%; object-fit: cover; }
+.ui-avatar__fallback { display: grid; width: 100%; height: 100%; place-items: center; }
+.ui-avatar__badge { position: absolute; right: 0.05rem; bottom: 0.05rem; width: 0.55rem; height: 0.55rem; border: 2px solid #fff; border-radius: 50%; background: #16c784; }
+.ui-button { display: inline-flex; align-items: center; justify-content: center; border: 1px solid transparent; border-radius: 0.45rem; font: inherit; cursor: pointer; transition: background-color 160ms ease, border-color 160ms ease; }
+.ui-button--default { background: #18181b; color: #fff; }
+.ui-button--outline { border-color: #e4e4e7; background: #fff; color: #27272a; }
+.ui-button--ghost { background: transparent; color: #71717a; }
+.ui-button--sm { min-height: 2rem; padding: 0.35rem 0.65rem; font-size: 0.72rem; }
+.ui-button--icon { width: 2rem; height: 2rem; padding: 0; }
+.ui-progress { display: grid; gap: 0.4rem; width: 100%; }
+.ui-progress__meta { display: flex; justify-content: space-between; gap: 1rem; color: #888c92; font-size: 0.68rem; }
+.ui-progress__value { color: #34363a; font-weight: 700; }
+.ui-progress__track { height: 0.32rem; overflow: hidden; border-radius: 999px; background: #eef0f1; }
+.ui-progress__indicator { display: block; height: 100%; border-radius: inherit; background: #12c98a; transition: width 180ms ease; }
+.ui-rating { display: inline-flex; align-items: center; gap: 0.3rem; color: #f6a311; }
+.ui-rating__stars { display: inline-flex; gap: 0.08rem; }
+.ui-rating__stars svg { width: 0.78rem; height: 0.78rem; stroke-width: 1.5; }
+.ui-rating__value { color: inherit; font-size: 0.68rem; font-weight: 700; }
+
 input,
 textarea,
 select {

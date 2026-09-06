@@ -1,0 +1,71 @@
+@use "../../../assets/sass/utilities/variables" as *;
+
+.service-modal {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  padding: 1.5rem;
+  place-items: center;
+  background: rgba(15, 23, 42, 0.42);
+}
+
+.service-modal__dialog {
+  width: min(100%, 58rem);
+  max-height: calc(100vh - 3rem);
+  overflow: auto;
+  border: 1px solid $dashboard-border-soft;
+  border-radius: 1rem;
+  background: $dashboard-surface;
+  box-shadow: 0 1.5rem 4rem rgba(15, 23, 42, 0.2);
+}
+
+.service-modal__header,
+.service-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.4rem 1.6rem;
+}
+
+.service-modal__header { border-bottom: 1px solid $dashboard-border-soft; }
+.service-modal__heading { display: flex; align-items: center; gap: 0.8rem; }
+.service-modal__heading > span { display: grid; width: 3rem; height: 3rem; place-items: center; border-radius: 0.65rem; background: #e8faf4; color: $dashboard-teal; }
+.service-modal__heading svg { width: 1.5rem; }
+.service-modal__heading p { color: $dashboard-teal; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; }
+.service-modal__heading h2 { margin-top: 0.2rem; color: $dashboard-ink; font-size: 1.45rem; }
+.service-modal__close { color: $dashboard-muted; }
+.service-modal__close svg { width: 1.4rem; }
+.service-modal__form { padding: 1.6rem; }
+.service-modal__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.service-modal__grid label { display: grid; gap: 0.4rem; color: $dashboard-muted-strong; font-size: 0.8rem; font-weight: 600; }
+.service-modal__grid label > span { display: flex; gap: 0.35rem; }
+.service-modal__grid em { color: $dashboard-muted; font-size: 0.7rem; font-style: normal; font-weight: 400; }
+.service-modal__grid input,
+.service-modal__grid select,
+.service-modal__grid textarea { width: 100%; padding: 0.7rem 0.8rem; border: 1px solid $dashboard-border-soft; border-radius: 0.55rem; background: $dashboard-surface; color: $dashboard-ink; font: inherit; font-size: 0.9rem; }
+.service-modal__grid textarea { min-height: 6rem; max-height: 9rem; resize: none; overflow-y: auto; }
+.service-modal__field--wide { grid-column: 1 / -1; }
+.service-modal__input-wrap { position: relative; display: flex; align-items: center; }
+.service-modal__input-wrap svg { position: absolute; left: 0.75rem; width: 1.1rem; color: $dashboard-muted; }
+.service-modal__input-wrap input { padding-left: 2.3rem; padding-right: 3rem; }
+.service-modal__input-wrap small { position: absolute; right: 0.75rem; color: $dashboard-muted; }
+.service-modal__error { margin-top: 1rem; color: #c2410c; font-size: 0.85rem; }
+.service-modal__footer { margin-top: 1.5rem; padding: 1.2rem 0 0; border-top: 1px solid $dashboard-border-soft; }
+.service-modal__footer button { min-height: 2.6rem; padding: 0.55rem 0.9rem; border-radius: 0.5rem; font-size: 0.85rem; }
+.service-modal__footer button:first-child { border: 1px solid $dashboard-border-soft; color: $dashboard-muted-strong; }
+.service-modal__footer button:last-child { display: inline-flex; align-items: center; gap: 0.45rem; background: $dashboard-ink; color: $dashboard-surface; }
+.service-modal__footer button:disabled { cursor: wait; opacity: 0.65; }
+.service-modal__footer svg { width: 1rem; animation: service-modal-spin 0.8s linear infinite; }
+.service-modal__success { display: grid; min-height: 20rem; padding: 2rem; place-items: center; align-content: center; gap: 0.6rem; text-align: center; }
+.service-modal__success svg { width: 3rem; height: 3rem; color: $dashboard-teal; }
+.service-modal__success h3 { color: $dashboard-ink; font-size: 1.2rem; }
+.service-modal__success p { color: $dashboard-muted; font-size: 0.9rem; }
+
+@keyframes service-modal-spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 600px) {
+  .service-modal__grid { grid-template-columns: 1fr; }
+  .service-modal__field--wide { grid-column: auto; }
+}

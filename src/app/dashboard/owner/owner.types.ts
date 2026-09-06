@@ -32,4 +32,38 @@ export type Kpi = {
 export type OwnerDashboardData = {
   appointments: Appointment[];
   services: Service[];
+  payments: Payment[];
+  reviews: Review[];
+  currentUser: CurrentUser;
+};
+
+export type CurrentUser = {
+  id: string;
+  name: string;
+  email: string | null;
+  avatar: string | null;
+  role: string;
+};
+
+export type Payment = {
+  id: string;
+  finalAmount: number | string;
+  paidAt: string | null;
+  status: string;
+};
+
+export type Review = {
+  id: string;
+  rating: number;
+  active: boolean;
+};
+
+export type DashboardOverviewStats = {
+  todayEarnings: number;
+  todayAppointments: number;
+  completedToday: number;
+  newClientsToday: number;
+  satisfaction: number | null;
+  reviewCount: number;
+  ratingDistribution: Array<{ rating: string; count: number }>;
 };
