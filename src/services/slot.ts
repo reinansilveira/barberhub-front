@@ -20,8 +20,6 @@ export async function findAvailableSlots(
   return data;
 }
 
-// --- novos ---
-
 export async function createSlots(
   professionalId: string,
   isoTimes: string[],
@@ -34,7 +32,9 @@ export async function createSlots(
   return data;
 }
 
-export function isSlotBatch(result: Slot | SlotBatchResult): result is SlotBatchResult {
+export function isSlotBatch(
+  result: Slot | SlotBatchResult,
+): result is SlotBatchResult {
   return "created" in result;
 }
 

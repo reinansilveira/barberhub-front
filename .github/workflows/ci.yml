@@ -31,5 +31,17 @@ jobs:
       - name: Executar Lint
         run: npm run lint
 
+      - name: Validar formatação
+        run: npm run format:check
+
+      - name: Validar tipos
+        run: npm run typecheck
+
+      - name: Executar testes
+        run: npm run test:coverage
+
+      - name: Compilar Sass
+        run: npm run build:sass
+
       - name: Gerar Build
         run: npm run build

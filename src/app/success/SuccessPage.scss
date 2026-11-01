@@ -1,0 +1,55 @@
+@use "../../assets/sass/utilities/variables" as *;
+@use "../../assets/sass/utilities/tipography" as *;
+
+.booking-success {
+  display: grid;
+  gap: 2rem;
+  padding: 3.2rem;
+  border: 1px solid #e3dccf;
+  border-radius: 1.2rem;
+  background: #fff;
+
+  &__icon {
+    width: 4.8rem;
+    height: 4.8rem;
+    color: #0f8a4b;
+  }
+
+  &__message,
+  &__hint {
+    @include body-text();
+    color: #3d3833;
+  }
+
+  &__details {
+    display: grid;
+    margin: 0;
+    border-top: 1px solid #ece6db;
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.6rem;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid #ece6db;
+
+    dt {
+      @include body-text();
+      color: #5c554d;
+    }
+
+    dd {
+      @include body-text();
+      margin: 0;
+      font-weight: 700;
+      text-align: right;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+  }
+}

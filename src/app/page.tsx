@@ -9,7 +9,7 @@ import Cta from "@/features/home/modules/Cta/Cta";
 
 export default function Home() {
   return (
-    <main>
+    <>
       <Hero />
       <Stats />
       <Howitworks />
@@ -18,6 +18,6 @@ export default function Home() {
       <InstagramFeed />
       <Testimonials />
       <Cta />
-    </main>
+    </>
   );
 }

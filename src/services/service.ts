@@ -1,4 +1,4 @@
-import { api } from "./api/axios";
+import { api, publicApi } from "./api/axios";
 
 export interface Service {
   id: string;
@@ -30,23 +30,23 @@ export interface ProfessionalService {
 }
 
 export async function findServices(): Promise<Service[]> {
-  const { data } = await api.get<Service[]>("/services");
+  const { data } = await publicApi.get<Service[]>("/services");
   return data;
 }
 
 export async function findProfessionalServices(
   professionalId: string,
 ): Promise<ProfessionalService[]> {
-  const { data } = await api.get<ProfessionalService[]>(
+  const { data } = await publicApi.get<ProfessionalService[]>(
     "/professional-services",
     { params: { professionalId } },
   );
   return data;
 }
 
-// --- novos ---
-
-export async function createService(payload: CreateServiceDto): Promise<Service> {
+export async function createService(
+  payload: CreateServiceDto,
+): Promise<Service> {
   const { data } = await api.post<Service>("/services", payload);
   return data;
 }

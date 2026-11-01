@@ -1,27 +1,25 @@
-import Image from "next/image";
-import "./LoginPage.scss";
-import bannerLogin from "@/assets/images/banner-login.png";
+import type { Metadata } from "next";
+import { AuthLayout } from "@/features/auth/AuthLayout";
 import { LoginForm } from "@/features/auth/LoginForm";
 
-export default function LoginPage() {
-  return (
-    <main className="login-page">
-      <section className="formSide">
-        <LoginForm />
-      </section>
+export const metadata: Metadata = { title: "Entrar" };
 
-      <aside className="showcaseSide">
-        <div className="imageFrame">
-          <Image
-            src={bannerLogin}
-            alt="Banner Barberhub"
-            fill
-            priority
-            className="bannerImage"
-            sizes="(max-width: 900px) 0px, 50vw"
-          />
-        </div>
-      </aside>
-    </main>
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ senha?: string; error?: string }>;
+}) {
+  const { senha, error } = await searchParams;
+  const notice =
+    senha === "redefinida"
+      ? "Senha alterada. Entre com a nova senha."
+      : error === "google"
+        ? "Não foi possível entrar com o Google. Tente novamente ou use seu e-mail."
+        : undefined;
+
+  return (
+    <AuthLayout>
+      <LoginForm notice={notice} />
+    </AuthLayout>
   );
 }

@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import Image from "next/image";
 import type { ReactNode } from "react";
+import { cn } from "@/utils/class-names";
+import { whatsappUrl } from "@/config/business";
 import "./Cta.scss";
+import { useCtaVideo } from "./use-cta-video";
 
-// Vídeo temporário (livre, sem marca d'água — licença Mixkit).
-// Troque por material próprio da barbearia quando tiver.
 const CTA_VIDEO_URL = "/videos/barbearia-video.mp4";
 const CTA_POSTER_URL =
   "https://assets.mixkit.co/videos/43236/43236-thumb-360-0.jpg";
@@ -18,6 +19,7 @@ interface Feature {
 
 const CLOCK_ICON = (
   <svg
+    aria-hidden="true"
     width="20"
     height="20"
     viewBox="0 0 24 24"
@@ -34,6 +36,7 @@ const CLOCK_ICON = (
 
 const SHIELD_ICON = (
   <svg
+    aria-hidden="true"
     width="20"
     height="20"
     viewBox="0 0 24 24"
@@ -49,6 +52,7 @@ const SHIELD_ICON = (
 
 const USER_LOCK_ICON = (
   <svg
+    aria-hidden="true"
     width="20"
     height="20"
     viewBox="0 0 24 24"
@@ -72,24 +76,31 @@ const FEATURES: Feature[] = [
 ];
 
 const WHATSAPP_ICON = (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+  <svg
+    aria-hidden="true"
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+  >
     <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.29-1.39a9.9 9.9 0 0 0 4.75 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.87 9.87 0 0 0 12.04 2Zm0 18.15h-.01a8.22 8.22 0 0 1-4.2-1.15l-.3-.18-3.14.82.84-3.06-.2-.31a8.21 8.21 0 0 1-1.26-4.36c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.55-3.7 8.24-8.22 8.24Zm4.52-6.17c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.13-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.38-1.99-1.22-.74-.65-1.23-1.46-1.38-1.7-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.15.16-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.56-1.34-.76-1.83-.2-.48-.41-.42-.56-.42-.14-.01-.31-.01-.48-.01-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1s.9 2.44 1.02 2.6c.12.17 1.77 2.7 4.29 3.79.6.26 1.07.41 1.43.53.6.19 1.15.16 1.58.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.28Z" />
   </svg>
 );
 
 export default function Cta() {
-  const [isVideoActive, setIsVideoActive] = useState(false);
+  const { isVideoActive, activateVideo } = useCtaVideo();
 
   return (
-    <section className="cta" onMouseEnter={() => setIsVideoActive(true)}>
+    <section className="cta" onMouseEnter={activateVideo}>
       <div className="cta__background">
-        <img
+        <Image
           src={CTA_POSTER_URL}
           alt=""
           aria-hidden="true"
-          className={`cta__poster ${
-            isVideoActive ? "cta__poster--hidden" : ""
-          }`}
+          fill
+          sizes="100vw"
+          loading="eager"
+          className={cn("cta__poster", isVideoActive && "cta__poster--hidden")}
         />
 
         {isVideoActive && (
@@ -127,6 +138,7 @@ export default function Cta() {
           <a href="/agendar" className="cta__primary">
             Agendar meu horário
             <svg
+              aria-hidden="true"
               width="16"
               height="16"
               viewBox="0 0 24 24"
@@ -142,10 +154,11 @@ export default function Cta() {
           </a>
 
           <a
-            href="https://wa.me/5579999999999"
+            href={whatsappUrl("Olá! Gostaria de agendar um horário.")}
             target="_blank"
             rel="noopener noreferrer"
             className="cta__secondary"
+            aria-label="Falar no WhatsApp (abre em nova aba)"
           >
             {WHATSAPP_ICON}
             WhatsApp
@@ -155,10 +168,10 @@ export default function Cta() {
         <div className="cta__features">
           {FEATURES.map(({ icon, label, value }) => (
             <div key={label} className="cta__feature">
-              <span className="cta__feature_icon">{icon}</span>
-              <span className="cta__feature_text">
-                <span className="cta__feature_label">{label}</span>
-                <strong className="cta__feature_value">{value}</strong>
+              <span className="cta__feature-icon">{icon}</span>
+              <span className="cta__feature-text">
+                <span className="cta__feature-label">{label}</span>
+                <strong className="cta__feature-value">{value}</strong>
               </span>
             </div>
           ))}

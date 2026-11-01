@@ -1,27 +1,13 @@
-import Image from "next/image";
-import "./RegisterPage.scss";
-import bannerLogin from "@/assets/images/banner-login.png";
-import { RegisterForm } from "@/features/auth/Registerform";
+import type { Metadata } from "next";
+import { AuthLayout } from "@/features/auth/AuthLayout";
+import { RegisterForm } from "@/features/auth/RegisterForm";
+
+export const metadata: Metadata = { title: "Criar conta" };
 
 export default function RegisterPage() {
   return (
-    <main className="register-page">
-      <section className="formSide">
-        <RegisterForm />
-      </section>
-
-      <aside className="showcaseSide">
-        <div className="imageFrame">
-          <Image
-            src={bannerLogin}
-            alt="Banner Barberhub"
-            fill
-            priority
-            className="bannerImage"
-            sizes="(max-width: 900px) 0px, 50vw"
-          />
-        </div>
-      </aside>
-    </main>
+    <AuthLayout>
+      <RegisterForm />
+    </AuthLayout>
   );
 }

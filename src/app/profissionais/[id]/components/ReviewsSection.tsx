@@ -1,96 +1,72 @@
-import Image from "next/image";
 import { Rating } from "@/components/reui/rating";
+import type { PublicReview } from "@/services/review";
+import { buildReviewSummary } from "../professional-profile.utils";
 
-export interface Review {
-  id: string;
-  authorName: string;
-  authorAvatar: string;
-  rating: number;
-  date: string;
-  comment: string;
-  serviceTag?: string;
-}
+const reviewDate = new Intl.DateTimeFormat("pt-BR", {
+  day: "2-digit",
+  month: "long",
+  year: "numeric",
+});
 
-export interface RatingBreakdown {
-  5: number;
-  4: number;
-  3: number;
-  2: number;
-  1: number;
-}
-
-export const ReviewsSection = ({
-  averageRating,
-  reviewCount,
-  ratingBreakdown,
-  reviews,
-}: {
-  averageRating?: number;
-  reviewCount?: number;
-  ratingBreakdown?: RatingBreakdown;
-  reviews?: Review[];
-}) => {
-  const hasReviews = Boolean(reviews?.length);
+export const ReviewsSection = ({ reviews }: { reviews: PublicReview[] }) => {
+  const summary = buildReviewSummary(reviews);
 
   return (
-    <section className="card">
-      <div className="sectionTitle">
-        <h2>Avaliações</h2>
-        {!hasReviews && <span>Novas avaliações aparecerão aqui</span>}
+    <section className="profile__card" aria-labelledby="profile-reviews-title">
+      <div className="profile__section-title">
+        <h2 id="profile-reviews-title">Avaliações</h2>
+        {!summary.count && <span>Novas avaliações aparecerão aqui</span>}
       </div>
 
-      {!hasReviews && (
-        <div className="ratingEmpty">
-          <strong>—</strong>
+      {!summary.count ? (
+        <div className="profile__rating-empty">
+          <strong aria-hidden="true">—</strong>
           <p>Este profissional ainda não possui avaliações.</p>
         </div>
-      )}
-
-      {hasReviews && (
+      ) : (
         <>
-          <div className="ratingSummary">
-            <div className="ratingScore">
-              <strong>{(averageRating ?? 0).toFixed(1)}</strong>
-              <span>{reviewCount ?? reviews!.length} avaliações</span>
-            </div>
-
-            {ratingBreakdown && (
-              <div className="ratingBars">
-                {[5, 4, 3, 2, 1].map((star) => {
-                  const count = ratingBreakdown[star as keyof RatingBreakdown] ?? 0;
-                  const total = Math.max(reviewCount ?? reviews!.length, 1);
-                  const percentage = Math.round((count / total) * 100);
-
-                  return (
-                    <div className="ratingBarRow" key={star}>
-                      <span>{star}★</span>
-                      <div className="ratingBarTrack">
-                        <div className="ratingBarFill" style={{ width: `${percentage}%` }} />
-                      </div>
-                      <span>{count}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+          <div className="reviews__summary">
+            <p className="reviews__score">
+              <strong>{summary.average.toFixed(1).replace(".", ",")}</strong>
+              <span>
+                {summary.count}{" "}
+                {summary.count === 1 ? "avaliação" : "avaliações"}
+              </span>
+            </p>
+            <ul className="reviews__bars" aria-label="Distribuição das notas">
+              {summary.breakdown.map(({ stars, count, percentage }) => (
+                <li className="reviews__bar-row" key={stars}>
+                  <span>
+                    {stars}
+                    <span aria-hidden="true">★</span>
+                    <span className="sr-only"> estrelas:</span>
+                  </span>
+                  <span className="reviews__bar-track" aria-hidden="true">
+                    <span
+                      className="reviews__bar-fill"
+                      style={{ width: `${percentage}%` }}
+                    />
+                  </span>
+                  <span>{count}</span>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          <div className="reviews">
-            {reviews!.map((review) => (
-              <article className="review" key={review.id}>
-                <div className="reviewHead">
-                  <Image className="reviewAvatar" src={review.authorAvatar} alt={review.authorName} width={48} height={48} />
-                  <div className="reviewAuthor">
-                    <strong>{review.authorName}</strong>
-                    <span>{review.date}</span>
+          <ul className="reviews">
+            {summary.withComment.map((review) => (
+              <li className="review" key={review.id}>
+                <div className="review__head">
+                  <div className="review__author">
+                    <strong>Cliente verificado</strong>
+                    <span>{reviewDate.format(new Date(review.createdAt))}</span>
                   </div>
-                  <Rating rating={review.rating} className="reviewStars" />
+                  <Rating rating={review.rating} className="review__stars" />
                 </div>
-                <p className="reviewComment">{review.comment}</p>
-                {review.serviceTag && <span className="reviewTag">{review.serviceTag}</span>}
-              </article>
+                <p className="review__comment">{review.comment}</p>
+              </li>
             ))}
-          </div>
+          </ul>
         </>
       )}
     </section>

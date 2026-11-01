@@ -1,9 +1,13 @@
 import { isAxiosError } from "axios";
 import { notFound } from "next/navigation";
 import { getBookingViewData } from "@/features/booking/booking.service";
-import { todayInBrazil } from "@/utils/booking.utils";
+import { todayInBrazil } from "@/utils/date-utils";
 import { findProfessionalById } from "@/services/professional";
-import { buildAvatarUrl, extractPortfolioImages } from "./professional-profile.utils";
+import {
+  buildAvatarUrl,
+  extractPortfolioImages,
+} from "./professional-profile.utils";
+import { findReviews } from "@/services/review";
 
 export async function getProfessionalProfileData(
   id: string,
@@ -21,7 +25,9 @@ export async function getProfessionalProfileData(
     }
 
     const status = isAxiosError(error) ? error.response?.status : undefined;
-    const message = isAxiosError(error) ? error.response?.data?.message : undefined;
+    const message = isAxiosError(error)
+      ? error.response?.data?.message
+      : undefined;
 
     console.error(`[professional-profile] Falha ao buscar profissional ${id}`, {
       status,
@@ -37,6 +43,7 @@ export async function getProfessionalProfileData(
       selectedService: undefined,
       avatar: "",
       portfolioImages: [],
+      reviews: [],
       profileError: true,
       errorStatus: status,
       errorMessage: message,
@@ -45,9 +52,14 @@ export async function getProfessionalProfileData(
 
   if (!professional) notFound();
 
-  const bookingData = await getBookingViewData(id, date).catch(() => ({ services: [], slots: [] }));
+  const [bookingData, allReviews] = await Promise.all([
+    getBookingViewData(id, date).catch(() => ({ services: [], slots: [] })),
+    findReviews().catch(() => []),
+  ]);
   const selectedServiceId = query.serviceId ?? "";
-  const selectedService = bookingData.services.find((item) => item.serviceId === selectedServiceId);
+  const selectedService = bookingData.services.find(
+    (item) => item.serviceId === selectedServiceId,
+  );
 
   return {
     professional,
@@ -57,6 +69,7 @@ export async function getProfessionalProfileData(
     selectedService,
     avatar: buildAvatarUrl(professional.user.avatar, professional.user.name),
     portfolioImages: extractPortfolioImages(bookingData.services),
+    reviews: allReviews.filter((review) => review.professionalId === id),
     profileError: false,
   };
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import { dateKey, formatDayLabel } from "@/utils/date-utils";
+import { cn } from "@/utils/class-names";
+import { WEEKDAY_INITIALS, dateKey, formatDayLabel } from "@/utils/date-utils";
 import "./AvailabilityCalendar.scss";
 import { useAvailabilityCalendar } from "./use-availability-calendar";
 
@@ -25,33 +26,44 @@ export function AvailabilityCalendar({
   } = useAvailabilityCalendar(professionalId, value);
 
   return (
-    <div className="calendar" aria-live="polite">
-      <div className="header">
-        <button aria-label="Mês anterior" disabled={!canGoBack} onClick={goToPreviousMonth} type="button">
+    <div className="availability-calendar">
+      <div className="availability-calendar__header">
+        <button
+          aria-label="Mês anterior"
+          disabled={!canGoBack}
+          onClick={goToPreviousMonth}
+          type="button"
+        >
           ‹
         </button>
-        <strong>{monthLabel}</strong>
+        <strong aria-live="polite">{monthLabel}</strong>
         <button aria-label="Próximo mês" onClick={goToNextMonth} type="button">
           ›
         </button>
       </div>
 
-      <div className="weekdays">
-        {["D", "S", "T", "Q", "Q", "S", "S"].map((day, index) => (
+      <div className="availability-calendar__weekdays">
+        {WEEKDAY_INITIALS.map((day, index) => (
           <span key={`${day}-${index}`}>{day}</span>
         ))}
       </div>
 
-      <div className="days">
+      <div className="availability-calendar__days">
         {calendarDays.map((day) => {
           const key = dateKey(day);
           const available = availableDates.has(key);
-          const isCurrentMonth = day.getUTCMonth() === visibleMonth.getUTCMonth();
+          const isCurrentMonth =
+            day.getUTCMonth() === visibleMonth.getUTCMonth();
 
           return (
             <button
               aria-label={formatDayLabel(day)}
-              className={`day ${available ? "available" : ""} ${key === value ? "selected" : ""} ${!isCurrentMonth ? "otherMonth" : ""}`}
+              className={cn(
+                "availability-calendar__day",
+                available && "availability-calendar__day--available",
+                key === value && "availability-calendar__day--selected",
+                !isCurrentMonth && "availability-calendar__day--outside-month",
+              )}
               disabled={!available}
               key={key}
               onClick={() => {
@@ -66,7 +78,11 @@ export function AvailabilityCalendar({
         })}
       </div>
 
-      {!availableDates.size && <p className="empty">Nenhuma data disponível neste mês.</p>}
+      {!availableDates.size && (
+        <p className="availability-calendar__empty">
+          Nenhuma data disponível neste mês.
+        </p>
+      )}
     </div>
   );
 }

@@ -1,9 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { login, loginClient, type LoginInput } from "@/services/auth";
+import {
+  login,
+  loginClient,
+  requiresTwoFactor,
+  verifyClientTwoFactorLogin,
+  type LoginInput,
+  type SessionTokens,
+  type TwoFactorChallenge,
+} from "@/services/auth";
 import { saveSession } from "./actions";
 
 type LoginFormValues = LoginInput & { remember?: boolean };
@@ -13,6 +21,10 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export function useLoginForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [twoFactorChallenge, setTwoFactorChallenge] =
+    useState<TwoFactorChallenge | null>(null);
+  const [twoFactorCode, setTwoFactorCode] = useState("");
+  const [isVerifyingTwoFactor, setIsVerifyingTwoFactor] = useState(false);
 
   const {
     register,
@@ -24,23 +36,59 @@ export function useLoginForm() {
     mode: "onSubmit",
   });
 
+  async function finishLogin(session: SessionTokens) {
+    await saveSession(session);
+    router.replace("/dashboard");
+    router.refresh();
+  }
+
   async function submit({ email, password }: LoginFormValues) {
     try {
-      let session;
+      let session: SessionTokens;
 
       try {
-        session = await loginClient({ email, password });
+        const clientLogin = await loginClient({ email, password });
+
+        if (requiresTwoFactor(clientLogin)) {
+          setTwoFactorChallenge(clientLogin);
+          setTwoFactorCode("");
+          return;
+        }
+
+        session = clientLogin;
       } catch {
         session = await login({ email, password });
       }
 
-      await saveSession(session);
-      router.replace("/dashboard");
-      router.refresh();
+      await finishLogin(session);
     } catch {
       setError("root", {
         message: "Não foi possível entrar. Confira suas credenciais.",
       });
+    }
+  }
+
+  async function submitTwoFactor(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!twoFactorChallenge || twoFactorCode.length !== 6) {
+      setError("root", { message: "Informe o código de seis dígitos." });
+      return;
+    }
+
+    setIsVerifyingTwoFactor(true);
+    try {
+      const session = await verifyClientTwoFactorLogin({
+        challengeId: twoFactorChallenge.challengeId,
+        code: twoFactorCode,
+      });
+      await finishLogin(session);
+    } catch {
+      setError("root", {
+        message: "Código inválido ou expirado. Solicite um novo login.",
+      });
+    } finally {
+      setIsVerifyingTwoFactor(false);
     }
   }
 
@@ -56,7 +104,17 @@ export function useLoginForm() {
     rememberField: register("remember"),
     errors,
     isSubmitting,
+    isVerifyingTwoFactor,
     showPassword,
+    twoFactorChallenge,
+    twoFactorCode,
+    onTwoFactorSubmit: submitTwoFactor,
+    setTwoFactorCode: (value: string) =>
+      setTwoFactorCode(value.replace(/\D/g, "").slice(0, 6)),
+    cancelTwoFactor: () => {
+      setTwoFactorChallenge(null);
+      setTwoFactorCode("");
+    },
     togglePassword: () => setShowPassword((prev) => !prev),
     onSubmit: handleSubmit(submit),
   };

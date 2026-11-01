@@ -10,7 +10,10 @@ import {
   Sparkles,
   Users,
 } from "lucide-react";
+import { logoutSession } from "@/features/auth/actions";
+import { cn } from "@/utils/class-names";
 import { ownerNav } from "../owner.nav";
+import { BUSINESS } from "@/config/business";
 
 const ICONS = {
   Painel: LayoutGrid,
@@ -23,14 +26,14 @@ const ICONS = {
   "Novo serviço": Plus,
 };
 
-export function DashboardSidebar({ activeTitle }: { activeTitle: string }) {
+export const DashboardSidebar = ({ activeTitle }: { activeTitle: string }) => {
   return (
     <aside className="dashboard-sidebar dashboard-shell__sidebar">
       <a className="dashboard-sidebar__brand" href="/dashboard">
         <b className="dashboard-sidebar__brand-mark">
           <Sparkles aria-hidden="true" />
         </b>
-        <span className="dashboard-sidebar__brand-name">Barberhub.</span>
+        <span className="dashboard-sidebar__brand-name">{BUSINESS.name}</span>
       </a>
       <nav className="dashboard-sidebar__nav">
         {ownerNav.slice(0, 6).map(([label, href]) => {
@@ -40,11 +43,10 @@ export function DashboardSidebar({ activeTitle }: { activeTitle: string }) {
             <a
               key={href}
               href={href}
-              className={`dashboard-sidebar__nav-item ${
-                label === activeTitle
-                  ? "dashboard-sidebar__nav-item--active"
-                  : ""
-              }`}
+              className={cn(
+                "dashboard-sidebar__nav-item",
+                label === activeTitle && "dashboard-sidebar__nav-item--active",
+              )}
             >
               <Icon aria-hidden="true" />
               {label}
@@ -53,16 +55,23 @@ export function DashboardSidebar({ activeTitle }: { activeTitle: string }) {
         })}
       </nav>
       <div className="dashboard-sidebar__footer">
-        <a className="dashboard-sidebar__footer-link" href="#">
+        <a className="dashboard-sidebar__footer-link" href="/faq">
           <CircleHelp aria-hidden="true" />
           Ajuda e suporte
         </a>
-        <a className="dashboard-sidebar__footer-link" href="#">
-          <LogOut aria-hidden="true" />
-          Sair
-        </a>
-        <small className="dashboard-sidebar__copyright">© 2024 Barberhub</small>
+        <form
+          className="dashboard-sidebar__footer-action"
+          action={logoutSession}
+        >
+          <button className="dashboard-sidebar__footer-link" type="submit">
+            <LogOut aria-hidden="true" />
+            Sair
+          </button>
+        </form>
+        <small className="dashboard-sidebar__copyright">
+          © {new Date().getFullYear()} {BUSINESS.name}
+        </small>
       </div>
     </aside>
   );
-}
+};

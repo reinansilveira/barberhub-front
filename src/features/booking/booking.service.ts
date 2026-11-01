@@ -1,4 +1,3 @@
-import { createClient } from "@/services/client";
 import { serverApi } from "@/services/api/server";
 import type { ProfessionalService } from "@/services/service";
 import type { Slot } from "@/services/slot";
@@ -8,7 +7,6 @@ export async function getBookingViewData(
   professionalId?: string,
   date?: string,
 ): Promise<BookingViewData> {
-
   if (!professionalId) return { services: [], slots: [] };
 
   const services = await serverApi<ProfessionalService[]>({
@@ -18,30 +16,26 @@ export async function getBookingViewData(
 
   const slots = date
     ? await serverApi<Slot[]>({
-      url: "/slots",
-      params: { professionalId, date },
-    })
+        url: "/slots",
+        params: { professionalId, date },
+      })
     : [];
 
   return { services, slots };
 }
 
 export async function createBooking(values: BookingFormValues) {
-  const client = await createClient({
-    name: values.name,
-    phone: values.phone,
-    email: values.email,
-  });
   await serverApi({
     method: "POST",
-    url: "/appointments",
+    url: "/appointments/public",
     data: {
-      clientId: client.id,
+      name: values.name,
+      phone: values.phone,
+      email: values.email,
       professionalId: values.professionalId,
       serviceId: values.serviceId,
       slotId: values.slotId,
       notes: values.notes,
     },
   });
-  
 }

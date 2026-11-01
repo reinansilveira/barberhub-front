@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-
-const apiBaseUrl =
-  process.env.API_URL ??
-  process.env.NEXT_PUBLIC_API_URL ??
-  process.env.NEXT_PUBLIC_API ??
-  "http://localhost:3000";
+import {
+  ACCESS_TOKEN_COOKIE,
+  API_BASE_URL,
+  REFRESH_TOKEN_COOKIE,
+  SESSION_COOKIE_OPTIONS,
+} from "@/services/api/config";
+import { getAccessToken } from "@/services/api/session";
 
 async function forward(req: NextRequest, path: string[]) {
-  const token = (await cookies()).get("barberhub_access_token")?.value;
-  const url = `${apiBaseUrl}/${path.join("/")}${req.nextUrl.search}`;
+  const token = await getAccessToken();
+  const url = `${API_BASE_URL}/${path.join("/")}${req.nextUrl.search}`;
 
   const hasBody = !["GET", "HEAD"].includes(req.method);
   const body = hasBody ? await req.text() : undefined;
@@ -28,47 +28,68 @@ async function forward(req: NextRequest, path: string[]) {
   const text = await res.text();
   const response = new NextResponse(text, {
     status: res.status,
-    headers: { "Content-Type": res.headers.get("Content-Type") ?? "application/json" },
+    headers: {
+      "Content-Type": res.headers.get("Content-Type") ?? "application/json",
+    },
   });
 
   try {
     const parsed = JSON.parse(text);
 
-    if (parsed?.session?.access_token && parsed?.session?.refresh_token) {
-      const isProd = process.env.NODE_ENV === "production";
+    // A criação pública de agendamento pode incluir a sessão do cliente no
+    // payload. Nunca deixe essa resposta substituir uma sessão que já está
+    // autenticada (por exemplo, a de um administrador criando um horário).
+    // Rotas de autenticação continuam podendo renovar/substituir a sessão.
+    const shouldPersistSession = path[0] === "auth" || !token;
 
-      response.cookies.set("barberhub_access_token", parsed.session.access_token, {
-        httpOnly: true,
-        secure: isProd,
-        sameSite: "lax",
-        path: "/",
-      });
-
-      response.cookies.set("barberhub_refresh_token", parsed.session.refresh_token, {
-        httpOnly: true,
-        secure: isProd,
-        sameSite: "lax",
-        path: "/",
-      });
+    if (
+      shouldPersistSession &&
+      parsed?.session?.access_token &&
+      parsed?.session?.refresh_token
+    ) {
+      response.cookies.set(
+        ACCESS_TOKEN_COOKIE,
+        parsed.session.access_token,
+        SESSION_COOKIE_OPTIONS,
+      );
+      response.cookies.set(
+        REFRESH_TOKEN_COOKIE,
+        parsed.session.refresh_token,
+        SESSION_COOKIE_OPTIONS,
+      );
     }
-  } catch {
-  }
+  } catch {}
 
   return response;
 }
 
-export async function GET(req: NextRequest, ctx: { params: Promise<{ path: string[] }> }) {
+export async function GET(
+  req: NextRequest,
+  ctx: { params: Promise<{ path: string[] }> },
+) {
   return forward(req, (await ctx.params).path);
 }
-export async function POST(req: NextRequest, ctx: { params: Promise<{ path: string[] }> }) {
+export async function POST(
+  req: NextRequest,
+  ctx: { params: Promise<{ path: string[] }> },
+) {
   return forward(req, (await ctx.params).path);
 }
-export async function PUT(req: NextRequest, ctx: { params: Promise<{ path: string[] }> }) {
+export async function PUT(
+  req: NextRequest,
+  ctx: { params: Promise<{ path: string[] }> },
+) {
   return forward(req, (await ctx.params).path);
 }
-export async function PATCH(req: NextRequest, ctx: { params: Promise<{ path: string[] }> }) {
+export async function PATCH(
+  req: NextRequest,
+  ctx: { params: Promise<{ path: string[] }> },
+) {
   return forward(req, (await ctx.params).path);
 }
-export async function DELETE(req: NextRequest, ctx: { params: Promise<{ path: string[] }> }) {
+export async function DELETE(
+  req: NextRequest,
+  ctx: { params: Promise<{ path: string[] }> },
+) {
   return forward(req, (await ctx.params).path);
 }

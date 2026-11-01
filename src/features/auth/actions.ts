@@ -1,11 +1,23 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import {
+  ACCESS_TOKEN_COOKIE,
+  REFRESH_TOKEN_COOKIE,
+  SESSION_COOKIE_OPTIONS,
+} from "@/services/api/config";
 import type { SessionTokens } from "@/services/auth";
 
 export async function saveSession(tokens: SessionTokens) {
   const store = await cookies();
-  const options = { httpOnly: true, sameSite: "lax" as const, secure: process.env.NODE_ENV === "production", path: "/" };
-  store.set("barberhub_access_token", tokens.access_token, options);
-  store.set("barberhub_refresh_token", tokens.refresh_token, options);
+  store.set(ACCESS_TOKEN_COOKIE, tokens.access_token, SESSION_COOKIE_OPTIONS);
+  store.set(REFRESH_TOKEN_COOKIE, tokens.refresh_token, SESSION_COOKIE_OPTIONS);
+}
+
+export async function logoutSession() {
+  const store = await cookies();
+  store.delete(ACCESS_TOKEN_COOKIE);
+  store.delete(REFRESH_TOKEN_COOKIE);
+  redirect("/login");
 }

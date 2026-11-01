@@ -1,104 +1,81 @@
-import type { Appointment } from "@/services/appointment";
-import { isCompleted, trend } from "../_shared/dashboard.utils";
-import { currency } from "../_shared/dashboard.utils";
 import { ownerNav } from "./owner.nav";
-import type { DayBucket, Kpi, OwnerView } from "./owner.types";
+import type {
+  DashboardOverviewStats,
+  OwnerDashboardData,
+  OwnerView,
+  Payment,
+} from "./owner.types";
 
-export function buildLast14Days(appointments: Appointment[]): DayBucket[] {
-  const now = new Date();
+const dayKey = (value: string | Date) =>
+  new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Sao_Paulo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date(value));
 
-  return Array.from({ length: 14 }, (_, i) => {
-    const date = new Date(now);
-    date.setHours(0, 0, 0, 0);
-    date.setDate(date.getDate() - 13 + i);
+export const paymentProfessionalName = (payment: Payment) =>
+  payment.appointment?.professional?.name ??
+  payment.appointment?.professional?.user?.name ??
+  "";
 
-    const entries = appointments.filter(
-      (item) => new Date(item.scheduledAt).toDateString() === date.toDateString(),
-    );
+export const paymentServiceName = (payment: Payment) =>
+  payment.appointment?.service?.name ?? "";
 
-    return {
-      date,
-      entries,
-      revenue: entries
-        .filter((item) => isCompleted(item.status))
-        .reduce((sum, item) => sum + Number(item.price || 0), 0),
-    };
+export const buildDashboardOverviewStats = (
+  appointments: OwnerDashboardData["appointments"],
+  payments: OwnerDashboardData["payments"],
+  reviews: OwnerDashboardData["reviews"],
+): DashboardOverviewStats => {
+  const today = dayKey(new Date());
+  const activeAppointments = appointments.filter(
+    (item) => !/cancel/i.test(item.status),
+  );
+  const todayAppointments = activeAppointments.filter(
+    (item) => dayKey(item.scheduledAt) === today,
+  );
+  const firstAppointmentByClient = new Map<string, string>();
+
+  activeAppointments.forEach((item) => {
+    const clientKey = item.client.id ?? item.client.name;
+    const first = firstAppointmentByClient.get(clientKey);
+    if (!first || new Date(item.scheduledAt) < new Date(first)) {
+      firstAppointmentByClient.set(clientKey, item.scheduledAt);
+    }
   });
-}
 
-function sumBucket(list: DayBucket[], fn: (bucket: DayBucket) => number) {
-  return list.reduce((total, bucket) => total + fn(bucket), 0);
-}
+  const activeReviews = reviews.filter((review) => review.active);
+  const averageRating = activeReviews.length
+    ? activeReviews.reduce((total, review) => total + review.rating, 0) /
+      activeReviews.length
+    : null;
+  const ratingDistribution = [1, 2, 3, 4, 5].map((rating) => ({
+    rating: String(rating),
+    count: activeReviews.filter(
+      (review) => Math.round(review.rating) === rating,
+    ).length,
+  }));
 
-export function buildKpis(appointments: Appointment[]): Kpi[] {
-  const days = buildLast14Days(appointments);
-  const lastWeek = days.slice(7);
-  const prevWeek = days.slice(0, 7);
-
-  const completedItems = appointments.filter((item) => isCompleted(item.status));
-  const revenue = completedItems.reduce((total, item) => total + Number(item.price || 0), 0);
-  const clients = Array.from(new Set(appointments.map((item) => item.client.name)));
-
-  const revenueTrend = trend(
-    sumBucket(lastWeek, (d) => d.revenue),
-    sumBucket(prevWeek, (d) => d.revenue),
-  );
-
-  const completionLast = sumBucket(lastWeek, (d) => d.entries.filter((e) => isCompleted(e.status)).length);
-  const bookedLast = sumBucket(lastWeek, (d) => d.entries.length) || 1;
-  const completionPrev = sumBucket(prevWeek, (d) => d.entries.filter((e) => isCompleted(e.status)).length);
-  const bookedPrev = sumBucket(prevWeek, (d) => d.entries.length) || 1;
-
-  const completionTrend = trend(
-    Math.round((completionLast / bookedLast) * 100),
-    Math.round((completionPrev / bookedPrev) * 100),
-  );
-
-  const newClientsLast = new Set(lastWeek.flatMap((d) => d.entries.map((e) => e.client.name))).size;
-  const newClientsPrev = new Set(prevWeek.flatMap((d) => d.entries.map((e) => e.client.name))).size;
-  const clientsTrend = trend(newClientsLast, newClientsPrev);
-
-  const maxDayRevenue = Math.max(...days.map((d) => d.revenue), 1);
-  const maxDayBookings = Math.max(...days.map((d) => d.entries.length), 1);
-
-  return [
-    {
-      label: "FATURAMENTO CONCLUÍDO",
-      icon: "$",
-      accent: "#6348cb",
-      value: currency.format(revenue),
-      caption: "Somente atendimentos concluídos",
-      trendPct: revenueTrend.pct,
-      trendDir: revenueTrend.direction,
-      spark: days.map((d) => d.revenue / maxDayRevenue),
-    },
-    {
-      label: "TAXA DE CONCLUSÃO",
-      icon: "✓",
-      accent: "#18b6a3",
-      value: `${appointments.length ? Math.round((completedItems.length / appointments.length) * 100) : 0}%`,
-      caption: `${completedItems.length} atendimentos concluídos`,
-      trendPct: completionTrend.pct,
-      trendDir: completionTrend.direction,
-      spark: days.map((d) => d.entries.filter((e) => isCompleted(e.status)).length / maxDayBookings),
-    },
-    {
-      label: "CLIENTES",
-      icon: "♟",
-      accent: "#e0ad28",
-      value: `${clients.length}`,
-      caption: "Clientes cadastrados",
-      trendPct: clientsTrend.pct,
-      trendDir: clientsTrend.direction,
-      spark: days.map(
-        (d) =>
-          new Set(d.entries.map((e) => e.client.name)).size /
-          Math.max(...days.map((x) => new Set(x.entries.map((e) => e.client.name)).size), 1),
-      ),
-    },
-  ];
-}
+  return {
+    todayEarnings: payments
+      .filter((payment) => payment.paidAt && dayKey(payment.paidAt) === today)
+      .reduce((total, payment) => total + Number(payment.finalAmount), 0),
+    todayAppointments: todayAppointments.length,
+    completedToday: todayAppointments.filter((item) =>
+      /complete/i.test(item.status),
+    ).length,
+    newClientsToday: Array.from(firstAppointmentByClient.values()).filter(
+      (scheduledAt) => dayKey(scheduledAt) === today,
+    ).length,
+    satisfaction:
+      averageRating === null ? null : Math.round((averageRating / 5) * 100),
+    reviewCount: activeReviews.length,
+    ratingDistribution,
+  };
+};
 
 export function resolveTitle(view: OwnerView) {
-  return ownerNav.find((item) => item[1].includes(`view=${view}`))?.[0] ?? "Painel";
+  return (
+    ownerNav.find((item) => item[1].includes(`view=${view}`))?.[0] ?? "Painel"
+  );
 }

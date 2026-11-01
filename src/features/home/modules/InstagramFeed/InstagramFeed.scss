@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "../../../../assets/sass/utilities/variables" as *;
 @use "../../../../assets/sass/utilities/utilities" as *;
 @use "../../../../assets/sass/utilities/tipography" as *;
@@ -50,7 +51,7 @@
     transition: background-color $default-trans;
 
     &:hover {
-      background-color: darken($default-amber, 10%);
+      background-color: color.adjust($default-amber, $lightness: -10%);
     }
   }
 

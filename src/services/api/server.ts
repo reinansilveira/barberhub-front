@@ -1,16 +1,11 @@
 import axios, { type AxiosRequestConfig } from "axios";
-import { cookies } from "next/headers";
-
-const apiBaseUrl =
-  process.env.API_URL ??
-  process.env.NEXT_PUBLIC_API_URL ??
-  process.env.NEXT_PUBLIC_API ??
-  "http://localhost:3000";
+import { API_BASE_URL } from "./config";
+import { getAccessToken } from "./session";
 
 export async function serverApi<T>(config: AxiosRequestConfig): Promise<T> {
-  const token = (await cookies()).get("barberhub_access_token")?.value;
+  const token = await getAccessToken();
   const { data } = await axios.request<T>({
-    baseURL: apiBaseUrl,
+    baseURL: API_BASE_URL,
     ...config,
     headers: {
       Accept: "application/json",
@@ -19,6 +14,6 @@ export async function serverApi<T>(config: AxiosRequestConfig): Promise<T> {
       ...config.headers,
     },
   });
-  
+
   return data;
 }

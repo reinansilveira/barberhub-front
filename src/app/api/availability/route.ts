@@ -16,7 +16,10 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const professionalId = searchParams.get("professionalId");
   const start = searchParams.get("start");
-  const days = Math.min(Math.max(Number(searchParams.get("days") ?? 42), 1), 62);
+  const days = Math.min(
+    Math.max(Number(searchParams.get("days") ?? 42), 1),
+    62,
+  );
 
   if (!professionalId || !start) {
     return NextResponse.json(
@@ -37,7 +40,9 @@ export async function GET(request: Request) {
     );
 
     const availableDates = result.flatMap((item) =>
-      item.status === "fulfilled" && item.value.slots.length ? [item.value.date] : [],
+      item.status === "fulfilled" && item.value.slots.length
+        ? [item.value.date]
+        : [],
     );
 
     return NextResponse.json(

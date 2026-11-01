@@ -1,14 +1,22 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
 import { AvailabilityCalendar } from "./AvailabilityCalendar";
+import { useDateSearchParam } from "./use-date-search-param";
 
-export function ProfileAvailabilityCalendar({ professionalId, date }: { professionalId: string; date: string }) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  return <AvailabilityCalendar professionalId={professionalId} value={date} onChange={(nextDate) => {
-    const params = new URLSearchParams(searchParams?.toString() ?? "");
-    params.set("date", nextDate);
-    router.replace(`?${params.toString()}`, { scroll: false });
-  }} />;
+export function ProfileAvailabilityCalendar({
+  professionalId,
+  date,
+}: {
+  professionalId: string;
+  date: string;
+}) {
+  const setDate = useDateSearchParam();
+
+  return (
+    <AvailabilityCalendar
+      professionalId={professionalId}
+      value={date}
+      onChange={setDate}
+    />
+  );
 }

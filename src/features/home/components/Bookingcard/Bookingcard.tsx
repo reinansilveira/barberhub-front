@@ -2,12 +2,17 @@
 
 import "./Bookingcard.scss";
 
-import type { BookingProfessional } from "./booking-card.logic";
-import { formatSlot, useBookingCard } from "./booking-card.logic";
 import { AvailabilityCalendar } from "@/features/booking/calendar/AvailabilityCalendar";
+import { formatSlot } from "@/utils/booking.utils";
+import { cn } from "@/utils/class-names";
+import { type BookingProfessional, useBookingCard } from "./use-booking-card";
 
-export default function BookingCard({ professionals }: { professionals: BookingProfessional[] }) {
-  const booking = useBookingCard();
+export default function BookingCard({
+  professionals,
+}: {
+  professionals: BookingProfessional[];
+}) {
+  const booking = useBookingCard(professionals);
   const {
     form,
     professionalId,
@@ -19,9 +24,6 @@ export default function BookingCard({ professionals }: { professionals: BookingP
     showDatePicker,
     loadingSlots,
     error,
-    success,
-    setSelectedDate,
-    setShowDatePicker,
   } = booking;
 
   return (
@@ -37,7 +39,7 @@ export default function BookingCard({ professionals }: { professionals: BookingP
           <select
             className="booking-card__select"
             id="professionalId"
-            {...form.register("professionalId", { required: true })}
+            {...booking.registerProfessional()}
           >
             <option value="">Selecione um profissional</option>
             {professionals.map((professional) => (
@@ -57,7 +59,7 @@ export default function BookingCard({ professionals }: { professionals: BookingP
               <select
                 className="booking-card__select"
                 id="serviceId"
-                {...form.register("serviceId", { required: true })}
+                {...booking.registerService()}
               >
                 <option value="">Selecione um serviço</option>
                 {services.map((service) => (
@@ -74,7 +76,7 @@ export default function BookingCard({ professionals }: { professionals: BookingP
                   key={professionalId}
                   professionalId={professionalId}
                   value={selectedDate}
-                  onChange={setSelectedDate}
+                  onChange={booking.changeDate}
                 />
               ) : (
                 <>
@@ -83,7 +85,7 @@ export default function BookingCard({ professionals }: { professionals: BookingP
                   </span>
                   <button
                     className="booking-card__change-date"
-                    onClick={() => setShowDatePicker(true)}
+                    onClick={booking.showDateOptions}
                     type="button"
                   >
                     Escolher outra data
@@ -96,16 +98,17 @@ export default function BookingCard({ professionals }: { professionals: BookingP
 
         {serviceId && (
           <div className="booking-card__field">
-            <span className="booking-card__field-label">Horário disponível</span>
+            <span className="booking-card__field-label">
+              Horário disponível
+            </span>
 
             <div className="booking-card__slots">
               {slots.map((slot) => (
                 <button
-                  className={
-                    slot.id === slotId
-                      ? "booking-card__slot--selected"
-                      : "booking-card__slot"
-                  }
+                  className={cn(
+                    "booking-card__slot",
+                    slot.id === slotId && "booking-card__slot--selected",
+                  )}
                   key={slot.id}
                   onClick={() => form.setValue("slotId", slot.id)}
                   type="button"
@@ -121,7 +124,7 @@ export default function BookingCard({ professionals }: { professionals: BookingP
                 {!showDatePicker && (
                   <button
                     className="booking-card__change-date"
-                    onClick={() => setShowDatePicker(true)}
+                    onClick={booking.showDateOptions}
                     type="button"
                   >
                     Escolher outra data
@@ -130,7 +133,10 @@ export default function BookingCard({ professionals }: { professionals: BookingP
               </div>
             )}
 
-            <input type="hidden" {...form.register("slotId", { required: true })} />
+            <input
+              type="hidden"
+              {...form.register("slotId", { required: true })}
+            />
           </div>
         )}
 
@@ -139,14 +145,20 @@ export default function BookingCard({ professionals }: { professionals: BookingP
             <div className="booking-card__field">
               <label className="booking-card__field-label">
                 Nome
-                <input className="booking-card__select" {...form.register("name")} />
+                <input
+                  className="booking-card__select"
+                  {...form.register("name")}
+                />
               </label>
             </div>
 
             <div className="booking-card__field">
               <label className="booking-card__field-label">
                 Telefone
-                <input className="booking-card__select" {...form.register("phone")} />
+                <input
+                  className="booking-card__select"
+                  {...form.register("phone")}
+                />
               </label>
             </div>
 
@@ -169,7 +181,6 @@ export default function BookingCard({ professionals }: { professionals: BookingP
       </form>
 
       {error && <p className="booking-card__error">{error}</p>}
-      {success && <p className="booking-card__success">Agendamento confirmado!</p>}
     </div>
   );
 }

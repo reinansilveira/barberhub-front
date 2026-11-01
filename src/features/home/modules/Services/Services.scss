@@ -1,121 +1,132 @@
+@use "sass:color";
 @use "../../../../assets/sass/utilities/variables" as *;
 @use "../../../../assets/sass/utilities/utilities" as *;
 @use "../../../../assets/sass/utilities/tipography" as *;
 
 .services {
-	background-color: $default-black;
-	padding: 9.6rem 0;
+  background-color: $default-black;
+  padding: 9.6rem 0;
 
-	&__header {
-		@include flexColumn(center, center, column);
-		text-align: center;
-		max-width: 56rem;
-		margin: 0 auto 6.4rem;
-	}
+  &__header {
+    @include flexColumn(center, center, column);
+    text-align: center;
+    max-width: 56rem;
+    margin: 0 auto 6.4rem;
+  }
 
-	&__label {
-		@include label-text();
-		color: $default-amber;
-		text-transform: uppercase;
-		margin-bottom: 1.6rem;
-	}
+  &__label {
+    @include label-text();
+    color: $default-amber;
+    text-transform: uppercase;
+    margin-bottom: 1.6rem;
+  }
 
-	&__title {
-		@include display-2();
-		color: $default-cream;
-		margin-bottom: 1.6rem;
-	}
+  &__title {
+    @include display-2();
+    color: $default-cream;
+    margin-bottom: 1.6rem;
+  }
 
-	&__subtitle {
-		@include body-text();
-		color: $default-grey-warm;
-	}
+  &__subtitle {
+    @include body-text();
+    color: $default-grey-warm;
+  }
 
-	&__grid {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 2.4rem;
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.4rem;
 
-		@include max(900) {
-			grid-template-columns: repeat(2, 1fr);
-		}
+    @include max(900) {
+      grid-template-columns: repeat(2, 1fr);
+    }
 
-		@include max(600) {
-			grid-template-columns: 1fr;
-		}
-	}
+    @include max(600) {
+      grid-template-columns: 1fr;
+    }
+  }
 
-	&__card {
-		@include flexColumn(stretch, flex-start, column);
-		padding: 3.2rem;
-		background-color: $default-surface;
-		border: 1px solid $default-border-dark;
-		border-radius: 1.2rem;
-		transition: border-color $default-trans;
+  &__card {
+    @include flexColumn(stretch, flex-start, column);
+    padding: 3.2rem;
+    background-color: $default-surface;
+    border: 1px solid $default-border-dark;
+    border-radius: 1.2rem;
+    transition: border-color $default-trans;
 
-		&:hover {
-			border-color: $default-amber;
-		}
-	}
+    &:hover {
+      border-color: $default-amber;
+    }
+  }
 
-	&__icon {
-		@include flex(center, center);
-		width: 4.8rem;
-		height: 4.8rem;
-		margin-bottom: 2.4rem;
-		background-color: $default-amber-dark;
-		border-radius: 50%;
-		color: $default-amber;
-	}
+  &__empty {
+    grid-column: 1 / -1;
+    padding: 3.2rem;
+    border: 1px solid $default-border-dark;
+    border-radius: 1.2rem;
+    color: $default-grey-warm;
+    font-size: 1.4rem;
+    text-align: center;
+  }
 
-	&__card_title {
-		@include display-3();
-		font-size: 2rem;
-		color: $default-cream;
-		margin-bottom: 1.2rem;
-	}
+  &__icon {
+    @include flex(center, center);
+    width: 4.8rem;
+    height: 4.8rem;
+    margin-bottom: 2.4rem;
+    background-color: $default-amber-dark;
+    border-radius: 50%;
+    color: $default-amber;
+  }
 
-	&__description {
-		@include body-text();
-		font-size: 1.4rem;
-		color: $default-grey-warm;
-		margin-bottom: 2.4rem;
-	}
+  &__card-title {
+    @include display-3();
+    font-size: 2rem;
+    color: $default-cream;
+    margin-bottom: 1.2rem;
+  }
 
-	&__footer {
-		@include flex(flex-end, space-between);
-		padding-top: 2rem;
-		margin-top: auto;
-		border-top: 1px solid $default-border-dark;
-	}
+  &__description {
+    @include body-text();
+    font-size: 1.4rem;
+    color: $default-grey-warm;
+    margin-bottom: 2.4rem;
+  }
 
-	&__price_group {
-		@include flexColumn(flex-start, center, column);
-		gap: 0.4rem;
-	}
+  &__footer {
+    @include flex(flex-end, space-between);
+    padding-top: 2rem;
+    margin-top: auto;
+    border-top: 1px solid $default-border-dark;
+  }
 
-	&__price {
-		@include display-3();
-		font-size: 2rem;
-		color: $default-amber;
-	}
+  &__price-group {
+    @include flexColumn(flex-start, center, column);
+    gap: 0.4rem;
+  }
 
-	&__duration {
-		@include small-text();
-		color: $default-grey-warm;
-	}
+  &__price {
+    @include display-3();
+    font-size: 2rem;
+    color: $default-amber;
+  }
 
-	&__link {
-		@include button-text();
-		display: inline-flex;
-		align-items: center;
-		gap: 0.6rem;
-		color: $default-amber;
-		text-decoration: none;
-		transition: color $default-trans;
+  &__duration {
+    @include small-text();
+    color: $default-grey-warm;
+  }
 
-		&:hover {
-			color: darken($default-amber, 10%);
-		}
-	}
+  &__link {
+    @include button-text();
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: $default-amber;
+    text-decoration: none;
+    transition: color $default-trans;
+
+    &:hover {
+      color: color.adjust($default-amber, $lightness: -10%);
+    }
+  }
 }

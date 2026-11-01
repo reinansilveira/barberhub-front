@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { BUSINESS } from "@/config/business";
 import "./globals.css";
 import { Playfair_Display, Inter } from "next/font/google";
 import Header from "@/layouts/header/Header";
@@ -16,9 +17,23 @@ const inter = Inter({
   weight: ["400", "500", "600", "700"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
+
 export const metadata: Metadata = {
-  title: "BarberHub",
-  description: "Agende seu horário com os melhores profissionais",
+  metadataBase: new URL(siteUrl),
+  title: { default: BUSINESS.name, template: `%s | ${BUSINESS.name}` },
+  description: BUSINESS.description,
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    siteName: BUSINESS.name,
+    title: BUSINESS.name,
+    description: BUSINESS.description,
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#111111",
 };
 
 export default function RootLayout({
@@ -27,10 +42,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={`${playfair.variable} ${inter.variable}`}>
+    <html
+      lang="pt-BR"
+      className={`${playfair.variable} ${inter.variable}`}
+      data-scroll-behavior="smooth"
+    >
       <body>
+        <a href="#conteudo" className="skip-link">
+          Pular para o conteúdo
+        </a>
         <Header />
-        <main>{children}</main>
+        <main id="conteudo" tabIndex={-1}>
+          {children}
+        </main>
         <Footer />
       </body>
     </html>

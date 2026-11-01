@@ -5,8 +5,8 @@ import type { Slot } from "@/services/slot";
 export type Professional = ProfessionalResponseDto;
 
 export interface BookingViewData {
-    services: ProfessionalService[];
-    slots: Slot[];
+  services: ProfessionalService[];
+  slots: Slot[];
 }
 
 export type BookingServiceItem = BookingViewData["services"][number];

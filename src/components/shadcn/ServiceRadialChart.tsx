@@ -10,20 +10,21 @@ import {
 
 type ServiceRadialChartProps = {
   total: number;
+  data: Array<{ name: string; value: number; fill: string }>;
 };
 
-const chartData = [
-  { name: "Cortes", value: 60, fill: "#09c9ae" },
-  { name: "Barbas", value: 25, fill: "#ffd45d" },
-  { name: "Pacotes", value: 15, fill: "#9333ea" },
-];
-
-export const ServiceRadialChart = ({ total }: ServiceRadialChartProps) => (
+export const ServiceRadialChart = ({
+  total,
+  data,
+}: ServiceRadialChartProps) => (
   <div className="service-radial-chart">
-    <div className="service-radial-chart__visual" aria-label="Distribuição dos serviços">
+    <div
+      className="service-radial-chart__visual"
+      aria-label="Distribuição dos serviços"
+    >
       <ResponsiveContainer width="100%" height="100%">
         <RadialBarChart
-          data={chartData}
+          data={data}
           innerRadius="55%"
           outerRadius="88%"
           startAngle={90}
@@ -49,7 +50,11 @@ export const ServiceRadialChart = ({ total }: ServiceRadialChartProps) => (
               );
             }}
           />
-          <RadialBar dataKey="value" background={{ fill: "#f2f3f4" }} cornerRadius={0} />
+          <RadialBar
+            dataKey="value"
+            background={{ fill: "#f2f3f4" }}
+            cornerRadius={0}
+          />
         </RadialBarChart>
       </ResponsiveContainer>
       <div className="service-radial-chart__total">
@@ -58,7 +63,7 @@ export const ServiceRadialChart = ({ total }: ServiceRadialChartProps) => (
       </div>
     </div>
     <div className="service-radial-chart__legend">
-      {chartData.map((item) => (
+      {data.map((item) => (
         <p key={item.name}>
           <span style={{ backgroundColor: item.fill }} />
           {item.name}

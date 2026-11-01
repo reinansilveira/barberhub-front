@@ -1,4 +1,6 @@
-export function today() {
+export const WEEKDAY_INITIALS = ["D", "S", "T", "Q", "Q", "S", "S"];
+
+export function todayInBrazil() {
   return new Intl.DateTimeFormat("en-CA", {
     timeZone: "America/Sao_Paulo",
     year: "numeric",
@@ -17,7 +19,9 @@ export function monthStart(date: string) {
 }
 
 export function addMonths(date: Date, amount: number) {
-  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + amount, 1));
+  return new Date(
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + amount, 1),
+  );
 }
 
 export function buildCalendarDays(visibleMonth: Date) {
@@ -31,16 +35,24 @@ export function buildCalendarDays(visibleMonth: Date) {
   });
 }
 
+export const capitalizeFirst = (text: string) =>
+  text.charAt(0).toLocaleUpperCase("pt-BR") + text.slice(1);
+
 export function formatMonthLabel(visibleMonth: Date) {
-  return new Intl.DateTimeFormat("pt-BR", {
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(visibleMonth);
+  return capitalizeFirst(
+    new Intl.DateTimeFormat("pt-BR", {
+      month: "long",
+      year: "numeric",
+      timeZone: "UTC",
+    }).format(visibleMonth),
+  );
 }
 
 export function formatDayLabel(day: Date) {
-  return new Intl.DateTimeFormat("pt-BR", { dateStyle: "full", timeZone: "UTC" }).format(day);
+  return new Intl.DateTimeFormat("pt-BR", {
+    dateStyle: "full",
+    timeZone: "UTC",
+  }).format(day);
 }
 
 export function daysInMonthOf(visibleMonth: Date) {

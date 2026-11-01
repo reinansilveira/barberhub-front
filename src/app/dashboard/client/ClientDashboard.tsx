@@ -1,15 +1,120 @@
-import { Bell, Camera, Check, ChevronRight, Clock3, CreditCard, MapPin, Plus, ShieldCheck } from "lucide-react";
+"use client";
+
+import { CalendarDays, LoaderCircle, Plus } from "lucide-react";
+import {
+  Avatar,
+  AvatarBadge,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
 import { DashboardSidebar } from "../_shared/components/DashboardSidebar";
+import { initials } from "../_shared/dashboard.utils";
 import { clientNav } from "./client.nav";
-import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Rating } from "@/components/reui/rating";
+import { ClientAccount } from "./components/ClientAccount";
+import { ClientAppointmentsList } from "./components/ClientAppointmentsList";
+import { ClientBookingModal } from "./components/ClientBookingModal";
+import { ClientNotificationPopover } from "./components/ClientNotificationPopover";
+import { useClientBookingModal } from "./hooks/use-client-booking-modal";
+import { useClientDashboard } from "./hooks/use-client-dashboard";
 
-const history = [["Corte Clássico", "Elite Studio", "Enzo", "10 nov", "R$ 85,00", "5,0"], ["Barba real", "Barber King", "Mateo", "28 out", "R$ 70,00", "4,8"], ["Combo completo", "Elite Studio", "Lucas", "14 out", "R$ 130,00", "5,0"], ["Fade + barba", "Elite Studio", "Enzo", "30 set", "R$ 110,00", "4,9"]];
-const appointments = [["24", "NOV", "Corte Clássico + Barba", "Elite Studio", "15:30", "Enzo Ribeiro", "R$ 110,00"], ["03", "DEZ", "Combo completo", "Barber King", "10:00", "Mateo Silva", "R$ 130,00"]];
+export function ClientDashboard({ view }: { view?: string }) {
+  const dashboard = useClientDashboard(view);
+  const bookingModal = useClientBookingModal();
 
-function HistoryCard() { return <section className="member-card client-account__history"><div className="member-card__heading"><div><h2>Histórico de cortes</h2><p>Seus últimos atendimentos.</p></div><a href="/dashboard?view=agendamentos">Ver tudo <ChevronRight aria-hidden="true" /></a></div><div className="member-table"><table><thead><tr><th>Serviço</th><th>Barbearia</th><th>Profissional</th><th>Data</th><th>Valor</th><th>Avaliação</th></tr></thead><tbody>{history.map((item) => <tr key={item[0] + item[3]}>{item.map((value, index) => <td key={value}>{index === 5 ? <Rating rating={Number(value.replace(",", "."))} showValue /> : value}</td>)}</tr>)}</tbody></table></div></section>; }
-function PreferenceCard() { return <section className="member-card client-account__preferences"><h2>Preferências</h2>{[["Notificações push", "Alertas de agendamento"], ["E-mails promocionais", "Ofertas e novidades"], ["Lembretes por SMS", "1 hora antes do horário"]].map(([title, text], index) => <label key={title}><span><b>{title}</b><small>{text}</small></span><input type="checkbox" defaultChecked={index !== 1} /></label>)}<div className="client-account__security"><h2>Segurança</h2><button><ShieldCheck aria-hidden="true" /> Alterar senha <ChevronRight aria-hidden="true" /></button><button><ShieldCheck aria-hidden="true" /> Autenticação em duas etapas <ChevronRight aria-hidden="true" /></button></div></section>; }
+  let content;
+  if (dashboard.loading) {
+    content = (
+      <section className="member-card member-state">
+        <LoaderCircle className="member-state__spinner" aria-hidden="true" />
+        <h2>Carregando sua conta</h2>
+      </section>
+    );
+  } else if (dashboard.error || !dashboard.data) {
+    content = (
+      <section className="member-card member-state">
+        <h2>Não foi possível carregar</h2>
+        <p>{dashboard.error}</p>
+        <button type="button" onClick={dashboard.reloadPage}>
+          Tentar novamente
+        </button>
+      </section>
+    );
+  } else if (dashboard.view === "agendamentos") {
+    content = <ClientAppointmentsList />;
+  } else if (dashboard.view === "inicio") {
+    content = (
+      <>
+        <section className="member-card member-welcome">
+          <CalendarDays aria-hidden="true" />
+          <div>
+            <h2>Olá, {dashboard.data.client.name}</h2>
+            <p>
+              {dashboard.upcoming.length
+                ? `Você tem ${dashboard.upcoming.length} agendamento(s) futuro(s).`
+                : "Você não tem agendamentos futuros."}
+            </p>
+          </div>
+        </section>
+        <ClientAccount />
+      </>
+    );
+  } else {
+    content = <ClientAccount />;
+  }
 
-function AccountOverview() { return <div className="client-account"><section className="client-account__profile-card"><button className="client-account__photo" aria-label="Alterar foto de perfil"><span>CS</span><Camera aria-hidden="true" /></button><h2>Camila Souza</h2><p>camila.souza@email.com</p><b className="client-account__vip">★ Cliente VIP</b><div className="client-account__totals"><div><strong>24</strong><span>Cortes</span></div><div><strong>4,9</strong><span>Média dada</span></div><div><strong>R$ 1,8k</strong><span>Total gasto</span></div></div></section><section className="client-account__details"><div className="member-card member-card--form"><div className="member-card__heading"><div><h2>Informações pessoais</h2><p>Mantenha seus dados atualizados.</p></div><button className="member-button member-button--dark">Salvar alterações</button></div><div className="member-form"><label>Nome completo<input defaultValue="Camila Souza" /></label><label>E-mail<input defaultValue="camila.souza@email.com" /></label><label>Telefone<input defaultValue="(11) 98765-4321" /></label><label>Data de nascimento<input defaultValue="14/03/1996" /></label><label className="member-form__full">Endereço<input defaultValue="Rua das Palmeiras, 245 — São Paulo, SP" /></label></div></div><section className="member-card client-account__next"><div className="member-card__heading"><div><h2>Próximo agendamento</h2><p>Seu horário está reservado.</p></div><span className="member-status member-status--success"><Check aria-hidden="true" /> Confirmado</span></div><div className="client-account__appointment"><b className="client-account__date"><small>NOV</small>24</b><div><h3>Corte Clássico + Barba</h3><p><MapPin aria-hidden="true" /> Barbearia Elite Studio <span>·</span> <Clock3 aria-hidden="true" /> 15:30</p><small>com Enzo Ribeiro</small></div><strong>R$ 110,00</strong><button>Remarcar</button><button className="client-account__cancel">Cancelar</button></div></section><HistoryCard /></section><aside className="client-account__aside"><section className="client-account__loyalty"><div><h2>🏅 Programa fidelidade</h2><b>Nível Gold</b></div><strong>7 <small>/ 10 cortes</small></strong><span><i /></span><p>Faltam 3 cortes para ganhar 1 grátis</p></section><section className="member-card client-account__payment"><div className="member-card__heading"><div><h2>Formas de pagamento</h2><p>Escolha a preferida para pagar.</p></div><button>Gerenciar</button></div><div className="client-account__payment-row"><CreditCard aria-hidden="true" /><div><b>VISA ·•••• 4821</b><small>Expira 08/27</small></div><em>Padrão</em></div><div className="client-account__payment-row"><b>PIX</b><div><strong>Chave cadastrada</strong><small>CPF •••.•••.489-00</small></div></div><button className="client-account__add-payment"><Plus aria-hidden="true" /> Adicionar novo cartão</button></section><PreferenceCard /></aside></div>; }
-function AppointmentsView() { return <section className="member-card member-list"><div className="member-card__heading"><div><h2>Meus agendamentos</h2><p>Acompanhe os próximos horários e seu histórico.</p></div><button className="member-button member-button--dark">Novo agendamento</button></div>{appointments.map((item, i) => <article className="member-list__row" key={item[0]}><b className="client-account__date"><small>{item[1]}</small>{item[0]}</b><div><h3>{item[2]}</h3><p>{item[3]} · com {item[5]} · {item[4]}</p></div><strong>{item[6]}</strong><span className="member-status member-status--success">{i ? "Confirmado" : "Hoje"}</span><button>Detalhes</button></article>)}</section>; }
-export function ClientDashboard({ view: rawView }: { view?: string }) { const view = rawView ?? "conta"; const active = clientNav.find((item) => item.href.endsWith(`view=${view}`))?.label ?? "Minha conta"; const content = view === "agendamentos" ? <AppointmentsView /> : <AccountOverview />; return <section className="dashboard-shell member-dashboard"><DashboardSidebar active={active} items={clientNav} /><main className="dashboard-shell__main"><header className="member-topbar dashboard-shell__topbar"><div><h1>{active}</h1><p>Gerencie seus dados, preferências e histórico</p></div><div className="member-topbar__profile"><Bell aria-hidden="true" /><span>Camila Souza</span><Avatar><AvatarImage src="https://i.pravatar.cc/80?img=47" alt="Camila Souza" /><AvatarFallback>CS</AvatarFallback><AvatarBadge /></Avatar></div></header><div className="dashboard-shell__content member-dashboard__content">{content}</div></main></section>; }
+  return (
+    <section className="dashboard-shell member-dashboard">
+      <DashboardSidebar active={dashboard.active} items={clientNav} />
+      <div className="dashboard-shell__main">
+        <header className="member-topbar dashboard-shell__topbar">
+          <div className="member-topbar__container">
+            <div>
+              <h1>{dashboard.active}</h1>
+              <p>Gerencie seus dados, preferências e histórico</p>
+            </div>
+            <div className="member-topbar__profile">
+              <button
+                className="member-button member-button--dark member-topbar__booking"
+                type="button"
+                aria-label="Novo agendamento"
+                onClick={bookingModal.openBooking}
+              >
+                <Plus aria-hidden="true" />
+                <span>Novo agendamento</span>
+              </button>
+              <ClientNotificationPopover />
+              <a
+                className="member-topbar__account"
+                href="/dashboard?view=conta"
+                aria-label="Abrir minha conta"
+              >
+                <span>{dashboard.data?.client.name ?? "Conta do cliente"}</span>
+                <Avatar className="member-topbar__avatar">
+                  <AvatarImage
+                    src={dashboard.data?.client.avatar ?? undefined}
+                    alt={dashboard.data?.client.name ?? "Conta do cliente"}
+                  />
+                  <AvatarFallback>
+                    {dashboard.data
+                      ? initials(dashboard.data.client.name)
+                      : "—"}
+                  </AvatarFallback>
+                  <AvatarBadge />
+                </Avatar>
+              </a>
+            </div>
+          </div>
+        </header>
+        <div className="dashboard-shell__content">
+          <div className="member-dashboard__content">{content}</div>
+        </div>
+        {dashboard.data && (
+          <ClientBookingModal
+            clientId={dashboard.data.client.id}
+            onCreated={dashboard.refresh}
+          />
+        )}
+      </div>
+    </section>
+  );
+}

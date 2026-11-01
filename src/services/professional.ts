@@ -1,4 +1,4 @@
-import { api } from "./api/axios";
+import { api, publicApi } from "./api/axios";
 
 export interface User {
   id: string;
@@ -9,6 +9,16 @@ export interface User {
 
 export interface CreateProfessionalDto {
   userId: string;
+  specialty?: string;
+  bio?: string;
+  experience?: number;
+  commission?: number;
+}
+
+export interface CreateProfessionalAccountDto {
+  name: string;
+  email: string;
+  phone?: string;
   specialty?: string;
   bio?: string;
   experience?: number;
@@ -27,13 +37,21 @@ export interface ProfessionalResponseDto {
   user: User;
 }
 
+export type CreatedProfessionalAccount = {
+  professional: ProfessionalResponseDto;
+  temporaryPassword: string;
+};
+
 export async function findAllProfessionals(
   active?: boolean,
 ): Promise<ProfessionalResponseDto[]> {
-  const { data } = await api.get<ProfessionalResponseDto[]>("/professionals", {
-    params: active !== undefined ? { active: String(active) } : undefined,
-  });
-  
+  const { data } = await publicApi.get<ProfessionalResponseDto[]>(
+    "/professionals",
+    {
+      params: active !== undefined ? { active: String(active) } : undefined,
+    },
+  );
+
   return data;
 }
 
@@ -41,7 +59,7 @@ export async function findProfessionalById(
   id: string,
   active?: boolean,
 ): Promise<ProfessionalResponseDto> {
-  const { data } = await api.get<ProfessionalResponseDto>(
+  const { data } = await publicApi.get<ProfessionalResponseDto>(
     `/professionals/${id}`,
     {
       params: active !== undefined ? { active: String(active) } : undefined,
@@ -56,6 +74,17 @@ export async function createProfessional(
 ): Promise<ProfessionalResponseDto> {
   const { data } = await api.post<ProfessionalResponseDto>(
     "/professionals",
+    payload,
+  );
+
+  return data;
+}
+
+export async function createProfessionalAccount(
+  payload: CreateProfessionalAccountDto,
+): Promise<CreatedProfessionalAccount> {
+  const { data } = await api.post<CreatedProfessionalAccount>(
+    "/professionals/account",
     payload,
   );
 

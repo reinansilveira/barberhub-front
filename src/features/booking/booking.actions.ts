@@ -1,16 +1,20 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { apiErrorMessage } from "@/services/api/api-error";
+import { buildSuccessPath, toBookingQuery } from "@/utils/booking.utils";
 import { bookingFormSchema } from "./booking.schemas";
 import { createBooking } from "./booking.service";
-import { toBookingQuery } from "../../utils/booking.utils";
+
+const field = (formData: FormData, name: string) =>
+  String(formData.get(name) ?? "").trim() || undefined;
 
 export async function submitBooking(formData: FormData) {
   const parsed = bookingFormSchema.safeParse(Object.fromEntries(formData));
   const requestedReturnPath = String(formData.get("returnPath") ?? "/agendar");
   const returnPath =
     requestedReturnPath === "/agendar" ||
-      requestedReturnPath.startsWith("/profissionais/")
+    requestedReturnPath.startsWith("/profissionais/")
       ? requestedReturnPath
       : "/agendar";
 
@@ -26,12 +30,28 @@ export async function submitBooking(formData: FormData) {
     );
   }
 
+  let errorMessage: string | null = null;
   try {
     await createBooking(parsed.data);
-    redirect(`${returnPath}?success=1`);
-  } catch {
-    redirect(
-      `${returnPath}?${baseQuery}&error=${encodeURIComponent("Nao foi possivel concluir o agendamento.")}`,
+  } catch (error) {
+    errorMessage = apiErrorMessage(
+      error,
+      "Não foi possível concluir o agendamento. Tente outro horário.",
     );
   }
+
+  if (errorMessage) {
+    redirect(
+      `${returnPath}?${baseQuery}&error=${encodeURIComponent(errorMessage)}`,
+    );
+  }
+
+  redirect(
+    buildSuccessPath({
+      service: field(formData, "serviceName"),
+      professional: field(formData, "professionalName"),
+      date: field(formData, "dateLabel"),
+      time: field(formData, "timeLabel"),
+    }),
+  );
 }

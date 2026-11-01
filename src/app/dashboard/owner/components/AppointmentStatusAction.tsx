@@ -1,39 +1,33 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import {
-  updateAppointmentStatus,
-  type AppointmentStatus,
-} from "@/services/appointment";
+  canCompleteAppointment,
+  useCompleteAppointment,
+} from "../hooks/use-complete-appointment";
 
-export function AppointmentStatusAction({
+export const AppointmentStatusAction = ({
   id,
   status,
 }: {
   id: string;
   status: string;
-}) {
-  const router = useRouter();
-  const [pending, setPending] = useState(false);
+}) => {
+  const action = useCompleteAppointment(id);
 
-  if (!id || id.length < 20 || status === "COMPLETED" || status === "CANCELLED") {
-    return null;
-  }
-
-  async function complete() {
-    setPending(true);
-    try {
-      await updateAppointmentStatus(id, "COMPLETED" as AppointmentStatus);
-      router.refresh();
-    } finally {
-      setPending(false);
-    }
-  }
+  if (!canCompleteAppointment(id, status)) return null;
 
   return (
-    <button type="button" onClick={complete} disabled={pending}>
-      {pending ? "Salvando…" : "Concluir"}
+    <button
+      type="button"
+      onClick={action.complete}
+      disabled={action.pending}
+      title={
+        action.failed
+          ? "Não foi possível concluir. Tente novamente."
+          : undefined
+      }
+    >
+      {action.pending ? "Salvando…" : "Concluir"}
     </button>
   );
-}
+};

@@ -1,0 +1,17 @@
+@use "../../assets/sass/utilities/utilities" as *;
+
+.schedule-page {
+  display: grid;
+  grid-template-columns: 38rem minmax(0, 1fr);
+  gap: 4rem;
+  align-items: start;
+
+  @include max(900) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  &__info {
+    display: grid;
+    gap: 3.2rem;
+  }
+}

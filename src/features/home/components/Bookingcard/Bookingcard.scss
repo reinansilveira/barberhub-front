@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "../../../../assets/sass/utilities/variables" as *;
 @use "../../../../assets/sass/utilities/utilities" as *;
 @use "../../../../assets/sass/utilities/tipography" as *;
@@ -68,10 +69,6 @@
     border-color: $default-amber;
   }
 
-  &__date-input {
-    color-scheme: dark;
-  }
-
   &__slots {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -79,8 +76,7 @@
     margin-top: 1.2rem;
   }
 
-  &__slot,
-  &__slot--selected {
+  &__slot {
     @include button-text();
     padding: 1rem 0;
     background-color: $default-black;
@@ -105,11 +101,6 @@
     color: $default-black;
   }
 
-  &__availability,
-  &__contact {
-    margin-bottom: 2rem;
-  }
-
   &__status,
   &__error,
   &__success {
@@ -119,9 +110,6 @@
 
   &__error {
     color: #ef8b8b;
-  }
-  &__success {
-    color: #8ed9a5;
   }
 
   &__submit {
@@ -138,7 +126,7 @@
     transition: background-color $default-trans;
 
     &:hover {
-      background-color: darken($default-amber, 10%);
+      background-color: color.adjust($default-amber, $lightness: -10%);
     }
   }
 
@@ -147,38 +135,34 @@
     color: #ff9d9d;
     font-size: 1.3rem;
   }
+}
 
-  &__success {
-    margin-top: 1.2rem;
-    color: #76d89c;
+.booking-card {
+  &__date-choice,
+  &__empty-slots {
+    @include flexColumn(stretch, flex-start, column);
+    gap: 0.8rem;
+    margin: -0.6rem 0 2rem;
+  }
+
+  &__empty-slots {
+    margin: 1.2rem 0 0;
+    color: $default-grey-warm;
     font-size: 1.3rem;
   }
-}
 
-.booking-card__date-choice,
-.booking-card__empty-slots {
-  @include flexColumn(stretch, flex-start, column);
-  gap: 0.8rem;
-  margin: -0.6rem 0 2rem;
-}
+  &__change-date {
+    @include button-text();
+    width: fit-content;
+    padding: 0.9rem 1.2rem;
+    color: $default-amber;
+    background: transparent;
+    border: 1px solid $default-amber;
+    border-radius: 0.6rem;
+    cursor: pointer;
 
-.booking-card__empty-slots {
-  margin: 1.2rem 0 0;
-  color: $default-grey-warm;
-  font-size: 1.3rem;
-}
-
-.booking-card__change-date {
-  @include button-text();
-  width: fit-content;
-  padding: 0.9rem 1.2rem;
-  color: $default-amber;
-  background: transparent;
-  border: 1px solid $default-amber;
-  border-radius: 0.6rem;
-  cursor: pointer;
-
-  &:hover {
-    background: rgba($default-amber, 0.12);
+    &:hover {
+      background: rgba($default-amber, 0.12);
+    }
   }
 }

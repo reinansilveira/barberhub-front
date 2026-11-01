@@ -1,10 +1,5 @@
 import axios from "axios";
-
-const serverBaseUrl =
-  process.env.API_URL ??
-  process.env.NEXT_PUBLIC_API_URL ??
-  process.env.NEXT_PUBLIC_API ??
-  "http://localhost:3000";
+import { ACCESS_TOKEN_COOKIE, API_BASE_URL, API_PROXY_PATH } from "./config";
 
 export const api = axios.create({
   headers: {
@@ -12,21 +7,30 @@ export const api = axios.create({
   },
 });
 
+export const publicApi = axios.create({
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
 api.interceptors.request.use(async (config) => {
   if (typeof window === "undefined") {
-    // rodando no servidor: precisa de URL absoluta e ler o cookie httpOnly
     const { cookies } = await import("next/headers");
-    const token = (await cookies()).get("barberhub_access_token")?.value;
+    const token = (await cookies()).get(ACCESS_TOKEN_COOKIE)?.value;
 
-    config.baseURL = serverBaseUrl;
+    config.baseURL = API_BASE_URL;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
   } else {
-    // rodando no browser: continua indo pelo proxy relativo
-    config.baseURL = "/api/backend";
+    config.baseURL = API_PROXY_PATH;
   }
 
+  return config;
+});
+
+publicApi.interceptors.request.use((config) => {
+  config.baseURL =
+    typeof window === "undefined" ? API_BASE_URL : API_PROXY_PATH;
   return config;
 });

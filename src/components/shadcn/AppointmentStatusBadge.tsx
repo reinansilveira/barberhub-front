@@ -10,8 +10,8 @@ export function AppointmentStatusBadge({ status }: { status: string }) {
       : "Pendente";
 
   return (
-    <span className={`statusBadge statusBadge--${key}`}>
-      <span className="statusBadge__dot" />
+    <span className={`status-badge status-badge--${key}`}>
+      <span className="status-badge__dot" />
       {label}
     </span>
   );

@@ -2,9 +2,6 @@
 @use "../../../../assets/sass/utilities/utilities" as *;
 @use "../../../../assets/sass/utilities/tipography" as *;
 
-// Sem classe raiz única: nav e track são renderizados como irmãos
-// (via Fragment) e posicionados pelo grid definido em Professionals.module.scss
-
 .professionals-carousel {
   &__nav {
     grid-area: nav;
@@ -26,7 +23,9 @@
     border-radius: 50%;
     color: $default-cream;
     cursor: pointer;
-    transition: border-color $default-trans, color $default-trans;
+    transition:
+      border-color $default-trans,
+      color $default-trans;
 
     &:hover {
       border-color: $default-amber;

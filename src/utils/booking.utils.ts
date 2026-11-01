@@ -13,20 +13,26 @@ export function toBookingQuery(filters: BookingFilters): string {
   return params.toString();
 }
 
-export function formatSlot(startsAt: string): string {
+export type BookingSummary = {
+  service?: string;
+  professional?: string;
+  date?: string;
+  time?: string;
+};
 
+export function buildSuccessPath(summary: BookingSummary): string {
+  const params = new URLSearchParams();
+  Object.entries(summary).forEach(([key, value]) => {
+    if (value) params.set(key, value);
+  });
+  const query = params.toString();
+  return query ? `/success?${query}` : "/success";
+}
+
+export function formatSlot(startsAt: string): string {
   return new Intl.DateTimeFormat("pt-BR", {
     timeZone: "America/Sao_Paulo",
     hour: "2-digit",
     minute: "2-digit",
   }).format(new Date(startsAt));
-}
-
-export function todayInBrazil(): string {
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Sao_Paulo",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date());
 }

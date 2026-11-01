@@ -1,5 +1,8 @@
 import { ProfileAvailabilityCalendar } from "@/features/booking/calendar/ProfileAvailabilityCalendar";
-import type { BookingServiceItem, BookingSlot } from "../professional-profile.types";
+import type {
+  BookingServiceItem,
+  BookingSlot,
+} from "../professional-profile.types";
 import { formatPrice, formatDuration } from "../professional-profile.utils";
 import { SlotSelector } from "./SlotSelector";
 
@@ -11,7 +14,6 @@ export const BookingCard = ({
   selectedService,
   date,
   error,
-  success,
 }: {
   id: string;
   professionalName: string;
@@ -20,16 +22,27 @@ export const BookingCard = ({
   selectedService: BookingServiceItem | undefined;
   date: string;
   error?: string;
-  success?: string;
 }) => {
   return (
-    <aside className="bookingCard" id="agendar">
-      <div className="bookingHeader">
-        <div className="bookingHeaderTop">
-          <span className="bookingHeaderIcon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <rect x="3" y="5" width="18" height="16" rx="3" fill="currentColor" />
-              <path d="M7 3v4M17 3v4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+    <aside className="profile-booking" id="agendar">
+      <div className="profile-booking__header">
+        <div className="profile-booking__header-top">
+          <span className="profile-booking__header-icon" aria-hidden="true">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+              <rect
+                x="3"
+                y="5"
+                width="18"
+                height="16"
+                rx="3"
+                fill="currentColor"
+              />
+              <path
+                d="M7 3v4M17 3v4"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
               <path d="M3 9.5h18" stroke="#17150f" strokeWidth="2" />
               <path
                 d="m8.5 14.5 2.2 2.2 4.8-4.8"
@@ -42,15 +55,17 @@ export const BookingCard = ({
           </span>
           <h2>Agendar horário</h2>
         </div>
-        <p className="bookingHeaderSubtitle">Escolha o serviço, data e hora</p>
+        <p className="profile-booking__header-subtitle">
+          Escolha o serviço, data e hora
+        </p>
       </div>
 
-      <span className="fieldLabel">Serviço selecionado</span>
+      <span className="profile-booking__field-label">Serviço selecionado</span>
       {selectedService ? (
-        <div className="selectedService">
-          <div className="selectedServiceInfo">
+        <div className="profile-booking__service">
+          <div className="profile-booking__service-info">
             <strong>{selectedService.service.name}</strong>
-            <span className="selectedServiceDuration">
+            <span className="profile-booking__service-duration">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -66,18 +81,22 @@ export const BookingCard = ({
               <span>{formatDuration(selectedService.service.duration)}</span>
             </span>
           </div>
-          <strong className="selectedServicePrice">
-            {formatPrice(selectedService.customPrice ?? selectedService.service.price)}
+          <strong className="profile-booking__service-price">
+            {formatPrice(
+              selectedService.customPrice ?? selectedService.service.price,
+            )}
           </strong>
         </div>
       ) : (
-        <div className="selectedServiceEmpty">Escolha um serviço na lista ao lado</div>
+        <div className="profile-booking__service-empty">
+          Escolha um serviço na lista ao lado
+        </div>
       )}
 
-      <form action={`/profissionais/${id}`} className="filterForm">
+      <form action={`/profissionais/${id}`} className="profile-booking__filter">
         <input name="serviceId" type="hidden" value={selectedServiceId} />
 
-        <span className="fieldLabel">Escolha a data</span>
+        <span className="profile-booking__field-label">Escolha a data</span>
         <input name="date" type="hidden" value={date} />
         <ProfileAvailabilityCalendar date={date} professionalId={id} />
       </form>
@@ -85,6 +104,7 @@ export const BookingCard = ({
       {selectedService && (
         <SlotSelector
           id={id}
+          professionalName={professionalName}
           date={date}
           selectedService={selectedService}
           selectedServiceId={selectedServiceId}
@@ -92,8 +112,11 @@ export const BookingCard = ({
         />
       )}
 
-      {error && <p className="error">{error}</p>}
-      {success === "1" && <p className="success">Agendamento confirmado com sucesso.</p>}
+      {error && (
+        <p className="profile-booking__error" role="alert">
+          {error}
+        </p>
+      )}
     </aside>
   );
 };

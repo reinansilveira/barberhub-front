@@ -1,14 +1,24 @@
-// Dashboard stylesheet entry point. Component rules live in styles/.
 @use "./styles/dashboard-legacy";
 @use "./styles/dashboard-sidebar";
 @use "./styles/dashboard-overview";
 @use "./styles/dashboard-pages";
 @use "./styles/_dashboard-members";
-@use "./styles/appointment-modal";
-@use "./styles/service-modal";
-@use "./styles/dashboard-topbar";
-@use "./styles/profile-settings";
+@use "./styles/dashboard-components";
 @use "./styles/barber-modal";
 @use "../../assets/sass/components/satisfaction-chart";
 @use "../../assets/sass/components/revenue-chart";
 @use "../../assets/sass/components/service-radial-chart";
+
+body:has(.dashboard-shell) {
+  background: #f5f7fc;
+
+  > header,
+  > footer {
+    display: none !important;
+  }
+
+  > main {
+    margin: 0;
+    padding: 0;
+  }
+}

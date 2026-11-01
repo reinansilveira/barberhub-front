@@ -1,4 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  ACCESS_TOKEN_COOKIE,
+  API_BASE_URL,
+  REFRESH_TOKEN_COOKIE,
+  SESSION_COOKIE_OPTIONS,
+} from "@/services/api/config";
 
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get("code");
@@ -8,13 +14,13 @@ export async function GET(request: NextRequest) {
   }
 
   const response = await fetch(
-    `${process.env.BACKEND_URL}/clients/google/exchange`,
+    `${process.env.BACKEND_URL ?? API_BASE_URL}/clients/google/exchange`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ code }),
       cache: "no-store",
-    }
+    },
   );
 
   if (!response.ok) {
@@ -24,25 +30,18 @@ export async function GET(request: NextRequest) {
   const session = await response.json();
 
   const redirectResponse = NextResponse.redirect(
-    new URL("/dashboard", request.url)
+    new URL("/dashboard", request.url),
   );
 
-  const cookieOptions = {
-    httpOnly: true,
-    sameSite: "lax" as const,
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-  };
-
   redirectResponse.cookies.set(
-    "barberhub_access_token",
+    ACCESS_TOKEN_COOKIE,
     session.access_token,
-    cookieOptions
+    SESSION_COOKIE_OPTIONS,
   );
   redirectResponse.cookies.set(
-    "barberhub_refresh_token",
+    REFRESH_TOKEN_COOKIE,
     session.refresh_token,
-    cookieOptions
+    SESSION_COOKIE_OPTIONS,
   );
 
   return redirectResponse;

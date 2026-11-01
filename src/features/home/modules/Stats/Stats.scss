@@ -11,6 +11,7 @@
     @include flex(center, center);
     flex-wrap: wrap;
     gap: 6.4rem;
+    margin: 0;
 
     @include max(700) {
       gap: 3.2rem;
@@ -19,11 +20,13 @@
 
   &__item {
     @include flexColumn(center, center, column);
+    flex-direction: column-reverse;
     gap: 0.8rem;
   }
 
   &__value {
     @include display-2();
+    margin: 0;
     color: $default-amber;
 
     @include max(700) {

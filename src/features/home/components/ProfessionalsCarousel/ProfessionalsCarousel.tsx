@@ -2,8 +2,8 @@
 
 import "./ProfessionalsCarousel.scss";
 
-import { useRef } from "react";
 import type { Professional } from "./Professionals.types";
+import { useCarouselScroll } from "./use-carousel-scroll";
 
 interface ProfessionalsCarouselProps {
   professionals: Professional[];
@@ -13,12 +13,10 @@ function RatingStars({ rating }: { rating: number }) {
   const filledStars = Math.round(rating);
 
   return (
-    <div
-      className="professionals-carousel__stars"
-      aria-label={`Avaliação ${rating} de 5`}
-    >
+    <div className="professionals-carousel__stars" aria-hidden="true">
       {Array.from({ length: 5 }).map((_, index) => (
         <svg
+          aria-hidden="true"
           key={index}
           width="12"
           height="12"
@@ -37,19 +35,7 @@ function RatingStars({ rating }: { rating: number }) {
 export default function ProfessionalsCarousel({
   professionals,
 }: ProfessionalsCarouselProps) {
-  const trackRef = useRef<HTMLDivElement>(null);
-
-  function handleScroll(direction: "prev" | "next") {
-    const track = trackRef.current;
-    if (!track) return;
-
-    const amount = track.clientWidth * 0.85;
-
-    track.scrollBy({
-      left: direction === "next" ? amount : -amount,
-      behavior: "smooth",
-    });
-  }
+  const { trackRef, scroll } = useCarouselScroll();
 
   return (
     <>
@@ -57,10 +43,11 @@ export default function ProfessionalsCarousel({
         <button
           type="button"
           aria-label="Profissional anterior"
-          onClick={() => handleScroll("prev")}
+          onClick={() => scroll("prev")}
           className="professionals-carousel__nav-button"
         >
           <svg
+            aria-hidden="true"
             width="18"
             height="18"
             viewBox="0 0 24 24"
@@ -77,10 +64,11 @@ export default function ProfessionalsCarousel({
         <button
           type="button"
           aria-label="Próximo profissional"
-          onClick={() => handleScroll("next")}
+          onClick={() => scroll("next")}
           className="professionals-carousel__nav-button"
         >
           <svg
+            aria-hidden="true"
             width="18"
             height="18"
             viewBox="0 0 24 24"
@@ -109,17 +97,15 @@ export default function ProfessionalsCarousel({
             <div className="professionals-carousel__image-wrapper">
               <img
                 src={professional.imageUrl}
-                alt={professional.name}
+                alt=""
                 loading="lazy"
                 className="professionals-carousel__image"
               />
 
               {professional.available && (
                 <span className="professionals-carousel__badge">
-                  <span
-                    className="professionals-carousel__badge-dot"
-                  />
-                  Disponível hoje
+                  <span className="professionals-carousel__badge-dot" />
+                  Agenda online
                 </span>
               )}
             </div>
@@ -136,14 +122,21 @@ export default function ProfessionalsCarousel({
               </p>
 
               <div className="professionals-carousel__footer">
-                <div className="professionals-carousel__rating">
-                  <RatingStars rating={professional.rating} />
-                  <span
-                    className="professionals-carousel__rating-value"
+                {professional.reviewsCount ? (
+                  <div
+                    className="professionals-carousel__rating"
+                    aria-label={`Nota ${professional.rating.toFixed(1)} de 5 em ${professional.reviewsCount} avaliações`}
                   >
-                    {professional.rating.toFixed(1)}
+                    <RatingStars rating={professional.rating} />
+                    <span className="professionals-carousel__rating-value">
+                      {professional.rating.toFixed(1).replace(".", ",")}
+                    </span>
+                  </div>
+                ) : (
+                  <span className="professionals-carousel__rating-value">
+                    Novo na equipe
                   </span>
-                </div>
+                )}
 
                 <span className="professionals-carousel__link">Ver perfil</span>
               </div>

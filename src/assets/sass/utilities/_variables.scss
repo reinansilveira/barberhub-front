@@ -4,34 +4,29 @@ $secondary-font: var(--font-inter), sans-serif;
 $default-trans: 0.3s ease-in-out;
 
 $default-black: #111111;
-$default-surface: #1F1F1F;
+$default-surface: #1f1f1f;
 
-$default-amber: #D4A72C;
-$default-amber-dark: #332B1D;
+$default-amber: #d4a72c;
+$default-amber-dark: #332b1d;
 
-$default-cream: #F4F0E8;
+$default-cream: #f4f0e8;
 
-$default-grey-warm: #817A78;
-$default-border-dark: #4A463F;
+$default-grey-warm: #948d8a;
+$default-grey-ink: #6b6461;
+$default-border-dark: #4a463f;
 
-$default-success: #00D26A;
-$default-error: #FF003D;
+$default-success: #00d26a;
+$default-error: #ff003d;
 
-$shadow-sm: 0 1px 3px rgba(0,0,0,.15);
-$shadow-md: 0 4px 16px rgba(0,0,0,.25);
-$shadow-lg: 0 8px 32px rgba(0,0,0,.35);
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.15);
+$shadow-md: 0 4px 16px rgba(0, 0, 0, 0.25);
+$shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.35);
 
-$color-gradient: linear-gradient(
-    135deg,
-    #D4A72C 0%,
-    #332B1D 100%
-);
+$color-gradient: linear-gradient(135deg, #d4a72c 0%, #332b1d 100%);
 
-// Dashboard tokens. Keeping these in the shared token module lets every
-// dashboard partial consume the same visual contract without local copies.
 $dashboard-ink: #15213a;
 $dashboard-ink-soft: #56657d;
-$dashboard-muted: #7f8ca2;
+$dashboard-muted: #5f6d84;
 $dashboard-muted-strong: #65738a;
 $dashboard-border: #e1e6f0;
 $dashboard-border-soft: #edf0f5;
@@ -42,14 +37,14 @@ $dashboard-brand: #6348cb;
 $dashboard-brand-strong: #7950d7;
 $dashboard-brand-soft: #eee9ff;
 $dashboard-brand-tint: #e3e0fa;
-$dashboard-teal: #18b6a3;
+$dashboard-teal: #118275;
 
 $dashboard-success-background: #def6e7;
 $dashboard-success-ink: #16854a;
 $dashboard-warning-background: #fff0d5;
-$dashboard-warning-ink: #ae7114;
+$dashboard-warning-ink: #956111;
 $dashboard-danger-background: #ffe5e7;
-$dashboard-danger-ink: #d1353f;
+$dashboard-danger-ink: #c52d37;
 $dashboard-neutral-background: #eef1f7;
 
 $dashboard-sidebar-from: #1e3156;
@@ -95,8 +90,6 @@ $dashboard-status-colors: (
   ),
 );
 
-// Compatibility names for the existing dashboard styles. New dashboard
-// partials should prefer the explicit $dashboard-* tokens above.
 $ink: $dashboard-ink;
 $ink-soft: $dashboard-ink-soft;
 $muted: $dashboard-muted;

@@ -1,33 +1,47 @@
 "use client";
 
 import Link from "next/link";
-import "./LoginForm.scss";
+import "./AuthForm.scss";
 import { useLoginForm } from "./use-login-form";
+import { API_BASE_URL } from "@/services/api/config";
 
-export const LoginForm = () => {
+export const LoginForm = ({ notice }: { notice?: string }) => {
   const {
     emailField,
     passwordField,
-    rememberField,
     errors,
     isSubmitting,
+    isVerifyingTwoFactor,
     showPassword,
+    twoFactorChallenge,
+    twoFactorCode,
+    onTwoFactorSubmit,
+    setTwoFactorCode,
+    cancelTwoFactor,
     togglePassword,
     onSubmit,
   } = useLoginForm();
 
   return (
-    <div className="login-form">
-      <div className="content">
-        <h2 className="title">Bem-vindo de volta</h2>
-        <p className="subtitle">Informe seus dados para acessar sua conta.</p>
+    <div className="auth-form">
+      <div className="auth-form__content">
+        <h1 className="auth-form__title">Bem-vindo de volta</h1>
+        <p className="auth-form__subtitle">
+          Informe seus dados para acessar sua conta.
+        </p>
+        {notice && (
+          <p className="auth-form__notice" role="status">
+            {notice}
+          </p>
+        )}
 
-        <div className="oauthGroup">
+        <div className="auth-form__oauth-group">
           <Link
-            href={`${process.env.NEXT_PUBLIC_API_URL}/clients/google`}
-            className="oauthButton"
+            href={`${API_BASE_URL}/clients/google`}
+            className="auth-form__oauth-button"
           >
             <svg
+              aria-hidden="true"
               width="20"
               height="20"
               viewBox="0 0 24 24"
@@ -55,128 +69,188 @@ export const LoginForm = () => {
           </Link>
         </div>
 
-        <div className="divider">
-          <span>or</span>
+        <div className="auth-form__divider">
+          <span>ou</span>
         </div>
 
-        <form className="form" onSubmit={onSubmit} noValidate>
-          <label className="field">
-            <span className="fieldLabel">E-mail</span>
-            <input
-              type="email"
-              placeholder="seu@email.com"
-              autoComplete="email"
-              {...emailField}
-            />
-            {errors.email && (
-              <small className="formError">{errors.email.message}</small>
-            )}
-          </label>
-
-          <label className="field">
-            <div className="fieldHead">
-              <span className="fieldLabel">Senha</span>
-              <Link href="/forgot-password" className="forgotLink">
-                Esqueci a senha
-              </Link>
-            </div>
-            <div className="passwordInput">
+        {twoFactorChallenge ? (
+          <form
+            className="auth-form__fields"
+            onSubmit={onTwoFactorSubmit}
+            noValidate
+          >
+            <label className="auth-form__field">
+              <span className="auth-form__field-label">
+                Código de segurança
+              </span>
               <input
-                type={showPassword ? "text" : "password"}
-                placeholder="••••••••"
-                autoComplete="current-password"
-                {...passwordField}
+                autoComplete="one-time-code"
+                inputMode="numeric"
+                maxLength={6}
+                onChange={(event) => setTwoFactorCode(event.target.value)}
+                placeholder="000000"
+                required
+                value={twoFactorCode}
               />
-              <button
-                type="button"
-                className="togglePassword"
-                onClick={togglePassword}
-              >
-                {showPassword ? (
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                    focusable="false"
-                  >
-                    <path
-                      d="M3 3l18 18"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M10.6 10.6a3 3 0 1 0 4.24 4.24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M9.18 5.02A11.63 11.63 0 0 1 12 4c6.5 0 10 8 10 8a18.84 18.84 0 0 1-4.18 5.02"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M6.2 7.64A18.46 18.46 0 0 0 2 12s3.5 7 10 7a11.9 11.9 0 0 0 4.4-.84"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                    focusable="false"
-                  >
-                    <path
-                      d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="3"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                    />
-                  </svg>
-                )}
-              </button>
-            </div>
-            {errors.password && (
-              <small className="formError">{errors.password.message}</small>
+              <small>
+                {twoFactorChallenge.message} O código expira em 5 minutos.
+              </small>
+            </label>
+            {errors.root && (
+              <small className="auth-form__error" role="alert">
+                {errors.root.message}
+              </small>
             )}
-          </label>
+            <button
+              type="submit"
+              className="auth-form__submit"
+              disabled={isVerifyingTwoFactor}
+            >
+              {isVerifyingTwoFactor ? "Verificando..." : "Confirmar código"}
+            </button>
+            <button
+              type="button"
+              className="auth-form__forgot-link"
+              onClick={cancelTwoFactor}
+            >
+              Voltar ao login
+            </button>
+          </form>
+        ) : (
+          <form className="auth-form__fields" onSubmit={onSubmit} noValidate>
+            <label className="auth-form__field">
+              <span className="auth-form__field-label">E-mail</span>
+              <input
+                type="email"
+                placeholder="seu@email.com"
+                autoComplete="email"
+                {...emailField}
+              />
+              {errors.email && (
+                <small className="auth-form__error" role="alert">
+                  {errors.email.message}
+                </small>
+              )}
+            </label>
 
-          <button type="submit" className="submit" disabled={isSubmitting}>
-            Entrar
-          </button>
-        </form>
+            <label className="auth-form__field">
+              <div className="auth-form__field-head">
+                <span className="auth-form__field-label">Senha</span>
+                <Link href="/esqueci-senha" className="auth-form__forgot-link">
+                  Esqueci a senha
+                </Link>
+              </div>
+              <div className="auth-form__password">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  {...passwordField}
+                />
+                <button
+                  type="button"
+                  className="auth-form__password-toggle"
+                  onClick={togglePassword}
+                  aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                  aria-pressed={showPassword}
+                >
+                  {showPassword ? (
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <path
+                        d="M3 3l18 18"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                      />
+                      <path
+                        d="M10.6 10.6a3 3 0 1 0 4.24 4.24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                      />
+                      <path
+                        d="M9.18 5.02A11.63 11.63 0 0 1 12 4c6.5 0 10 8 10 8a18.84 18.84 0 0 1-4.18 5.02"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M6.2 7.64A18.46 18.46 0 0 0 2 12s3.5 7 10 7a11.9 11.9 0 0 0 4.4-.84"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <path
+                        d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="3"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                      />
+                    </svg>
+                  )}
+                </button>
+              </div>
+              {errors.password && (
+                <small className="auth-form__error" role="alert">
+                  {errors.password.message}
+                </small>
+              )}
+            </label>
 
-        <div className="signup">
+            {errors.root && (
+              <p className="auth-form__error" role="alert">
+                {errors.root.message}
+              </p>
+            )}
+            <button
+              type="submit"
+              className="auth-form__submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Entrando..." : "Entrar"}
+            </button>
+          </form>
+        )}
+
+        <div className="auth-form__signup">
           Ainda não tem conta? <Link href="/cadastrar">Crie agora</Link>
         </div>
 
-        <div className="legal">
+        <div className="auth-form__legal">
           Ao continuar, você concorda com os{" "}
-          <Link href="/terms">Termos de uso</Link> e a{" "}
-          <Link href="/privacy">Política de privacidade</Link>
+          <Link href="/termos">Termos de uso</Link> e a{" "}
+          <Link href="/privacidade">Política de privacidade</Link>
         </div>
       </div>
     </div>

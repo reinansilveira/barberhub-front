@@ -1,6 +1,5 @@
 import type { Appointment } from "@/services/appointment";
 import type { Service } from "@/services/service";
-import type { TrendDirection } from "../_shared/dashboard.utils";
 
 export type OwnerView =
   | "dashboard"
@@ -12,29 +11,13 @@ export type OwnerView =
   | "profissionais"
   | "novo-servico";
 
-export type DayBucket = {
-  date: Date;
-  entries: Appointment[];
-  revenue: number;
-};
-
-export type Kpi = {
-  label: string;
-  icon: string;
-  accent: string;
-  value: string;
-  caption: string;
-  trendPct: number;
-  trendDir: TrendDirection;
-  spark: number[];
-};
-
 export type OwnerDashboardData = {
   appointments: Appointment[];
   services: Service[];
   payments: Payment[];
   reviews: Review[];
   currentUser: CurrentUser;
+  notifications: import("@/services/notification").Notification[];
 };
 
 export type CurrentUser = {
@@ -50,6 +33,21 @@ export type Payment = {
   finalAmount: number | string;
   paidAt: string | null;
   status: string;
+  method?: string;
+  createdAt?: string;
+  appointment?: {
+    id: string;
+    scheduledAt?: string;
+    service?: { name?: string };
+    professional?: {
+      name?: string;
+      user?: { name?: string; avatar?: string | null };
+    };
+    client?: {
+      name?: string;
+      user?: { name?: string; avatar?: string | null };
+    };
+  };
 };
 
 export type Review = {

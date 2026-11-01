@@ -1,3 +1,5 @@
+@use "../../../assets/sass/utilities/utilities" as *;
+
 .dashboard-sidebar {
   display: flex;
   flex-direction: column;
@@ -5,7 +7,7 @@
   padding: 2.2rem 1.25rem 1.8rem;
   border-right: 1px solid #eeeeee;
   background: #fff;
-  color: #8b9098;
+  color: #70757e;
 
   &__brand {
     display: flex;
@@ -74,11 +76,17 @@
 
   &__footer-link {
     display: flex;
+    width: 100%;
     gap: 0.85rem;
     align-items: center;
     padding: 0.65rem 0;
+    border: 0;
+    background: transparent;
     color: inherit;
-    font-size: 0.98rem;
+    font-family: inherit;
+    font-size: 1rem;
+    text-align: left;
+    cursor: pointer;
 
     svg {
       flex: 0 0 auto;
@@ -88,13 +96,17 @@
     }
   }
 
-  &__copyright {
-    margin-top: 0.8rem;
-    color: #b4b7bd;
-    font-size: 0.8rem;
+  &__footer-action {
+    display: contents;
   }
 
-  @media (max-width: 1000px) {
+  &__copyright {
+    margin-top: 0.8rem;
+    color: #70757f;
+    font-size: 1rem;
+  }
+
+  @include max(1000) {
     &__brand-name,
     &__nav-item,
     &__footer-link {
@@ -111,7 +123,7 @@
     }
   }
 
-  @media (max-width: 650px) {
+  @include max(650) {
     min-height: auto;
 
     &__nav {
@@ -128,7 +140,7 @@
     }
   }
 
-  @media (min-width: 801px) {
+  @include min(801) {
     &__nav-item,
     &__footer-link {
       justify-content: flex-start;
