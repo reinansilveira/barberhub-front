@@ -5,26 +5,32 @@
   display: grid;
   gap: 2rem;
   padding: 3.2rem;
-  border: 1px solid #e3dccf;
+  border: 1px solid #3a3530;
   border-radius: 1.2rem;
-  background: #fff;
+  background: #1f1c19;
+  color: $default-cream;
 
   &__icon {
     width: 4.8rem;
     height: 4.8rem;
-    color: #0f8a4b;
+    color: #3ecf8e;
   }
 
   &__message,
   &__hint {
     @include body-text();
-    color: #3d3833;
+    color: #c9c2b8;
+
+    a {
+      color: $default-amber;
+      font-weight: 600;
+    }
   }
 
   &__details {
     display: grid;
     margin: 0;
-    border-top: 1px solid #ece6db;
+    border-top: 1px solid #3a3530;
   }
 
   &__row {
@@ -32,11 +38,11 @@
     justify-content: space-between;
     gap: 1.6rem;
     padding: 1.2rem 0;
-    border-bottom: 1px solid #ece6db;
+    border-bottom: 1px solid #3a3530;
 
     dt {
       @include body-text();
-      color: #5c554d;
+      color: #a59e95;
     }
 
     dd {

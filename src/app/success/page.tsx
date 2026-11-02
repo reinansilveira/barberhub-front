@@ -31,7 +31,11 @@ export default async function BookingSuccessPage({
   ].filter((item): item is [string, string] => Boolean(item[1]));
 
   return (
-    <ContentPage eyebrow="Tudo certo" title="Agendamento confirmado!">
+    <ContentPage
+      tone="dark"
+      eyebrow="Tudo certo"
+      title="Agendamento confirmado!"
+    >
       <div className="booking-success" role="status">
         <CheckCircle2 className="booking-success__icon" aria-hidden="true" />
         <p className="booking-success__message">

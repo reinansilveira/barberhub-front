@@ -12,11 +12,17 @@ import {
   type SessionTokens,
   type TwoFactorChallenge,
 } from "@/services/auth";
+import { apiErrorStatus } from "@/services/api/api-error";
 import { saveSession } from "./actions";
 
 type LoginFormValues = LoginInput & { remember?: boolean };
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const loginErrorMessage = (error: unknown) =>
+  apiErrorStatus(error) === 429
+    ? "Muitas tentativas de login. Aguarde alguns minutos e tente de novo."
+    : "Não foi possível entrar. Confira suas credenciais.";
 
 export function useLoginForm() {
   const router = useRouter();
@@ -56,15 +62,14 @@ export function useLoginForm() {
         }
 
         session = clientLogin;
-      } catch {
+      } catch (error) {
+        if (apiErrorStatus(error) !== 401) throw error;
         session = await login({ email, password });
       }
 
       await finishLogin(session);
-    } catch {
-      setError("root", {
-        message: "Não foi possível entrar. Confira suas credenciais.",
-      });
+    } catch (error) {
+      setError("root", { message: loginErrorMessage(error) });
     }
   }
 

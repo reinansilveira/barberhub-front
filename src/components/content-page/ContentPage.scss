@@ -8,6 +8,11 @@
   background: $default-cream;
   color: $default-black;
 
+  &--dark {
+    background: #151311;
+    color: $default-cream;
+  }
+
   &__hero {
     background: $default-black;
     color: $default-cream;
@@ -193,5 +198,26 @@
     border-radius: 1.2rem;
     color: #5c554d;
     text-align: center;
+  }
+
+  &--dark &__section {
+    p,
+    li {
+      color: #c9c2b8;
+    }
+
+    a {
+      color: $default-amber;
+    }
+  }
+
+  &--dark &__button--secondary {
+    border-color: $default-cream;
+    color: $default-cream;
+
+    &:hover {
+      background: $default-cream;
+      color: $default-black;
+    }
   }
 }

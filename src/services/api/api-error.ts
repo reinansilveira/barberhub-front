@@ -23,3 +23,6 @@ export function apiErrorMessage(err: unknown, fallback: string): string {
   }
   return fallback;
 }
+
+export const apiErrorStatus = (err: unknown) =>
+  isAxiosError(err) ? err.response?.status : undefined;

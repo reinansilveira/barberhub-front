@@ -16,6 +16,7 @@ export default async function AgendarPage() {
 
   return (
     <ContentPage
+      tone="dark"
       eyebrow="Agendamento"
       title="Agende seu horário"
       description="Sem cadastro: escolha o profissional, o serviço e o horário, e informe seus dados para confirmar."
